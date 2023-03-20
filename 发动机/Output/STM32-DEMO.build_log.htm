@@ -1,0 +1,88 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+C:\Users\杨勇\Desktop\毕业设计\j1939工程\发动机\USER\STM32-DEMO.uvproj
+Project File Date:  03/17/2023
+
+<h2>Output:</h2>
+Rebuild target 'CAN-Loopback-DEMO'
+assembling startup_stm32f10x_hd.s...
+compiling main.c...
+..\J1939\j1939.h(252): warning:  #40-D: expected an identifier
+        };
+..\J1939\j1939.h(281): warning:  #1295-D: Deprecated declaration J1939_Initialization - give arg types
+  extern void                   J1939_Initialization( );
+..\J1939\j1939.h(283): warning:  #1295-D: Deprecated declaration J1939_ISR - give arg types
+  extern void                       J1939_ISR( );
+..\J1939\j1939.h(285): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
+  extern void                   J1939_Poll( );
+main.c(81): warning:  #223-D: function "send_massage" declared implicitly
+                send_massage();
+main.c(86): warning:  #159-D: declaration is incompatible with previous "send_massage" (declared at line 81)
+  void send_massage(void)
+main.c(103): warning:  #223-D: function "J1939_EnqueueMessage" declared implicitly
+          while (J1939_EnqueueMessage(&Msg,Select_CAN_NODE_1) != RC_SUCCESS){ 
+main.c: 7 warnings, 0 errors
+compiling stm32f10x_it.c...
+compiling usart1.c...
+compiling can.c...
+can.c(67): warning:  #177-D: variable "TxMessage" was declared but never referenced
+    CanTxMsg TxMessage;  
+can.c(124): warning:  #223-D: function "J1939_ISR" declared implicitly
+    J1939_ISR( );
+can.c: 2 warnings, 0 errors
+compiling led.c...
+compiling stm32f10x_gpio.c...
+compiling stm32f10x_rcc.c...
+compiling stm32f10x_usart.c...
+compiling stm32f10x_can.c...
+compiling misc.c...
+compiling core_cm3.c...
+compiling system_stm32f10x.c...
+compiling J1939.c...
+..\J1939\J1939.H(252): warning:  #40-D: expected an identifier
+        };
+..\J1939\J1939.H(281): warning:  #1295-D: Deprecated declaration J1939_Initialization - give arg types
+  extern void                   J1939_Initialization( );
+..\J1939\J1939.H(283): warning:  #1295-D: Deprecated declaration J1939_ISR - give arg types
+  extern void                       J1939_ISR( );
+..\J1939\J1939.H(285): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
+  extern void                   J1939_Poll( );
+..\J1939\J1939_config.H(222): warning:  #111-D: statement is unreachable
+                        break;
+..\J1939\J1939_config.H(231): warning:  #111-D: statement is unreachable
+                        return 0;
+..\J1939\J1939_config.H(232): warning:  #111-D: statement is unreachable
+                        break;
+..\J1939\J1939_config.H(242): warning:  #111-D: statement is unreachable
+                        return 0;
+..\J1939\J1939_config.H(243): warning:  #111-D: statement is unreachable
+                        break;
+..\J1939\J1939_config.H(253): warning:  #111-D: statement is unreachable
+                        return 0;
+..\J1939\J1939_config.H(254): warning:  #111-D: statement is unreachable
+                        break;
+..\J1939\J1939_config.H(259): warning:  #111-D: statement is unreachable
+                        break;
+..\J1939\J1939.c(457): warning:  #223-D: function "J1939_TP_Poll" declared implicitly
+          J1939_TP_Poll();
+..\J1939\J1939.c(635): warning:  #111-D: statement is unreachable
+                      break;
+..\J1939\J1939.c(690): warning:  #111-D: statement is unreachable
+                                break;
+..\J1939\J1939.c(1005): warning:  #111-D: statement is unreachable
+                        break;
+..\J1939\J1939.c(1307): warning:  #159-D: declaration is incompatible with previous "J1939_TP_Poll" (declared at line 457)
+  void J1939_TP_Poll(void)
+..\J1939\J1939.c(1546): warning:  #223-D: function "malloc" declared implicitly
+        _requestList->next = (struct Request_List *)malloc(sizeof(struct Request_List));
+..\J1939\J1939.c: 18 warnings, 0 errors
+linking...
+Program Size: Code=11956 RO-data=336 RW-data=72 ZI-data=1552  
+FromELF: creating hex file...
+"..\Output\STM32-DEMO.axf" - 0 Error(s), 27 Warning(s).
+</pre>
+</body>
+</html>
