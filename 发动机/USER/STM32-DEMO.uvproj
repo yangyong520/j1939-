@@ -364,7 +364,7 @@
               <MiscControls>--gnu</MiscControls>
               <Define>USE_STDPERIPH_DRIVER, STM32F10X_HD</Define>
               <Undefine></Undefine>
-              <IncludePath>..\CMSIS;..\FWlib\inc;..\USER;..\J1939</IncludePath>
+              <IncludePath>..\CMSIS;..\FWlib\inc;..\USER;..\J1939;..\Msg</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -506,6 +506,21 @@
               <FileName>J1939_Config.H</FileName>
               <FileType>5</FileType>
               <FilePath>..\J1939\J1939_Config.H</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Msg</GroupName>
+          <Files>
+            <File>
+              <FileName>msg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Msg\msg.c</FilePath>
+            </File>
+            <File>
+              <FileName>msg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Msg\msg.h</FilePath>
             </File>
           </Files>
         </Group>

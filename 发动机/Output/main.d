@@ -13,3 +13,5 @@
 ..\output\main.o: can.h
 ..\output\main.o: led.h
 ..\output\main.o: ..\J1939\j1939.h
+..\output\main.o: ..\Msg\msg.h
+..\output\main.o: ..\Testmsg\testmsg.h

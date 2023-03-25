@@ -1,0 +1,81 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+C:\Users\杨勇\Desktop\毕业设计\j1939工程\驾驶室显示器\STM32.uvproj
+Project File Date:  03/07/2023
+
+<h2>Output:</h2>
+Rebuild target 'STM32_USART1'
+assembling startup_stm32f10x_cl.s...
+compiling main.c...
+.\j1939\j1939.h(303): warning:  #40-D: expected an identifier
+        };
+user\main.c(73): warning:  #223-D: function "send_massage" declared implicitly
+                send_massage();
+user\main.c(90): warning:  #223-D: function "CAN_SendData" declared implicitly
+          CAN_SendData(CAN2,&TxMsg2);                                                                                                                              
+user\main.c(143): warning:  #159-D: declaration is incompatible with previous "send_massage" (declared at line 73)
+  void send_massage(void)
+user\main.c(160): warning:  #223-D: function "J1939_EnqueueMessage" declared implicitly
+          while (J1939_EnqueueMessage(&Msg,Select_CAN_NODE_1) != RC_SUCCESS){ 
+user\main.c: 5 warnings, 0 errors
+compiling stm32f10x_it.c...
+user\stm32f10x_it.c(67): warning:  #550-D: variable "rece" was set but never used
+        u8 rece;
+user\stm32f10x_it.c(94): warning:  #223-D: function "J1939_ISR" declared implicitly
+        J1939_ISR( );
+user\stm32f10x_it.c(131): warning:  #223-D: function "Comm_Send_CANmsg_str" declared implicitly
+        Comm_Send_CANmsg_str(2,&RxMessage);
+user\stm32f10x_it.c: 3 warnings, 0 errors
+compiling usart.c...
+compiling CAN.c...
+compiling J1939.c...
+j1939\J1939.H(303): warning:  #40-D: expected an identifier
+        };
+j1939\J1939_config.H(263): warning:  #111-D: statement is unreachable
+              break;
+j1939\J1939_config.H(272): warning:  #111-D: statement is unreachable
+              return 0;
+j1939\J1939_config.H(273): warning:  #111-D: statement is unreachable
+              break;
+j1939\J1939_config.H(283): warning:  #111-D: statement is unreachable
+              return 0;
+j1939\J1939_config.H(284): warning:  #111-D: statement is unreachable
+              break;
+j1939\J1939_config.H(294): warning:  #111-D: statement is unreachable
+              return 0;
+j1939\J1939_config.H(295): warning:  #111-D: statement is unreachable
+              break;
+j1939\J1939_config.H(300): warning:  #111-D: statement is unreachable
+              break;
+j1939\J1939.c(526): warning:  #223-D: function "J1939_TP_Poll" declared implicitly
+      J1939_TP_Poll();
+j1939\J1939.c(547): warning:  #159-D: declaration is incompatible with previous "J1939_TP_Poll" (declared at line 526)
+  void J1939_TP_Poll(void);
+j1939\J1939.c(706): warning:  #111-D: statement is unreachable
+                      break;
+j1939\J1939.c(761): warning:  #111-D: statement is unreachable
+              break;
+j1939\J1939.c(1101): warning:  #111-D: statement is unreachable
+          break;
+j1939\J1939.c(1659): warning:  #223-D: function "malloc" declared implicitly
+      _requestList->next = (struct Request_List *)malloc(sizeof(struct Request_List));
+j1939\J1939.c: 15 warnings, 0 errors
+compiling misc.c...
+compiling stm32f10x_rcc.c...
+compiling stm32f10x_gpio.c...
+compiling stm32f10x_usart.c...
+compiling stm32f10x_can.c...
+compiling stm32f10x_tim.c...
+compiling stm32f10x_flash.c...
+compiling core_cm3.c...
+compiling system_stm32f10x.c...
+linking...
+Program Size: Code=16874 RO-data=426 RW-data=104 ZI-data=2584  
+FromELF: creating hex file...
+".\Obj\STM32.axf" - 0 Error(s), 23 Warning(s).
+</pre>
+</body>
+</html>

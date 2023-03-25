@@ -138,6 +138,23 @@ typedef struct
 	j1939_uint8_t  SA;   /**< J1939的消息对象的 目标地址（发送目的地  或  接受来源地）*/
 
 } J1939_MESSAGE_T ;
+
+typedef struct 
+{
+	struct R_and_DP{
+		j1939_uint8_t R:1;
+		j1939_uint8_t DP:1;
+	}R_and_DP;
+	struct R_and_DP RDP;
+	j1939_uint8_t PDU_Format;
+	j1939_uint8_t PDU_Specific;
+}PGN_t ;
+typedef struct
+{
+	PGN_t PGN;
+	j1939_uint8_t  data[8] ;
+}PGN_and_DF_t;
+
 /**J1939消息对象的结构体
 *
 * 本结构体实现了 J1939的多帧消息对象
@@ -249,7 +266,7 @@ union J1939_MESSAGE_UNION
 		j1939_uint8_t	Data[J1939_DATA_LENGTH];  /**< 数据*/
 		j1939_uint32_t  PGN					:24;  /**< 参数群编号*/
 		j1939_uint32_t  ReservePGN			: 8;  /**< 空闲*/
-	};
+	}j1939_PID;
 	struct j1939_PID Mxe;  /**< j1939 的 ID 组成结构体*/
 	j1939_uint8_t		Array[J1939_MSG_LENGTH + J1939_DATA_LENGTH]; /**< 联合体数组，方便快速处理结构体赋值*/
 };

@@ -10,13 +10,13 @@ Project File Date:  03/17/2023
 Rebuild target 'CAN-Loopback-DEMO'
 assembling startup_stm32f10x_hd.s...
 compiling main.c...
-..\J1939\j1939.h(290): warning:  #40-D: expected an identifier
+..\J1939\j1939.h(299): warning:  #40-D: expected an identifier
         };
-..\J1939\j1939.h(319): warning:  #1295-D: Deprecated declaration J1939_Initialization - give arg types
+..\J1939\j1939.h(328): warning:  #1295-D: Deprecated declaration J1939_Initialization - give arg types
   extern void                   J1939_Initialization( );
-..\J1939\j1939.h(321): warning:  #1295-D: Deprecated declaration J1939_ISR - give arg types
+..\J1939\j1939.h(330): warning:  #1295-D: Deprecated declaration J1939_ISR - give arg types
   extern void                       J1939_ISR( );
-..\J1939\j1939.h(323): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
+..\J1939\j1939.h(332): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
   extern void                   J1939_Poll( );
 main.c(88): warning:  #223-D: function "send_massage" declared implicitly
                 send_massage();
@@ -42,13 +42,21 @@ compiling misc.c...
 compiling core_cm3.c...
 compiling system_stm32f10x.c...
 compiling J1939.c...
-..\J1939\J1939.H(290): warning:  #40-D: expected an identifier
+..\J1939\J1939.H(151): error:  #20: identifier "uint16_t" is undefined
+      uint16_t Unique_Beacon_Message_Identifier_Number;
+..\J1939\J1939.H(153): error:  #20: identifier "uint8_t" is undefined
+          uint8_t Radio_Beacon_Direction:2;
+..\J1939\J1939.H(156): error:  #20: identifier "uint32_t" is undefined
+      uint32_t Transmitter_ID_2;
+..\J1939\J1939.H(157): error:  #20: identifier "uint8_t" is undefined
+      uint8_t Wireless_Signal_Strength_2;
+..\J1939\J1939.H(299): warning:  #40-D: expected an identifier
         };
-..\J1939\J1939.H(319): warning:  #1295-D: Deprecated declaration J1939_Initialization - give arg types
+..\J1939\J1939.H(328): warning:  #1295-D: Deprecated declaration J1939_Initialization - give arg types
   extern void                   J1939_Initialization( );
-..\J1939\J1939.H(321): warning:  #1295-D: Deprecated declaration J1939_ISR - give arg types
+..\J1939\J1939.H(330): warning:  #1295-D: Deprecated declaration J1939_ISR - give arg types
   extern void                       J1939_ISR( );
-..\J1939\J1939.H(323): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
+..\J1939\J1939.H(332): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
   extern void                   J1939_Poll( );
 ..\J1939\J1939_config.H(260): warning:  #111-D: statement is unreachable
                         break;
@@ -78,11 +86,9 @@ compiling J1939.c...
   void J1939_TP_Poll(void)
 ..\J1939\J1939.c(1584): warning:  #223-D: function "malloc" declared implicitly
         _requestList->next = (struct Request_List *)malloc(sizeof(struct Request_List));
-..\J1939\J1939.c: 18 warnings, 0 errors
-linking...
-Program Size: Code=11956 RO-data=336 RW-data=72 ZI-data=1552  
-FromELF: creating hex file...
-"..\Output\STM32-DEMO.axf" - 0 Error(s), 27 Warning(s).
+..\J1939\J1939.c: 18 warnings, 4 errors
+"..\Output\STM32-DEMO.axf" - 4 Error(s), 27 Warning(s).
+Target not created
 </pre>
 </body>
 </html>
