@@ -93,14 +93,15 @@ int main(void)
 
 void send_massage(J1939_MESSAGE_T *msg)
 {			
-				uint8_t j1939_msg[8];
-        //Msg.Mxe.DataPage                = 0;//dp
+
+				Msg.Mxe.PDUSpecific							= msg->PGN<<24>>24;
+        Msg.Mxe.DataPage                = 0;//dp
         Msg.Mxe.Priority                = J1939_CONTROL_PRIORITY;
-        Msg.Mxe.DestinationAddress      = 254;
+        //Msg.Mxe.DestinationAddress      = 0x40;
         Msg.Mxe.DataLength              = msg->byte_count;
         Msg.Mxe.PDUFormat               = msg->PGN<<16>>24;//pf
-				Msg.Mxe.PDUSpecific							= msg->PGN<<24>>24;
-				Msg.Mxe.PGN =msg->PGN;
+				
+				//Msg.Mxe.PGN =msg->PGN;
 
         Msg.Mxe.Data[0]         = msg->data[0];
         Msg.Mxe.Data[1]         = msg->data[1];

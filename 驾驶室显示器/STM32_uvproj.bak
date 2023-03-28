@@ -437,6 +437,21 @@
               <FileType>1</FileType>
               <FilePath>.\user\CAN\CAN.c</FilePath>
             </File>
+            <File>
+              <FileName>J1939.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\j1939\J1939.c</FilePath>
+            </File>
+            <File>
+              <FileName>J1939.H</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\j1939\J1939.H</FilePath>
+            </File>
+            <File>
+              <FileName>J1939_Config.H</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\j1939\J1939_Config.H</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -491,26 +506,6 @@
               <FileName>system_stm32f10x.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\user\system_stm32f10x.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>j1939</GroupName>
-          <Files>
-            <File>
-              <FileName>J1939.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\j1939\J1939.c</FilePath>
-            </File>
-            <File>
-              <FileName>J1939.H</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\j1939\J1939.H</FilePath>
-            </File>
-            <File>
-              <FileName>J1939_Config.H</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\j1939\J1939_Config.H</FilePath>
             </File>
           </Files>
         </Group>

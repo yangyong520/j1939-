@@ -4,9 +4,9 @@
 
 #include "stm32f10x.h"
 #include "J1939.H"  
-#define RATE 1
 
-uint16_t Parameter_Translate(long double measured,float resolutionratio,float offset);
+void transmit_USART_STR(J1939_MESSAGE *J1939_MESSAGE);
+double Parameter_Translate(uint64_t result,float resolutionratio,float offset);
 typedef struct getTSC1 {
     struct TSC1_byte1 {
         uint8_t Engine_Override_Control_Mode:2;
@@ -14,8 +14,8 @@ typedef struct getTSC1 {
         uint8_t Override_Control_Mode_Priority:2;
     }TSC1_byte1;
     struct TSC1_byte1 bt1 ;
-    uint16_t Engine_Requested_Speed_Speed_Limit;
-    uint8_t Engine_Requested_Torque_Torque_Limit;
+    double Engine_Requested_Speed_Speed_Limit;
+    float Engine_Requested_Torque_Torque_Limit;
     struct TSC1_byte5 {
         uint8_t TSC1_Transmission_Rate:3;
         uint8_t TSC1_Control_Purpose:5;
@@ -38,8 +38,8 @@ typedef struct getTC1 {
         uint8_t Disengage_Driveline_Request:2;
     }TC1_byte1;
     struct TC1_byte1 bt1 ;
-    uint8_t Requested_Percent_Clutch_Slip;
-    uint8_t Transmission_Requested_Gear;
+    float Requested_Percent_Clutch_Slip;
+    float Transmission_Requested_Gear;
     struct TC1_byte4 {
         uint8_t Disengage_Differential_Lock_Request___Front_Axle_1:2;
         uint8_t Disengage_Differential_Lock_Request___Front_Axle_2:2;
@@ -75,14 +75,14 @@ typedef struct getTC1 {
     struct TC1_byte8 bt8 ;
 } getTC1_t ;
 typedef struct getXBR {
-    uint16_t External_Acceleration_Demand;
+    double External_Acceleration_Demand;
     struct XBR_byte3 {
         uint8_t XBR_EBI_Mode:2;
         uint8_t XBR_Priority:2;
         uint8_t XBR_Control_Mode:2;
     }XBR_byte3;
     struct XBR_byte3 bt3 ;
-    uint8_t XBR_urgency;
+    float XBR_urgency;
     struct XBR_byte8 {
         uint8_t XBR_Message_Counter:4;
         uint8_t XBR_Message_Checksum:4;
@@ -90,19 +90,19 @@ typedef struct getXBR {
     struct XBR_byte8 bt8 ;
 } getXBR_t ;
 typedef struct getGPV4 {
-    uint16_t Valve_Load_Sense_Pressure;
-    uint8_t Valve_Pilot_Pressure;
-    uint16_t Valve_Assembly_Load_sense_Pressure;
-    uint16_t Valve_Assembly_Supply_Pressure;
+    double Valve_Load_Sense_Pressure;
+    float Valve_Pilot_Pressure;
+    double Valve_Assembly_Load_sense_Pressure;
+    double Valve_Assembly_Supply_Pressure;
 } getGPV4_t ;
 typedef struct getAUXIO5 {
-    uint16_t Auxiliary_I_O_Channel_6;
-    uint16_t Auxiliary_I_O_Channel_5;
-    uint16_t Auxiliary_I_O_Channel_4;
-    uint16_t Auxiliary_I_O_Channel_3;
+    double Auxiliary_I_O_Channel_6;
+    double Auxiliary_I_O_Channel_5;
+    double Auxiliary_I_O_Channel_4;
+    double Auxiliary_I_O_Channel_3;
 } getAUXIO5_t ;
 typedef struct getSRASI {
-    uint8_t Static_Roll_Angle;
+    float Static_Roll_Angle;
     struct SRASI_byte2 {
         uint8_t Static_Roll_Angle_Status:3;
     }SRASI_byte2;
@@ -134,13 +134,13 @@ typedef struct getESR {
     struct ESR_byte1 bt1 ;
 } getESR_t ;
 typedef struct getRBR {
-    uint16_t Unique_Beacon_Message_Identifier_Number;
+    double Unique_Beacon_Message_Identifier_Number;
     struct RBR_byte3 {
         uint8_t Radio_Beacon_Direction:2;
     }RBR_byte3;
     struct RBR_byte3 bt3 ;
-    uint32_t Transmitter_ID_2;
-    uint8_t Wireless_Signal_Strength_2;
+    long float Transmitter_ID_2;
+    float Wireless_Signal_Strength_2;
 } getRBR_t ;
 typedef struct getECC {
     struct ECC_byte1 {
@@ -154,7 +154,7 @@ typedef struct getSFC {
         uint8_t Supplemental_Fan_Direction_Command:2;
     }SFC_byte1;
     struct SFC_byte1 bt1 ;
-    uint16_t Supplemental_Fan_Speed_Command;
+    double Supplemental_Fan_Speed_Command;
     struct SFC_byte4 {
         uint8_t Supplemental_Fan_Power_Hold:2;
     }SFC_byte4;
@@ -174,7 +174,7 @@ typedef struct getVLS1 {
     struct VLS1_byte2 bt2 ;
 } getVLS1_t ;
 typedef struct getHCDI1 {
-    uint16_t Requested_Fuel_Mass_Rate;
+    double Requested_Fuel_Mass_Rate;
     struct HCDI1_byte3 {
         uint8_t HC_Doser_Status:3;
         uint8_t HC_Doser_Injecting_Status:2;
@@ -187,12 +187,12 @@ typedef struct getHCDI1 {
     struct HCDI1_byte4 bt4 ;
 } getHCDI1_t ;
 typedef struct getAT1DPFSSC {
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_Soot_Mean_Calibration_Offset;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_Soot_Standard_Deviation_Calibration_Offset;
+    double Aftertreatment_1_Diesel_Particulate_Filter_Soot_Mean_Calibration_Offset;
+    double Aftertreatment_1_Diesel_Particulate_Filter_Soot_Standard_Deviation_Calibration_Offset;
 } getAT1DPFSSC_t ;
 typedef struct getAT2DPFSSC {
-    uint16_t Aftertreatment_2_Diesel_Particulate_Filter_Soot_Mean_Calibration_Offset;
-    uint16_t Aftertreatment_2_Diesel_Particulate_Filter_Soot_Standard_Deviation_Calibration_Offset;
+    double Aftertreatment_2_Diesel_Particulate_Filter_Soot_Mean_Calibration_Offset;
+    double Aftertreatment_2_Diesel_Particulate_Filter_Soot_Standard_Deviation_Calibration_Offset;
 } getAT2DPFSSC_t ;
 typedef struct getLVDSOM {
     struct LVDSOM_byte1 {
@@ -271,24 +271,24 @@ typedef struct getJLCM {
     struct JLCM_byte8 bt8 ;
 } getJLCM_t ;
 typedef struct getAUXIO7 {
-    uint8_t Auxiliary_I_O_Channel_18;
-    uint8_t Auxiliary_I_O_Channel_17;
-    uint8_t Auxiliary_I_O_Channel_16;
-    uint8_t Auxiliary_I_O_Channel_15;
-    uint8_t Auxiliary_I_O_Channel_22;
-    uint8_t Auxiliary_I_O_Channel_21;
-    uint8_t Auxiliary_I_O_Channel_20;
-    uint8_t Auxiliary_I_O_Channel_19;
+    float Auxiliary_I_O_Channel_18;
+    float Auxiliary_I_O_Channel_17;
+    float Auxiliary_I_O_Channel_16;
+    float Auxiliary_I_O_Channel_15;
+    float Auxiliary_I_O_Channel_22;
+    float Auxiliary_I_O_Channel_21;
+    float Auxiliary_I_O_Channel_20;
+    float Auxiliary_I_O_Channel_19;
 } getAUXIO7_t ;
 typedef struct getAUXIO6 {
-    uint8_t Auxiliary_I_O_Channel_10;
-    uint8_t Auxiliary_I_O_Channel_9;
-    uint8_t Auxiliary_I_O_Channel_8;
-    uint8_t Auxiliary_I_O_Channel_7;
-    uint8_t Auxiliary_I_O_Channel_14;
-    uint8_t Auxiliary_I_O_Channel_13;
-    uint8_t Auxiliary_I_O_Channel_12;
-    uint8_t Auxiliary_I_O_Channel_11;
+    float Auxiliary_I_O_Channel_10;
+    float Auxiliary_I_O_Channel_9;
+    float Auxiliary_I_O_Channel_8;
+    float Auxiliary_I_O_Channel_7;
+    float Auxiliary_I_O_Channel_14;
+    float Auxiliary_I_O_Channel_13;
+    float Auxiliary_I_O_Channel_12;
+    float Auxiliary_I_O_Channel_11;
 } getAUXIO6_t ;
 typedef struct getAUXIO4 {
     struct AUXIO4_byte1 {
@@ -469,7 +469,7 @@ typedef struct getDISP1 {
         uint8_t Text_Display_Instructions:4;
     }DISP1_byte1;
     struct DISP1_byte1 bt1 ;
-    uint8_t Text_Display_Index;
+    float Text_Display_Index;
 } getDISP1_t ;
 typedef struct getFLIC {
     struct FLIC_byte1 {
@@ -482,27 +482,27 @@ typedef struct getTPRS {
         uint8_t Tire_Location:8;
     }TPRS_byte1;
     struct TPRS_byte1 bt1 ;
-    uint8_t Reference_Tire_Pressure_Setting;
+    float Reference_Tire_Pressure_Setting;
 } getTPRS_t ;
 typedef struct getCTL {
-    uint8_t Engine_Speed_Limit_Request___Minimum_Continuous;
-    uint8_t Engine_Speed_Limit_Request___Maximum_Continuous;
-    uint8_t Engine_Torque_Limit_Request___Minimum_Continuous;
-    uint8_t Engine_Torque_Limit_Request___Maximum_Continuous;
-    uint8_t Minimum_Continuous_Retarder_Speed_Limit_Request;
-    uint8_t Maximum_Continuous_Retarder_Speed_Limit_Request;
-    uint8_t Minimum_Continuous_Retarder_Torque_Limit_Request;
-    uint8_t Maximum_Continuous_Retarder_Torque_Limit_Request;
+    float Engine_Speed_Limit_Request___Minimum_Continuous;
+    float Engine_Speed_Limit_Request___Maximum_Continuous;
+    float Engine_Torque_Limit_Request___Minimum_Continuous;
+    float Engine_Torque_Limit_Request___Maximum_Continuous;
+    float Minimum_Continuous_Retarder_Speed_Limit_Request;
+    float Maximum_Continuous_Retarder_Speed_Limit_Request;
+    float Minimum_Continuous_Retarder_Torque_Limit_Request;
+    float Maximum_Continuous_Retarder_Torque_Limit_Request;
 } getCTL_t ;
 typedef struct getCL {
-    uint8_t Illumination_Brightness_Percent;
-    uint8_t Switch_Backlight_Illumination_Brightness_Percent;
+    float Illumination_Brightness_Percent;
+    float Switch_Backlight_Illumination_Brightness_Percent;
 } getCL_t ;
 typedef struct getASC6 {
-    uint16_t Level_Preset_Front_Axle_Left;
-    uint16_t Level_Preset_Front_Axle_Right;
-    uint16_t Level_Preset_Rear_Axle_Left;
-    uint16_t Level_Preset_Rear_Axle_Right;
+    double Level_Preset_Front_Axle_Left;
+    double Level_Preset_Front_Axle_Right;
+    double Level_Preset_Rear_Axle_Left;
+    double Level_Preset_Rear_Axle_Right;
 } getASC6_t ;
 typedef struct getASC2 {
     struct ASC2_byte1 {
@@ -523,9 +523,9 @@ typedef struct getASC2 {
         uint8_t Lift_Axle_2_Position_Command:2;
     }ASC2_byte3;
     struct ASC2_byte3 bt3 ;
-    uint8_t Damper_Stiffness_Request_Front_Axle;
-    uint8_t Damper_Stiffness_Request_Rear_Axle;
-    uint8_t Damper_Stiffness_Request_Lift___Tag_Axle;
+    float Damper_Stiffness_Request_Front_Axle;
+    float Damper_Stiffness_Request_Rear_Axle;
+    float Damper_Stiffness_Request_Lift___Tag_Axle;
     struct ASC2_byte7 {
         uint8_t Kneeling_Command___Front_Axle:2;
         uint8_t Kneeling_Command___Rear_Axle:2;
@@ -541,14 +541,14 @@ typedef struct getASC2 {
     struct ASC2_byte8 bt8 ;
 } getASC2_t ;
 typedef struct getTDA {
-    uint8_t Adjust_seconds;
-    uint8_t Adjust_minutes;
-    uint8_t Adjust_hours;
-    uint8_t Adjust_month;
-    uint8_t Adjust_day;
-    uint8_t Adjust_year;
-    uint8_t Adjust_local_minute_offset;
-    uint8_t Adjust_local_hour_offset;
+    float Adjust_seconds;
+    float Adjust_minutes;
+    float Adjust_hours;
+    float Adjust_month;
+    float Adjust_day;
+    float Adjust_year;
+    float Adjust_local_minute_offset;
+    float Adjust_local_hour_offset;
 } getTDA_t ;
 typedef struct getATS {
     struct ATS_byte1 {
@@ -558,7 +558,7 @@ typedef struct getATS {
         uint8_t Anti_theft_Modify_Password_States:2;
     }ATS_byte1;
     struct ATS_byte1 bt1 ;
-    uint64_t Anti_theft_Random_Number;
+    long double Anti_theft_Random_Number;
 } getATS_t ;
 typedef struct getATR {
     struct ATR_byte1 {
@@ -567,11 +567,11 @@ typedef struct getATR {
         uint8_t Anti_theft_Command_States:3;
     }ATR_byte1;
     struct ATR_byte1 bt1 ;
-    uint64_t Anti_theft_Password_Representation;
+    long double Anti_theft_Password_Representation;
 } getATR_t ;
 typedef struct getCM1 {
-    uint8_t Requested_Percent_Fan_Speed;
-    uint16_t Cab_Interior_Temperature_Command;
+    float Requested_Percent_Fan_Speed;
+    double Cab_Interior_Temperature_Command;
     struct CM1_byte4 {
         uint8_t Auxiliary_Heater_Coolant_Pump_Request:2;
         uint8_t Battery_Main_Switch_Hold_Request:2;
@@ -598,7 +598,7 @@ typedef struct getCM1 {
         uint8_t Request_Cab_Zone_Heating:2;
     }CM1_byte7;
     struct CM1_byte7 bt7 ;
-    uint8_t Selected_Maximum_Vehicle_Speed_Limit;
+    float Selected_Maximum_Vehicle_Speed_Limit;
 } getCM1_t ;
 typedef struct getERC1 {
     struct ERC1_byte1 {
@@ -607,8 +607,8 @@ typedef struct getERC1 {
         uint8_t Retarder_Enable___Shift_Assist_Switch:2;
     }ERC1_byte1;
     struct ERC1_byte1 bt1 ;
-    uint8_t Actual_Retarder___Percent_Torque;
-    uint8_t Intended_Retarder_Percent_Torque;
+    float Actual_Retarder___Percent_Torque;
+    float Intended_Retarder_Percent_Torque;
     struct ERC1_byte4 {
         uint8_t Engine_Coolant_Load_Increase:2;
         uint8_t Retarder_Requesting_Brake_Light:2;
@@ -616,10 +616,10 @@ typedef struct getERC1 {
         uint8_t Retarder_Road_Speed_Exceeded_Status:2;
     }ERC1_byte4;
     struct ERC1_byte4 bt4 ;
-    uint8_t Source_Address_of_Controlling_Device_for_Retarder_Control;
-    uint8_t Drivers_Demand_Retarder__;
-    uint8_t Retarder_Selection_non_engine;
-    uint8_t Actual_Maximum_Available_Retarder___Percent_Torque;
+    float Source_Address_of_Controlling_Device_for_Retarder_Control;
+    float Drivers_Demand_Retarder__;
+    float Retarder_Selection_non_engine;
+    float Actual_Maximum_Available_Retarder___Percent_Torque;
 } getERC1_t ;
 typedef struct getEBC1 {
     struct EBC1_byte1 {
@@ -629,7 +629,7 @@ typedef struct getEBC1 {
         uint8_t EBS_Brake_Switch:2;
     }EBC1_byte1;
     struct EBC1_byte1 bt1 ;
-    uint8_t Brake_Pedal_Position;
+    float Brake_Pedal_Position;
     struct EBC1_byte3 {
         uint8_t ABS_Off_road_Switch:2;
         uint8_t ASR_Off_road_Switch:2;
@@ -644,7 +644,7 @@ typedef struct getEBC1 {
         uint8_t Remote_Accelerator_Enable_Switch:2;
     }EBC1_byte4;
     struct EBC1_byte4 bt4 ;
-    uint8_t Engine_Retarder_Selection;
+    float Engine_Retarder_Selection;
     struct EBC1_byte6 {
         uint8_t ABS_Fully_Operational:2;
         uint8_t EBS_Red_Warning_Signal:2;
@@ -652,7 +652,7 @@ typedef struct getEBC1 {
         uint8_t ATC_ASR_Information_Signal:2;
     }EBC1_byte6;
     struct EBC1_byte6 bt6 ;
-    uint8_t Source_Address_of_Controlling_Device_for_Brake_Control;
+    float Source_Address_of_Controlling_Device_for_Brake_Control;
     struct EBC1_byte8 {
         uint8_t Halt_brake_switch:2;
         uint8_t Trailer_ABS_Status:2;
@@ -668,16 +668,16 @@ typedef struct getETC1 {
         uint8_t Transmission_Torque_Converter_Lockup_Transition_in_Process:2;
     }ETC1_byte1;
     struct ETC1_byte1 bt1 ;
-    uint16_t Transmission_Output_Shaft_Speed;
-    uint8_t Percent_Clutch_Slip;
+    double Transmission_Output_Shaft_Speed;
+    float Percent_Clutch_Slip;
     struct ETC1_byte5 {
         uint8_t Engine_Momentary_Overspeed_Enable:2;
         uint8_t Progressive_Shift_Disable:2;
         uint8_t Momentary_Engine_Maximum_Power_Enable:2;
     }ETC1_byte5;
     struct ETC1_byte5 bt5 ;
-    uint16_t Transmission_Input_Shaft_Speed;
-    uint8_t Source_Address_of_Controlling_Device_for_Transmission_Control;
+    double Transmission_Input_Shaft_Speed;
+    float Source_Address_of_Controlling_Device_for_Transmission_Control;
 } getETC1_t ;
 typedef struct getEEC2 {
     struct EEC2_byte1 {
@@ -687,10 +687,10 @@ typedef struct getEEC2 {
         uint8_t Accelerator_Pedal_2_Low_Idle_Switch:2;
     }EEC2_byte1;
     struct EEC2_byte1 bt1 ;
-    uint8_t Accelerator_Pedal_Position_1;
-    uint8_t Engine_Percent_Load_At_Current_Speed;
-    uint8_t Remote_Accelerator_Pedal_Position;
-    uint8_t Accelerator_Pedal_Position_2;
+    float Accelerator_Pedal_Position_1;
+    float Engine_Percent_Load_At_Current_Speed;
+    float Remote_Accelerator_Pedal_Position;
+    float Accelerator_Pedal_Position_2;
     struct EEC2_byte6 {
         uint8_t Vehicle_Acceleration_Rate_Limit_Status:2;
         uint8_t Momentary_Engine_Maximum_Power_Enable_Feedback:2;
@@ -698,8 +698,8 @@ typedef struct getEEC2 {
         uint8_t SCR_Thermal_Management_Active:2;
     }EEC2_byte6;
     struct EEC2_byte6 bt6 ;
-    uint8_t Actual_Maximum_Available_Engine___Percent_Torque;
-    uint8_t Estimated_Pumping___Percent_Torque;
+    float Actual_Maximum_Available_Engine___Percent_Torque;
+    float Estimated_Pumping___Percent_Torque;
 } getEEC2_t ;
 typedef struct getEEC1 {
     struct EEC1_byte1 {
@@ -707,22 +707,22 @@ typedef struct getEEC1 {
         uint8_t Actual_Engine___Percent_Torque_High_Resolution:4;
     }EEC1_byte1;
     struct EEC1_byte1 bt1 ;
-    uint8_t Driver_s_Demand_Engine___Percent_Torque;
-    uint8_t Actual_Engine___Percent_Torque;
-    uint16_t Engine_Speed;
-    uint8_t Source_Address_of_Controlling_Device_for_Engine_Control;
+    float Driver_s_Demand_Engine___Percent_Torque;
+    float Actual_Engine___Percent_Torque;
+    double Engine_Speed;
+    float Source_Address_of_Controlling_Device_for_Engine_Control;
     struct EEC1_byte7 {
         uint8_t Engine_Starter_Mode:4;
     }EEC1_byte7;
     struct EEC1_byte7 bt7 ;
-    uint8_t Engine_Demand__Percent_Torque;
+    float Engine_Demand__Percent_Torque;
 } getEEC1_t ;
 typedef struct getETC2 {
-    uint8_t Transmission_Selected_Gear;
-    uint16_t Transmission_Actual_Gear_Ratio;
-    uint8_t Transmission_Current_Gear;
-    uint16_t Transmission_Requested_Range;
-    uint16_t Transmission_Current_Range;
+    float Transmission_Selected_Gear;
+    double Transmission_Actual_Gear_Ratio;
+    float Transmission_Current_Gear;
+    double Transmission_Requested_Range;
+    double Transmission_Current_Range;
 } getETC2_t ;
 typedef struct getEAC1 {
     struct EAC1_byte1 {
@@ -758,7 +758,7 @@ typedef struct getFLI1 {
     struct FLI1_byte1 bt1 ;
 } getFLI1_t ;
 typedef struct getHPG {
-    uint16_t Hydraulic_Pressure;
+    double Hydraulic_Pressure;
     struct HPG_byte3 {
         uint8_t Engine_Hydraulic_Pressure_Governor_Mode_Indicator:2;
         uint8_t Engine_Hydraulic_Pressure_Governor_Switch:2;
@@ -767,23 +767,23 @@ typedef struct getHPG {
     struct HPG_byte3 bt3 ;
 } getHPG_t ;
 typedef struct getVDC2 {
-    uint16_t Steering_Wheel_Angle;
+    double Steering_Wheel_Angle;
     struct VDC2_byte3 {
         uint8_t Steering_Wheel_Turn_Counter:6;
         uint8_t Steering_Wheel_Angle_Sensor_Type:2;
     }VDC2_byte3;
     struct VDC2_byte3 bt3 ;
-    uint16_t Yaw_Rate;
-    uint16_t Lateral_Acceleration;
-    uint8_t Longitudinal_Acceleration;
+    double Yaw_Rate;
+    double Lateral_Acceleration;
+    float Longitudinal_Acceleration;
 } getVDC2_t ;
 typedef struct getEGF1 {
-    uint16_t Engine_Exhaust_Gas_Recirculation_1__EGR1__Mass_Flow_Rate;
-    uint16_t Engine_Intake_Air_Mass_Flow_Rate;
-    uint16_t Engine_Exhaust_Gas_Recirculation_2__EGR2__Mass_Flow_Rate;
+    double Engine_Exhaust_Gas_Recirculation_1__EGR1__Mass_Flow_Rate;
+    double Engine_Intake_Air_Mass_Flow_Rate;
+    double Engine_Exhaust_Gas_Recirculation_2__EGR2__Mass_Flow_Rate;
 } getEGF1_t ;
 typedef struct getESC1 {
-    uint16_t Actual_Inner_wheel_steering_angle;
+    double Actual_Inner_wheel_steering_angle;
     struct ESC1_byte3 {
         uint8_t Axle_Location:8;
     }ESC1_byte3;
@@ -804,8 +804,8 @@ typedef struct getESC1 {
     struct ESC1_byte6 bt6 ;
 } getESC1_t ;
 typedef struct getETC8 {
-    uint16_t Transmission_Torque_Converter_Ratio;
-    uint16_t Transmission_Clutch_Converter_Input_Speed;
+    double Transmission_Torque_Converter_Ratio;
+    double Transmission_Clutch_Converter_Input_Speed;
 } getETC8_t ;
 typedef struct getLOI {
     struct LOI_byte1 {
@@ -836,8 +836,8 @@ typedef struct getLOI {
     struct LOI_byte5 bt5 ;
 } getLOI_t ;
 typedef struct getAT1IG1 {
-    uint16_t Aftertreatment_1_Intake_NOx;
-    uint16_t Aftertreatment_1_Intake_O2;
+    double Aftertreatment_1_Intake_NOx;
+    double Aftertreatment_1_Intake_O2;
     struct AT1IG1_byte5 {
         uint8_t Aftertreatment_1_Intake_Gas_Sensor_Power_Status:2;
         uint8_t Aftertreatment_1_Intake_Gas_Sensor_at_Temperature:2;
@@ -861,8 +861,8 @@ typedef struct getAT1IG1 {
     struct AT1IG1_byte8 bt8 ;
 } getAT1IG1_t ;
 typedef struct getAT1OG1 {
-    uint16_t Aftertreatment_1_Outlet_NOx;
-    uint16_t Aftertreatment_1_Outlet_O2;
+    double Aftertreatment_1_Outlet_NOx;
+    double Aftertreatment_1_Outlet_O2;
     struct AT1OG1_byte5 {
         uint8_t Aftertreatment_1_Outlet_Gas_Sensor_Power_Status:2;
         uint8_t Aftertreatment_1_Outlet_Gas_Sensor_at_Temperature:2;
@@ -886,8 +886,8 @@ typedef struct getAT1OG1 {
     struct AT1OG1_byte8 bt8 ;
 } getAT1OG1_t ;
 typedef struct getAT2IG1 {
-    uint16_t Aftertreatment_2_Intake_NOx;
-    uint16_t Aftertreatment_2_Intake_O2;
+    double Aftertreatment_2_Intake_NOx;
+    double Aftertreatment_2_Intake_O2;
     struct AT2IG1_byte5 {
         uint8_t Aftertreatment_2_Intake_Gas_Sensor_Power_Status:2;
         uint8_t Aftertreatment_2_Intake_Gas_Sensor_at_Temperature:2;
@@ -911,8 +911,8 @@ typedef struct getAT2IG1 {
     struct AT2IG1_byte8 bt8 ;
 } getAT2IG1_t ;
 typedef struct getAT2OG1 {
-    uint16_t Aftertreatment_2_Outlet_NOx;
-    uint16_t Aftertreatment_2_Outlet_O2;
+    double Aftertreatment_2_Outlet_NOx;
+    double Aftertreatment_2_Outlet_O2;
     struct AT2OG1_byte5 {
         uint8_t Aftertreatment_2_Outlet_Gas_Sensor_Power_Status:2;
         uint8_t Aftertreatment_2_Outlet_Gas_Sensor_at_Temperature:2;
@@ -936,18 +936,18 @@ typedef struct getAT2OG1 {
     struct AT2OG1_byte8 bt8 ;
 } getAT2OG1_t ;
 typedef struct getFWSS1 {
-    uint16_t Fifth_Wheel_Vertical_Force;
-    uint16_t Fifth_Wheel_Drawbar_Force;
-    uint16_t Fifth_Wheel_Roll_Moment;
+    double Fifth_Wheel_Vertical_Force;
+    double Fifth_Wheel_Drawbar_Force;
+    double Fifth_Wheel_Roll_Moment;
     struct FWSS1_byte7 {
         uint8_t Fifth_Wheel_Roll_Warning_Indicator:2;
     }FWSS1_byte7;
     struct FWSS1_byte7 bt7 ;
 } getFWSS1_t ;
 typedef struct getSSI {
-    uint16_t Pitch_Angle;
-    uint16_t Roll_Angle;
-    uint16_t Pitch_Rate;
+    double Pitch_Angle;
+    double Roll_Angle;
+    double Pitch_Rate;
     struct SSI_byte7 {
         uint8_t Pitch_Angle_Figure_of_Merit:2;
         uint8_t Roll_Angle_Figure_of_Merit:2;
@@ -955,12 +955,12 @@ typedef struct getSSI {
         uint8_t Pitch_and_Roll_Compensated:2;
     }SSI_byte7;
     struct SSI_byte7 bt7 ;
-    uint8_t Roll_and_Pitch_Measurement_Latency;
+    float Roll_and_Pitch_Measurement_Latency;
 } getSSI_t ;
 typedef struct getBI {
-    uint16_t Relative_Blade_Height;
-    uint16_t Blade_Rotation_Angle;
-    uint8_t Relative_Blade_Height_and_Blade_Rotation_Angle_Measurement_Latency;
+    double Relative_Blade_Height;
+    double Blade_Rotation_Angle;
+    float Relative_Blade_Height_and_Blade_Rotation_Angle_Measurement_Latency;
     struct BI_byte6 {
         uint8_t Relative_Blade_Height_Figure_of_Merit:2;
         uint8_t Blade_Rotation_Angle_Figure_of_Merit:2;
@@ -1012,49 +1012,49 @@ typedef struct getCCS {
     struct CCS_byte6 bt6 ;
 } getCCS_t ;
 typedef struct getKL1 {
-    uint8_t Engine_Cylinder_1_Knock_Level;
-    uint8_t Engine_Cylinder_2_Knock_Level;
-    uint8_t Engine_Cylinder_3_Knock_Level;
-    uint8_t Engine_Cylinder_4_Knock_Level;
-    uint8_t Engine_Cylinder_5_Knock_Level;
-    uint8_t Engine_Cylinder_6_Knock_Level;
-    uint8_t Engine_Cylinder_7_Knock_Level;
-    uint8_t Engine_Cylinder_8_Knock_Level;
+    float Engine_Cylinder_1_Knock_Level;
+    float Engine_Cylinder_2_Knock_Level;
+    float Engine_Cylinder_3_Knock_Level;
+    float Engine_Cylinder_4_Knock_Level;
+    float Engine_Cylinder_5_Knock_Level;
+    float Engine_Cylinder_6_Knock_Level;
+    float Engine_Cylinder_7_Knock_Level;
+    float Engine_Cylinder_8_Knock_Level;
 } getKL1_t ;
 typedef struct getKL2 {
-    uint8_t Engine_Cylinder_9_Knock_Level;
-    uint8_t Engine_Cylinder_10_Knock_Level;
-    uint8_t Engine_Cylinder_11_Knock_Level;
-    uint8_t Engine_Cylinder_12_Knock_Level;
-    uint8_t Engine_Cylinder_13_Knock_Level;
-    uint8_t Engine_Cylinder_14_Knock_Level;
-    uint8_t Engine_Cylinder_15_Knock_Level;
-    uint8_t Engine_Cylinder_16_Knock_Level;
+    float Engine_Cylinder_9_Knock_Level;
+    float Engine_Cylinder_10_Knock_Level;
+    float Engine_Cylinder_11_Knock_Level;
+    float Engine_Cylinder_12_Knock_Level;
+    float Engine_Cylinder_13_Knock_Level;
+    float Engine_Cylinder_14_Knock_Level;
+    float Engine_Cylinder_15_Knock_Level;
+    float Engine_Cylinder_16_Knock_Level;
 } getKL2_t ;
 typedef struct getKL3 {
-    uint8_t Engine_Cylinder_17_Knock_Level;
-    uint8_t Engine_Cylinder_18_Knock_Level;
-    uint8_t Engine_Cylinder_19_Knock_Level;
-    uint8_t Engine_Cylinder_20_Knock_Level;
-    uint8_t Engine_Cylinder_21_Knock_Level;
-    uint8_t Engine_Cylinder_22_Knock_Level;
-    uint8_t Engine_Cylinder_23_Knock_Level;
-    uint8_t Engine_Cylinder_24_Knock_Level;
+    float Engine_Cylinder_17_Knock_Level;
+    float Engine_Cylinder_18_Knock_Level;
+    float Engine_Cylinder_19_Knock_Level;
+    float Engine_Cylinder_20_Knock_Level;
+    float Engine_Cylinder_21_Knock_Level;
+    float Engine_Cylinder_22_Knock_Level;
+    float Engine_Cylinder_23_Knock_Level;
+    float Engine_Cylinder_24_Knock_Level;
 } getKL3_t ;
 typedef struct getTFAC {
-    uint16_t Engine_Throttle_Actuator_1_Control_Command;
-    uint16_t Engine_Throttle_Actuator_2_Control_Command;
-    uint16_t Engine_Fuel_Actuator_1_Control_Command;
-    uint16_t Engine_Fuel_Actuator_2_Control_Command;
+    double Engine_Throttle_Actuator_1_Control_Command;
+    double Engine_Throttle_Actuator_2_Control_Command;
+    double Engine_Fuel_Actuator_1_Control_Command;
+    double Engine_Fuel_Actuator_2_Control_Command;
 } getTFAC_t ;
 typedef struct getSAS {
-    uint16_t Steering_Wheel_Angle;
+    double Steering_Wheel_Angle;
     struct SAS_byte3 {
         uint8_t Steering_Wheel_Angle_Range_Counter:6;
         uint8_t Steering_Wheel_Angle_Range_Counter_Type:2;
     }SAS_byte3;
     struct SAS_byte3 bt3 ;
-    uint16_t Steering_Wheel_Angle_Range;
+    double Steering_Wheel_Angle_Range;
     struct SAS_byte7 {
         uint8_t Steering_Angle_Sensor_Active_Mode:2;
         uint8_t Steering_Angle_Sensor_Calibrated:2;
@@ -1067,9 +1067,9 @@ typedef struct getSAS {
     struct SAS_byte8 bt8 ;
 } getSAS_t ;
 typedef struct getESSI {
-    uint16_t Engine_Speed_1;
-    uint16_t Engine_Speed_2;
-    uint16_t Engine_Speed_3;
+    double Engine_Speed_1;
+    double Engine_Speed_2;
+    double Engine_Speed_3;
     struct ESSI_byte7 {
         uint8_t Engine_Speed_Sensor_3_Timing_Pattern_Status:2;
         uint8_t Engine_Speed_Sensor_2_Timing_Pattern_Status:2;
@@ -1078,24 +1078,24 @@ typedef struct getESSI {
     struct ESSI_byte7 bt7 ;
 } getESSI_t ;
 typedef struct getA1SCRDSI1 {
-    uint16_t Aftertreatment_1_Diesel_Exhaust_Fluid_Actual_Dosing_Quantity;
+    double Aftertreatment_1_Diesel_Exhaust_Fluid_Actual_Dosing_Quantity;
     struct A1SCRDSI1_byte3 {
         uint8_t Aftertreatment_1_SCR_System_State:4;
     }A1SCRDSI1_byte3;
     struct A1SCRDSI1_byte3 bt3 ;
-    uint16_t Aftertreatment_1_Diesel_Exhaust_Fluid_Actual_Quantity_of_Integrator;
-    uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Doser_Absolute_Pressure;
+    double Aftertreatment_1_Diesel_Exhaust_Fluid_Actual_Quantity_of_Integrator;
+    float Aftertreatment_1_Diesel_Exhaust_Fluid_Doser_Absolute_Pressure;
 } getA1SCRDSI1_t ;
 typedef struct getA1SCRDSR1 {
-    uint16_t Aftertreatment_1_Diesel_Exhaust_Fluid_Dosing_Requested_Quantity;
+    double Aftertreatment_1_Diesel_Exhaust_Fluid_Dosing_Requested_Quantity;
     struct A1SCRDSR1_byte3 {
         uint8_t Aftertreatment_1_SCR_System_Requested_State:4;
     }A1SCRDSR1_byte3;
     struct A1SCRDSR1_byte3 bt3 ;
-    uint16_t Aftertreatment_1_Diesel_Exhaust_Fluid_Requested_Quantity_of_Integrator;
+    double Aftertreatment_1_Diesel_Exhaust_Fluid_Requested_Quantity_of_Integrator;
 } getA1SCRDSR1_t ;
 typedef struct getA1SCRAI {
-    uint16_t Aftertreatment_1_Outlet_NH3;
+    double Aftertreatment_1_Outlet_NH3;
     struct A1SCRAI_byte3 {
         uint8_t Aftertreatment_1_Outlet_NH3_Sensor_Preliminary_FMI:5;
     }A1SCRAI_byte3;
@@ -1116,24 +1116,24 @@ typedef struct getA1SCRAI {
     struct A1SCRAI_byte6 bt6 ;
 } getA1SCRAI_t ;
 typedef struct getA2SCRDSI1 {
-    uint16_t Aftertreatment_2_Diesel_Exhaust_Fluid_Actual_Dosing_Quantity;
+    double Aftertreatment_2_Diesel_Exhaust_Fluid_Actual_Dosing_Quantity;
     struct A2SCRDSI1_byte3 {
         uint8_t Aftertreatment_2_SCR_System_State:4;
     }A2SCRDSI1_byte3;
     struct A2SCRDSI1_byte3 bt3 ;
-    uint16_t Aftertreatment_2_Diesel_Exhaust_Fluid_Actual_Quantity_of_Integrator;
-    uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Dosing_Absolute_Pressure;
+    double Aftertreatment_2_Diesel_Exhaust_Fluid_Actual_Quantity_of_Integrator;
+    float Aftertreatment_2_Diesel_Exhaust_Fluid_Dosing_Absolute_Pressure;
 } getA2SCRDSI1_t ;
 typedef struct getA2SCRDSR1 {
-    uint16_t Aftertreatment_2_Diesel_Exhaust_Fluid_Dosing_Requested_Quantity;
+    double Aftertreatment_2_Diesel_Exhaust_Fluid_Dosing_Requested_Quantity;
     struct A2SCRDSR1_byte3 {
         uint8_t Aftertreatment_2_SCR_System_Requested_State:4;
     }A2SCRDSR1_byte3;
     struct A2SCRDSR1_byte3 bt3 ;
-    uint16_t Aftertreatment_2_Diesel_Exhaust_Fluid_Requested_Quantity_of_Integrator;
+    double Aftertreatment_2_Diesel_Exhaust_Fluid_Requested_Quantity_of_Integrator;
 } getA2SCRDSR1_t ;
 typedef struct getA2SCRAI {
-    uint16_t Aftertreatment_2_Outlet_NH3;
+    double Aftertreatment_2_Outlet_NH3;
     struct A2SCRAI_byte3 {
         uint8_t Aftertreatment_2_Outlet_NH3_Sensor_Preliminary_FMI:5;
     }A2SCRAI_byte3;
@@ -1154,8 +1154,8 @@ typedef struct getA2SCRAI {
     struct A2SCRAI_byte6 bt6 ;
 } getA2SCRAI_t ;
 typedef struct getSSI2 {
-    uint32_t Pitch_Angle_Extended_Range;
-    uint32_t Roll_Angle_Extended_Range;
+    long float Pitch_Angle_Extended_Range;
+    long float Roll_Angle_Extended_Range;
     struct SSI2_byte7 {
         uint8_t Pitch_Angle_Extended_Range_Compensation:2;
         uint8_t Pitch_Angle_Extended_Range_Figure_of_Merit:2;
@@ -1163,19 +1163,19 @@ typedef struct getSSI2 {
         uint8_t Roll_Angle_Extended_Range_Figure_of_Merit:2;
     }SSI2_byte7;
     struct SSI2_byte7 bt7 ;
-    uint8_t Roll_and_Pitch_Extended_Range_Measurement_Latency;
+    float Roll_and_Pitch_Extended_Range_Measurement_Latency;
 } getSSI2_t ;
 typedef struct getARI {
-    uint16_t Pitch_Rate_Extended_Range;
-    uint16_t Roll_Rate_Extended_Range;
-    uint16_t Yaw_Rate_Extended_Range;
+    double Pitch_Rate_Extended_Range;
+    double Roll_Rate_Extended_Range;
+    double Yaw_Rate_Extended_Range;
     struct ARI_byte7 {
         uint8_t Pitch_Rate_Extended_Range_Figure_of_Merit:2;
         uint8_t Roll_Rate_Extended_Range_Figure_of_Merit:2;
         uint8_t Yaw_Rate_Extended_Range_Figure_of_Merit:2;
     }ARI_byte7;
     struct ARI_byte7 bt7 ;
-    uint8_t Angular_Rate_Measurement_Latency;
+    float Angular_Rate_Measurement_Latency;
 } getARI_t ;
 typedef struct getCN {
     struct CN_byte1 {
@@ -1189,8 +1189,8 @@ typedef struct getCN {
     struct CN_byte8 bt8 ;
 } getCN_t ;
 typedef struct getMSI2 {
-    uint16_t Magnet_Forward_Current;
-    uint8_t Magnet_Reverse_Current;
+    double Magnet_Forward_Current;
+    float Magnet_Reverse_Current;
     struct MSI2_byte4 {
         uint8_t Material_Lift_Switch:2;
         uint8_t Material_Drop_Switch:2;
@@ -1207,9 +1207,9 @@ typedef struct getMSI2 {
     struct MSI2_byte5 bt5 ;
 } getMSI2_t ;
 typedef struct getACCS {
-    uint16_t Lateral_Acceleration_Extended_Range;
-    uint16_t Longitudinal_Acceleration_Extended_Range;
-    uint16_t Vertical_Acceleration_Extended_Range;
+    double Lateral_Acceleration_Extended_Range;
+    double Longitudinal_Acceleration_Extended_Range;
+    double Vertical_Acceleration_Extended_Range;
     struct ACCS_byte7 {
         uint8_t Lateral_Acceleration_Extended_Range_Figure_of_Merit:2;
         uint8_t Longitudinal_Acceleration_Extended_Range_Figure_of_Merit:2;
@@ -1219,9 +1219,9 @@ typedef struct getACCS {
     struct ACCS_byte7 bt7 ;
 } getACCS_t ;
 typedef struct getCommand {
-    uint16_t Engine_Turbocharger_Wastegate_Actuator_1_Command;
-    uint16_t Engine_Turbocharger_Wastegate_Actuator_2_Command;
-    uint16_t Engine_Exhaust_Back_Pressure_Regulator_Control_Command;
+    double Engine_Turbocharger_Wastegate_Actuator_1_Command;
+    double Engine_Turbocharger_Wastegate_Actuator_2_Command;
+    double Engine_Exhaust_Back_Pressure_Regulator_Control_Command;
 } getCommand_t ;
 typedef struct getAEBS1 {
     struct AEBS1_byte1 {
@@ -1234,33 +1234,33 @@ typedef struct getAEBS1 {
         uint8_t Bend_off_probability_of_relevant_object:3;
     }AEBS1_byte2;
     struct AEBS1_byte2 bt2 ;
-    uint8_t Time_to_collision_with_relevant_object;
+    float Time_to_collision_with_relevant_object;
 } getAEBS1_t ;
 typedef struct getWS {
-    uint16_t Wireless_Rolling_Message_Counter;
+    double Wireless_Rolling_Message_Counter;
     struct WS_byte3 {
         uint8_t Transmitter_Command_State:4;
     }WS_byte3;
     struct WS_byte3 bt3 ;
-    uint32_t Transmitter_ID_1;
-    uint8_t Wireless_Signal_Strength_1;
+    long float Transmitter_ID_1;
+    float Wireless_Signal_Strength_1;
 } getWS_t ;
 typedef struct getWAND {
-    uint16_t Wand_Angle;
+    double Wand_Angle;
     struct WAND_byte3 {
         uint8_t Wand_Sensor_Figure_of_Merit:2;
     }WAND_byte3;
     struct WAND_byte3 bt3 ;
 } getWAND_t ;
 typedef struct getLDISP {
-    uint16_t Measured_Linear_Displacement;
+    double Measured_Linear_Displacement;
     struct LDISP_byte3 {
         uint8_t Linear_Displacement_Sensor_Sensor_Figure_of_Merit:2;
     }LDISP_byte3;
     struct LDISP_byte3 bt3 ;
 } getLDISP_t ;
 typedef struct getA1SCRAI2 {
-    uint16_t Aftertreatment_1_SCR_Intermediate_NH3;
+    double Aftertreatment_1_SCR_Intermediate_NH3;
     struct A1SCRAI2_byte3 {
         uint8_t Aftertreatment_1_SCR_Intermediate_NH3_Sensor_Preliminary_FMI:5;
     }A1SCRAI2_byte3;
@@ -1281,7 +1281,7 @@ typedef struct getA1SCRAI2 {
     struct A1SCRAI2_byte6 bt6 ;
 } getA1SCRAI2_t ;
 typedef struct getA2SCRAI2 {
-    uint16_t Aftertreatment_2_SCR_Intermediate_NH3;
+    double Aftertreatment_2_SCR_Intermediate_NH3;
     struct A2SCRAI2_byte3 {
         uint8_t Aftertreatment_2_SCR_Intermediate_NH3_Sensor_Preliminary_FMI:5;
     }A2SCRAI2_byte3;
@@ -1310,17 +1310,17 @@ typedef struct getHSS {
     struct HSS_byte1 bt1 ;
 } getHSS_t ;
 typedef struct getGFI4 {
-    uint16_t Supply_Gas_Methane_Percentage;
+    double Supply_Gas_Methane_Percentage;
 } getGFI4_t ;
 typedef struct getA2SCREGT2 {
-    uint16_t Aftertreatment_2_SCR_Intermediate_Gas_Temperature;
+    double Aftertreatment_2_SCR_Intermediate_Gas_Temperature;
     struct A2SCREGT2_byte3 {
         uint8_t Aftertreatment_2_SCR_Intermediate_Gas_Temperature_Preliminary_FMI:5;
     }A2SCREGT2_byte3;
     struct A2SCREGT2_byte3 bt3 ;
 } getA2SCREGT2_t ;
 typedef struct getA1SCREGT2 {
-    uint16_t Aftertreatment_1_SCR_Intermediate_Gas_Temperature;
+    double Aftertreatment_1_SCR_Intermediate_Gas_Temperature;
     struct A1SCREGT2_byte3 {
         uint8_t Aftertreatment_1_SCR_Intermediate_Gas_Temperature_Preliminary_FMI:5;
     }A1SCREGT2_byte3;
@@ -1335,11 +1335,11 @@ typedef struct getEEC13 {
     struct EEC13_byte1 bt1 ;
 } getEEC13_t ;
 typedef struct getEF_TVI2 {
-    uint8_t Engine_Throttle_Valve_1_Temperature;
-    uint8_t Engine_Throttle_Valve_2_Temperature;
-    uint8_t Engine_Fuel_Valve_1_Temperature;
-    uint8_t Engine_Fuel_Valve_2_Temperature;
-    uint8_t Engine_Turbocharger_Wastegate_Actuator_2_Temperature;
+    float Engine_Throttle_Valve_1_Temperature;
+    float Engine_Throttle_Valve_2_Temperature;
+    float Engine_Fuel_Valve_1_Temperature;
+    float Engine_Fuel_Valve_2_Temperature;
+    float Engine_Turbocharger_Wastegate_Actuator_2_Temperature;
 } getEF_TVI2_t ;
 typedef struct getEEGR1A {
     struct EEGR1A_byte1 {
@@ -1347,15 +1347,15 @@ typedef struct getEEGR1A {
         uint8_t Engine_Exhaust_Gas_Recirculation_2_Actuator_1_Temperature_Status:3;
     }EEGR1A_byte1;
     struct EEGR1A_byte1 bt1 ;
-    uint8_t Engine_Exhaust_Gas_Recirculation_2_Actuator_1_Temperature;
-    uint8_t Engine_Exhaust_Gas_Recirculation_2_Actuator_1_Desired_Position;
+    float Engine_Exhaust_Gas_Recirculation_2_Actuator_1_Temperature;
+    float Engine_Exhaust_Gas_Recirculation_2_Actuator_1_Desired_Position;
     struct EEGR1A_byte4 {
         uint8_t Engine_Exhaust_Gas_Recirculation_2_Actuator_2_Preliminary_FMI:5;
         uint8_t Engine_Exhaust_Gas_Recirculation_2_Actuator_2_Temperature_Status:3;
     }EEGR1A_byte4;
     struct EEGR1A_byte4 bt4 ;
-    uint8_t Engine_Exhaust_Gas_Recirculation_2_Actuator_2_Temperature;
-    uint8_t Engine_Exhaust_Gas_Recirculation_2_Actuator_2_Desired_Position;
+    float Engine_Exhaust_Gas_Recirculation_2_Actuator_2_Temperature;
+    float Engine_Exhaust_Gas_Recirculation_2_Actuator_2_Desired_Position;
     struct EEGR1A_byte7 {
         uint8_t Engine_Exhaust_Gas_Recirculation_2_Actuator_1_Operation_Status:4;
         uint8_t Engine_Exhaust_Gas_Recirculation_2_Actuator_2_Operation_Status:4;
@@ -1368,15 +1368,15 @@ typedef struct getEEGR1B {
         uint8_t Engine_Exhaust_Gas_Recirculation_1_Actuator_1_Temperature_Status:3;
     }EEGR1B_byte1;
     struct EEGR1B_byte1 bt1 ;
-    uint8_t Engine_Exhaust_Gas_Recirculation_1_Actuator_1_Temperature;
-    uint8_t Engine_Exhaust_Gas_Recirculation_1_Actuator_1_Desired_Position;
+    float Engine_Exhaust_Gas_Recirculation_1_Actuator_1_Temperature;
+    float Engine_Exhaust_Gas_Recirculation_1_Actuator_1_Desired_Position;
     struct EEGR1B_byte4 {
         uint8_t Engine_Exhaust_Gas_Recirculation_1_Actuator_2_Preliminary_FMI:5;
         uint8_t Engine_Exhaust_Gas_Recirculation_1_Actuator_2_Temperature_Status:3;
     }EEGR1B_byte4;
     struct EEGR1B_byte4 bt4 ;
-    uint8_t Engine_Exhaust_Gas_Recirculation_1_Actuator_2_Temperature;
-    uint8_t Engine_Exhaust_Gas_Recirculation_1_Actuator_2_Desired_Position;
+    float Engine_Exhaust_Gas_Recirculation_1_Actuator_2_Temperature;
+    float Engine_Exhaust_Gas_Recirculation_1_Actuator_2_Desired_Position;
     struct EEGR1B_byte7 {
         uint8_t Engine_Exhaust_Gas_Recirculation_1_Actuator_1_Operation_Status:4;
         uint8_t Engine_Exhaust_Gas_Recirculation_1_Actuator_2_Operation_Status:4;
@@ -1405,47 +1405,47 @@ typedef struct getNSSR {
     struct NSSR_byte2 bt2 ;
 } getNSSR_t ;
 typedef struct getEPSI {
-    uint16_t Aftertreatment_1_Particulate_Sensor;
-    uint16_t Aftertreatment_2_Particulate_Sensor;
+    double Aftertreatment_1_Particulate_Sensor;
+    double Aftertreatment_2_Particulate_Sensor;
 } getEPSI_t ;
 typedef struct getAT1P1I {
-    uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Pump_Heater;
+    float Aftertreatment_1_Diesel_Exhaust_Fluid_Pump_Heater;
 } getAT1P1I_t ;
 typedef struct getAT1DPF2S5 {
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Analysis_Frequency_3;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Frequency_3_Soot_Signal;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Analysis_Frequency_4;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Frequency_4_Soot_Signal;
+    double Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Analysis_Frequency_3;
+    double Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Frequency_3_Soot_Signal;
+    double Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Analysis_Frequency_4;
+    double Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Frequency_4_Soot_Signal;
 } getAT1DPF2S5_t ;
 typedef struct getAT1DPF2S4 {
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Analysis_Frequency_1;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Frequency_1_Soot_Signal;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Analysis_Frequency_2;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Frequency_2_Soot_Signal;
+    double Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Analysis_Frequency_1;
+    double Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Frequency_1_Soot_Signal;
+    double Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Analysis_Frequency_2;
+    double Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Frequency_2_Soot_Signal;
 } getAT1DPF2S4_t ;
 typedef struct getAT1DPF2S3 {
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Analysis_Request_Frequency_1;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Analysis_Request_Frequency_2;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Analysis_Request_Frequency_3;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Analysis_Request_Frequency_4;
+    double Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Analysis_Request_Frequency_1;
+    double Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Analysis_Request_Frequency_2;
+    double Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Analysis_Request_Frequency_3;
+    double Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Analysis_Request_Frequency_4;
 } getAT1DPF2S3_t ;
 typedef struct getAT1DPF1S5 {
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Analysis_Frequency_3;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Frequency_3_Soot_Signal;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Analysis_Frequency_4;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Frequency_4_Soot_Signal;
+    double Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Analysis_Frequency_3;
+    double Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Frequency_3_Soot_Signal;
+    double Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Analysis_Frequency_4;
+    double Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Frequency_4_Soot_Signal;
 } getAT1DPF1S5_t ;
 typedef struct getAT1DPF1S4 {
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Analysis_Frequency_1;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Frequency_1_Soot_Signal;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Analysis_Frequency_2;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Frequency_2_Soot_Signal;
+    double Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Analysis_Frequency_1;
+    double Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Frequency_1_Soot_Signal;
+    double Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Analysis_Frequency_2;
+    double Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Frequency_2_Soot_Signal;
 } getAT1DPF1S4_t ;
 typedef struct getAT1DPF1S3 {
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Analysis_Request_Frequency_1;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Analysis_Request_Frequency_2;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Analysis_Request_Frequency_3;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Analysis_Request_Frequency_4;
+    double Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Analysis_Request_Frequency_1;
+    double Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Analysis_Request_Frequency_2;
+    double Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Analysis_Request_Frequency_3;
+    double Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Analysis_Request_Frequency_4;
 } getAT1DPF1S3_t ;
 typedef struct getCCVS3 {
     struct CCVS3_byte1 {
@@ -1453,29 +1453,29 @@ typedef struct getCCVS3 {
         uint8_t Cruise_Control_System_Command_State:3;
     }CCVS3_byte1;
     struct CCVS3_byte1 bt1 ;
-    uint8_t Source_Address_of_Controlling_Device_for_Disabling_Cruise_Control;
-    uint8_t Source_Address_of_Controlling_Device_for_Pausing_Cruise_Control;
+    float Source_Address_of_Controlling_Device_for_Disabling_Cruise_Control;
+    float Source_Address_of_Controlling_Device_for_Pausing_Cruise_Control;
 } getCCVS3_t ;
 typedef struct getAT2AC3 {
-    uint16_t Aftertreatment_2_Secondary_Air_Absolute_Pressure;
+    double Aftertreatment_2_Secondary_Air_Absolute_Pressure;
 } getAT2AC3_t ;
 typedef struct getAT1AC3 {
-    uint16_t Aftertreatment_1_Secondary_Air_Absolute_Pressure;
+    double Aftertreatment_1_Secondary_Air_Absolute_Pressure;
 } getAT1AC3_t ;
 typedef struct getEFL_P12 {
-    uint8_t Engine_Fuel_Delivery_Absolute_Pressure;
-    uint8_t Engine_Filtered_Fuel_Delivery_Pressure;
-    uint8_t Engine_Filtered_Fuel_Delivery_Absolute_Pressure;
-    uint8_t Engine_Fuel_Filter_Degradation;
+    float Engine_Fuel_Delivery_Absolute_Pressure;
+    float Engine_Filtered_Fuel_Delivery_Pressure;
+    float Engine_Filtered_Fuel_Delivery_Absolute_Pressure;
+    float Engine_Fuel_Filter_Degradation;
 } getEFL_P12_t ;
 typedef struct getDPFC2 {
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_Intake_Temperature_Set_Point;
-    uint16_t Relative_Unburned_Fuel_Mass_from_Engine;
-    uint16_t Aftertreatment_1_Fuel_Mass_Rate;
-    uint16_t Aftertreatment_2_Fuel_Mass_Rate;
+    double Aftertreatment_1_Diesel_Particulate_Filter_Intake_Temperature_Set_Point;
+    double Relative_Unburned_Fuel_Mass_from_Engine;
+    double Aftertreatment_1_Fuel_Mass_Rate;
+    double Aftertreatment_2_Fuel_Mass_Rate;
 } getDPFC2_t ;
 typedef struct getLFE2 {
-    uint32_t High_Resolution_Engine_Fuel_Rate;
+    long float High_Resolution_Engine_Fuel_Rate;
 } getLFE2_t ;
 typedef struct getSFS {
     struct SFS_byte1 {
@@ -1489,29 +1489,29 @@ typedef struct getSFS {
         uint8_t Supplemental_Fan_Drive_Status:4;
     }SFS_byte2;
     struct SFS_byte2 bt2 ;
-    uint8_t Supplemental_Fan_Controller_ECU_Temperature;
-    uint16_t Supplemental_Fan_Speed;
-    uint8_t Supplemental_Fan_Current;
-    uint16_t Supplemental_Fan_Power;
+    float Supplemental_Fan_Controller_ECU_Temperature;
+    double Supplemental_Fan_Speed;
+    float Supplemental_Fan_Current;
+    double Supplemental_Fan_Power;
 } getSFS_t ;
 typedef struct getEBCC {
-    uint8_t Engine_Turbocharger_1_Turbine_Outlet_Pressure;
-    uint8_t Desired_Engine_Turbocharger_1_Turbine_Outlet_Pressure;
-    uint8_t Engine_Exhaust_Brake_Actuator_Command;
-    uint8_t Engine_Turbocharger_2_Turbine_Outlet_Pressure;
-    uint8_t Desired_Engine_Turbocharger_2_Turbine_Outlet_Pressure;
+    float Engine_Turbocharger_1_Turbine_Outlet_Pressure;
+    float Desired_Engine_Turbocharger_1_Turbine_Outlet_Pressure;
+    float Engine_Exhaust_Brake_Actuator_Command;
+    float Engine_Turbocharger_2_Turbine_Outlet_Pressure;
+    float Desired_Engine_Turbocharger_2_Turbine_Outlet_Pressure;
 } getEBCC_t ;
 typedef struct getEFP {
-    uint16_t Engine_Fuel_Dynamic_Viscosity;
-    uint16_t Engine_Fuel_Density;
-    uint16_t Engine_Fuel_Dielectricity__high_resolution_;
-    uint16_t Engine_Fuel_Temperature__High_Resolution_;
+    double Engine_Fuel_Dynamic_Viscosity;
+    double Engine_Fuel_Density;
+    double Engine_Fuel_Dielectricity__high_resolution_;
+    double Engine_Fuel_Temperature__High_Resolution_;
 } getEFP_t ;
 typedef struct getHOP {
-    uint16_t Hydraulic_Oil_Dynamic_Viscosity;
-    uint16_t Hydraulic_Oil_Density;
-    uint16_t Hydraulic_Oil_Relative_Dielectricity__high_resolution_;
-    uint16_t Hydraulic_Oil_Temperature__High_Resolution_;
+    double Hydraulic_Oil_Dynamic_Viscosity;
+    double Hydraulic_Oil_Density;
+    double Hydraulic_Oil_Relative_Dielectricity__high_resolution_;
+    double Hydraulic_Oil_Temperature__High_Resolution_;
 } getHOP_t ;
 typedef struct getVLS2 {
     struct VLS2_byte1 {
@@ -1528,13 +1528,13 @@ typedef struct getVLS2 {
     struct VLS2_byte2 bt2 ;
 } getVLS2_t ;
 typedef struct getEC3 {
-    uint8_t Engine_Friction_Percent_Torque_At_Idle_Point_1;
-    uint8_t Engine_Friction_Percent_Torque_Point_2;
-    uint8_t Engine_Friction_Percent_Torque_Point_3;
-    uint8_t Engine_Friction_Percent_Torque_Point_4;
-    uint8_t Engine_Friction_Percent_Torque_Point_5;
-    uint8_t Engine_Friction_Percent_Torque_Point_6;
-    uint8_t Engine_Friction_Percent_Torque_Point_7;
+    float Engine_Friction_Percent_Torque_At_Idle_Point_1;
+    float Engine_Friction_Percent_Torque_Point_2;
+    float Engine_Friction_Percent_Torque_Point_3;
+    float Engine_Friction_Percent_Torque_Point_4;
+    float Engine_Friction_Percent_Torque_Point_5;
+    float Engine_Friction_Percent_Torque_Point_6;
+    float Engine_Friction_Percent_Torque_Point_7;
 } getEC3_t ;
 typedef struct getIVAC {
     struct IVAC_byte1 {
@@ -1553,7 +1553,7 @@ typedef struct getARMSWIMC {
     struct ARMSWIMC_byte1 bt1 ;
 } getARMSWIMC_t ;
 typedef struct getVEP4 {
-    uint16_t Hybrid_Battery_Pack_Remaining_Charge;
+    double Hybrid_Battery_Pack_Remaining_Charge;
 } getVEP4_t ;
 typedef struct getAFT2NAI {
     struct AFT2NAI_byte1 {
@@ -1570,21 +1570,21 @@ typedef struct getAFT1NAI {
     struct AFT1NAI_byte1 bt1 ;
 } getAFT1NAI_t ;
 typedef struct getAT2WUDOC {
-    uint16_t Aftertreatment_2_Warm_Up_Diesel_Oxidation_Catalyst_Intake_Temperature;
-    uint16_t Aftertreatment_2_Warm_Up_Diesel_Oxidation_Catalyst_Outlet_Temperature;
+    double Aftertreatment_2_Warm_Up_Diesel_Oxidation_Catalyst_Intake_Temperature;
+    double Aftertreatment_2_Warm_Up_Diesel_Oxidation_Catalyst_Outlet_Temperature;
 } getAT2WUDOC_t ;
 typedef struct getLLRE {
-    uint16_t Blade_Elevation_Deviation___Left;
-    uint16_t Blade_Elevation_Deviation___Right;
-    uint16_t Blade_Reference_Elevation_Offset___Left;
-    uint16_t Blade_Reference_Elevation_Offset___Right;
+    double Blade_Elevation_Deviation___Left;
+    double Blade_Elevation_Deviation___Right;
+    double Blade_Reference_Elevation_Offset___Left;
+    double Blade_Reference_Elevation_Offset___Right;
 } getLLRE_t ;
 typedef struct getEFL_P11 {
-    uint16_t Engine_Exhaust_Gas_Recirculation_1_Intake_Absolute_Pressure;
-    uint16_t Engine_Exhaust_Gas_Recirculation_1_Outlet_Absolute_Pressure__High_Resolution_;
+    double Engine_Exhaust_Gas_Recirculation_1_Intake_Absolute_Pressure;
+    double Engine_Exhaust_Gas_Recirculation_1_Outlet_Absolute_Pressure__High_Resolution_;
 } getEFL_P11_t ;
 typedef struct getEFS2 {
-    uint8_t Engine_Fuel_Filter__Suction_Side__Intake_Absolute_Pressure;
+    float Engine_Fuel_Filter__Suction_Side__Intake_Absolute_Pressure;
 } getEFS2_t ;
 typedef struct getInformation {
     struct Information_byte1 {
@@ -1597,7 +1597,7 @@ typedef struct getInformation {
         uint8_t Engine_Turbocharger_Wastegate_Actuator_2_Operation_Status:4;
     }Information_byte2;
     struct Information_byte2 bt2 ;
-    uint8_t Engine_Exhaust_Back_Pressure_Regulator_Position;
+    float Engine_Exhaust_Back_Pressure_Regulator_Position;
     struct Information_byte4 {
         uint8_t Engine_Exhaust_Back_Pressure_Regulator_Preliminary_FMI:5;
         uint8_t Engine_Exhaust_Back_Pressure_Regulator_Temperature_Status:3;
@@ -1607,18 +1607,18 @@ typedef struct getInformation {
         uint8_t Engine_Exhaust_Back_Pressure_Regulator_Control_Operation_Status:4;
     }Information_byte5;
     struct Information_byte5 bt5 ;
-    uint8_t Engine_Turbocharger_Wastegate_Actuator_1_Temperature;
-    uint8_t Engine_Exhaust_Back_Pressure_Actuator_1_Desired_Position;
-    uint8_t Engine_Exhaust_Back_Pressure_Actuator_1_Temperature;
+    float Engine_Turbocharger_Wastegate_Actuator_1_Temperature;
+    float Engine_Exhaust_Back_Pressure_Actuator_1_Desired_Position;
+    float Engine_Exhaust_Back_Pressure_Actuator_1_Temperature;
 } getInformation_t ;
 typedef struct getEFTVI1 {
-    uint8_t Engine_Desired_Throttle_Valve_1_Position;
+    float Engine_Desired_Throttle_Valve_1_Position;
     struct EFTVI1_byte2 {
         uint8_t Engine_Throttle_Valve_1_Preliminary_FMI:5;
         uint8_t Engine_Throttle_Valve_1_Temperature_Status:3;
     }EFTVI1_byte2;
     struct EFTVI1_byte2 bt2 ;
-    uint8_t Engine_Desired_Throttle_Valve_2_Position;
+    float Engine_Desired_Throttle_Valve_2_Position;
     struct EFTVI1_byte4 {
         uint8_t Engine_Throttle_Valve_2_Preliminary_FMI:5;
         uint8_t Engine_Throttle_Valve_2_Temperature_status:3;
@@ -1646,8 +1646,8 @@ typedef struct getEFTVI1 {
     struct EFTVI1_byte8 bt8 ;
 } getEFTVI1_t ;
 typedef struct getETCBI {
-    uint8_t Engine_Turbocharger_Compressor_Bypass_Actuator_2_Position;
-    uint8_t Engine_Desired_Turbocharger_Compressor_Bypass_Actuator_2_Position;
+    float Engine_Turbocharger_Compressor_Bypass_Actuator_2_Position;
+    float Engine_Desired_Turbocharger_Compressor_Bypass_Actuator_2_Position;
     struct ETCBI_byte3 {
         uint8_t Engine_Turbocharger_compressor_Bypass_Actuator_2_Preliminary_FMI:5;
         uint8_t Engine_Turbocharger_Compressor_Bypass_Actuator_2_Temperature_Status:3;
@@ -1658,76 +1658,76 @@ typedef struct getETCBI {
         uint8_t Engine_Turbocharger_Compressor_Bypass_Actuator_2_Operation_Status:4;
     }ETCBI_byte4;
     struct ETCBI_byte4 bt4 ;
-    uint8_t Engine_Turbocharger_Compressor_Bypass_Actuator_1_Temperature;
-    uint8_t Engine_Turbocharger_Compressor_Bypass_Actuator_2_Temperature;
+    float Engine_Turbocharger_Compressor_Bypass_Actuator_1_Temperature;
+    float Engine_Turbocharger_Compressor_Bypass_Actuator_2_Temperature;
 } getETCBI_t ;
 typedef struct getCAC2 {
-    uint16_t Engine_Charge_Air_Cooler_2_Intake_Temperature;
-    uint16_t Engine_Charge_Air_Cooler_2_Outlet_Temperature;
-    uint16_t Engine_Charge_Air_Cooler_2_Ambient_Air_Temperature;
-    uint8_t Engine_Charge_Air_Cooler_2_Efficiency;
+    double Engine_Charge_Air_Cooler_2_Intake_Temperature;
+    double Engine_Charge_Air_Cooler_2_Outlet_Temperature;
+    double Engine_Charge_Air_Cooler_2_Ambient_Air_Temperature;
+    float Engine_Charge_Air_Cooler_2_Efficiency;
 } getCAC2_t ;
 typedef struct getCAC2P {
-    uint16_t Engine_Charge_Air_Cooler_2_Precooler_Intake_Temperature;
-    uint16_t Engine_Charge_Air_Cooler_2_Precooler_Outlet_Temperature;
-    uint8_t Engine_Charge_Air_Cooler_2_Precooler_Efficiency;
+    double Engine_Charge_Air_Cooler_2_Precooler_Intake_Temperature;
+    double Engine_Charge_Air_Cooler_2_Precooler_Outlet_Temperature;
+    float Engine_Charge_Air_Cooler_2_Precooler_Efficiency;
 } getCAC2P_t ;
 typedef struct getCAC1 {
-    uint16_t Engine_Charge_Air_Cooler_1_Intake_Temperature;
-    uint16_t Engine_Charge_Air_Cooler_1_Ambient_Air_Temperature;
-    uint8_t Engine_Charge_Air_Cooler_1_Efficiency;
+    double Engine_Charge_Air_Cooler_1_Intake_Temperature;
+    double Engine_Charge_Air_Cooler_1_Ambient_Air_Temperature;
+    float Engine_Charge_Air_Cooler_1_Efficiency;
 } getCAC1_t ;
 typedef struct getCAC1P {
-    uint16_t Engine_Charge_Air_Cooler_1_Precooler_Intake_Temperature;
-    uint16_t Engine_Charge_Air_Cooler_1_Precooler_Outlet_Temperature;
-    uint8_t Engine_Charge_Air_Cooler_1_Precooler_Efficiency;
+    double Engine_Charge_Air_Cooler_1_Precooler_Intake_Temperature;
+    double Engine_Charge_Air_Cooler_1_Precooler_Outlet_Temperature;
+    float Engine_Charge_Air_Cooler_1_Precooler_Efficiency;
 } getCAC1P_t ;
 typedef struct getDPF2S2 {
-    uint16_t Diesel_Particulate_Filter_2_Soot_Signal_Standard_Deviation;
-    uint16_t Diesel_Particulate_Filter_2_Soot_Signal_Maximum;
-    uint16_t Diesel_Particulate_Filter_2_Soot_Signal_Minimum;
+    double Diesel_Particulate_Filter_2_Soot_Signal_Standard_Deviation;
+    double Diesel_Particulate_Filter_2_Soot_Signal_Maximum;
+    double Diesel_Particulate_Filter_2_Soot_Signal_Minimum;
 } getDPF2S2_t ;
 typedef struct getDPF1S2 {
-    uint16_t Diesel_Particulate_Filter_1_Soot_Signal_Standard_Deviation;
-    uint16_t Diesel_Particulate_Filter_1_Soot_Signal_Maximum;
-    uint16_t Diesel_Particulate_Filter_1_Soot_Signal_Minimum;
+    double Diesel_Particulate_Filter_1_Soot_Signal_Standard_Deviation;
+    double Diesel_Particulate_Filter_1_Soot_Signal_Maximum;
+    double Diesel_Particulate_Filter_1_Soot_Signal_Minimum;
 } getDPF1S2_t ;
 typedef struct getEEC11 {
-    uint16_t Engine_Exhaust_Gas_Recirculation_2__EGR2__Valve_Control;
-    uint16_t Engine_Exhaust_Gas_Recirculation_2__EGR2__Valve_2_Control;
-    uint16_t Engine_Exhaust_Gas_Recirculation_2_Valve_1_Position_Error;
-    uint16_t Engine_Exhaust_Gas_Recirculation_2_Valve_2_Position_Error;
+    double Engine_Exhaust_Gas_Recirculation_2__EGR2__Valve_Control;
+    double Engine_Exhaust_Gas_Recirculation_2__EGR2__Valve_2_Control;
+    double Engine_Exhaust_Gas_Recirculation_2_Valve_1_Position_Error;
+    double Engine_Exhaust_Gas_Recirculation_2_Valve_2_Position_Error;
 } getEEC11_t ;
 typedef struct getEMAP {
-    uint16_t Engine_Exhaust_Manifold_Bank_1_Flow_Balance_Valve_Actuator_Position;
-    uint16_t Engine_Exhaust_Manifold_Bank_2_Flow_Balance_Valve_Actuator_Position;
+    double Engine_Exhaust_Manifold_Bank_1_Flow_Balance_Valve_Actuator_Position;
+    double Engine_Exhaust_Manifold_Bank_2_Flow_Balance_Valve_Actuator_Position;
 } getEMAP_t ;
 typedef struct getEMAC {
-    uint16_t Engine_Exhaust_Manifold_Bank_1_Flow_Balance_Valve_Actuator_Control;
-    uint16_t Engine_Exhaust_Manifold_Bank_2_Flow_Balance_Valve_Actuator_Control;
+    double Engine_Exhaust_Manifold_Bank_1_Flow_Balance_Valve_Actuator_Control;
+    double Engine_Exhaust_Manifold_Bank_2_Flow_Balance_Valve_Actuator_Control;
 } getEMAC_t ;
 typedef struct getEEC9 {
-    uint16_t Engine_Exhaust_Gas_Recirculation_2_Valve_Position;
-    uint16_t Engine_Exhaust_Gas_Recirculation_2_Valve_2_Position;
-    uint16_t Commanded_Engine_Fuel_Rail_Pressure;
-    uint16_t Commanded_Engine_Fuel_Injection_Control_Pressure;
+    double Engine_Exhaust_Gas_Recirculation_2_Valve_Position;
+    double Engine_Exhaust_Gas_Recirculation_2_Valve_2_Position;
+    double Commanded_Engine_Fuel_Rail_Pressure;
+    double Commanded_Engine_Fuel_Injection_Control_Pressure;
 } getEEC9_t ;
 typedef struct getEEC10 {
-    uint16_t Engine_Exhaust_Gas_Recirculation_2__EGR2__Cooler_Temperature;
-    uint16_t Engine_Exhaust_Gas_Recirculation_2__EGR2__Cooler_Gas_Absolute_Pressure;
-    uint8_t Engine_Exhaust_Gas_Recirculation_2__EGR2__Cooler;
-    uint8_t EGR_2_Cooler_Bypass_Actuator_Position;
+    double Engine_Exhaust_Gas_Recirculation_2__EGR2__Cooler_Temperature;
+    double Engine_Exhaust_Gas_Recirculation_2__EGR2__Cooler_Gas_Absolute_Pressure;
+    float Engine_Exhaust_Gas_Recirculation_2__EGR2__Cooler;
+    float EGR_2_Cooler_Bypass_Actuator_Position;
 } getEEC10_t ;
 typedef struct getET5 {
-    uint16_t Engine_Exhaust_Gas_Recirculation_2_Temperature;
-    uint16_t Engine_Exhaust_Gas_Recirculation_2_Mixer_Intake_Temperature;
+    double Engine_Exhaust_Gas_Recirculation_2_Temperature;
+    double Engine_Exhaust_Gas_Recirculation_2_Mixer_Intake_Temperature;
 } getET5_t ;
 typedef struct getEFL_P10 {
-    uint16_t Engine_Exhaust_Gas_Recirculation_2_Differential_Pressure;
-    uint8_t Engine_Exhaust_Gas_Recirculation_2_Intake_Pressure;
-    uint16_t Engine_Exhaust_Gas_Recirculation_2_Outlet_Absolute_Pressure;
-    uint16_t Engine_Exhaust_Gas_Recirculation_2_Intake_Absolute_Pressure;
-    uint8_t Engine_Coolant_Pressure_2;
+    double Engine_Exhaust_Gas_Recirculation_2_Differential_Pressure;
+    float Engine_Exhaust_Gas_Recirculation_2_Intake_Pressure;
+    double Engine_Exhaust_Gas_Recirculation_2_Outlet_Absolute_Pressure;
+    double Engine_Exhaust_Gas_Recirculation_2_Intake_Absolute_Pressure;
+    float Engine_Coolant_Pressure_2;
 } getEFL_P10_t ;
 typedef struct getLVDS {
     struct LVDS_byte1 {
@@ -1746,7 +1746,7 @@ typedef struct getLVDS {
         uint8_t Low_Voltage_Disconnect_Vout_Output_State:4;
     }LVDS_byte3;
     struct LVDS_byte3 bt3 ;
-    uint8_t Low_Voltage_Disconnect_Temperature;
+    float Low_Voltage_Disconnect_Temperature;
 } getLVDS_t ;
 typedef struct getDLCD2 {
     struct DLCD2_byte1 {
@@ -1825,62 +1825,62 @@ typedef struct getDLCC1 {
     struct DLCC1_byte3 bt3 ;
 } getDLCC1_t ;
 typedef struct getEOM {
-    uint16_t Engine_Oil_Viscosity;
-    uint16_t Engine_Oil_Density;
-    uint16_t Engine_Oil_Relative_Dielectricity__high_resolution_;
-    uint32_t High_Resolution_Engine_Total_Fuel_Used;
+    double Engine_Oil_Viscosity;
+    double Engine_Oil_Density;
+    double Engine_Oil_Relative_Dielectricity__high_resolution_;
+    long float High_Resolution_Engine_Total_Fuel_Used;
 } getEOM_t ;
 typedef struct getAT2OGC2 {
-    uint8_t Aftertreatment_2_Outlet_Gas_NOx_Sensor_Correction_of_pressure_Lambda;
-    uint8_t Aftertreatment_2_Outlet_Gas_NOx_Sensor_Correction_of_pressure_Nox;
-    uint8_t Aftertreatment_2_Outlet_Gas_NOx_Sensor_NO2_Correction;
-    uint8_t Aftertreatment_2_Outlet_Gas_NOx_Sensor_NH3_Correction;
-    uint8_t NOx_Sensor_ATO2_Self_diagnosis_Final_Result;
+    float Aftertreatment_2_Outlet_Gas_NOx_Sensor_Correction_of_pressure_Lambda;
+    float Aftertreatment_2_Outlet_Gas_NOx_Sensor_Correction_of_pressure_Nox;
+    float Aftertreatment_2_Outlet_Gas_NOx_Sensor_NO2_Correction;
+    float Aftertreatment_2_Outlet_Gas_NOx_Sensor_NH3_Correction;
+    float NOx_Sensor_ATO2_Self_diagnosis_Final_Result;
 } getAT2OGC2_t ;
 typedef struct getAT2OGC1 {
-    uint16_t Aftertreatment_2_Outlet_Gas_NOx_Sensor_Heater_Ratio;
-    uint16_t Aftertreatment_2_Outlet_Gas_NOx_Sensor_New_part_deviation_NOx_Gain;
-    uint8_t Aftertreatment_2_Outlet_Gas_NOx_Sensor_New_part_deviation_NOx_Offset;
-    uint16_t NOx_Sensor_ATO2_Operation_Hours_Counter;
+    double Aftertreatment_2_Outlet_Gas_NOx_Sensor_Heater_Ratio;
+    double Aftertreatment_2_Outlet_Gas_NOx_Sensor_New_part_deviation_NOx_Gain;
+    float Aftertreatment_2_Outlet_Gas_NOx_Sensor_New_part_deviation_NOx_Offset;
+    double NOx_Sensor_ATO2_Operation_Hours_Counter;
 } getAT2OGC1_t ;
 typedef struct getAT2IGC2 {
-    uint8_t Aftertreatment_2_Intake_Gas_NOx_Sensor_Correction_of_pressure_Lambda;
-    uint8_t Aftertreatment_2_Intake_Gas_NOx_Sensor_Correction_of_pressure_Nox;
-    uint8_t Aftertreatment_2_Intake_Gas_NOx_Sensor_NO2_Correction;
-    uint8_t Aftertreatment_2_Intake_Gas_NOx_Sensor_NH3_Correction;
-    uint8_t NOx_Sensor_ATI2_Self_diagnosis_Final_Result;
+    float Aftertreatment_2_Intake_Gas_NOx_Sensor_Correction_of_pressure_Lambda;
+    float Aftertreatment_2_Intake_Gas_NOx_Sensor_Correction_of_pressure_Nox;
+    float Aftertreatment_2_Intake_Gas_NOx_Sensor_NO2_Correction;
+    float Aftertreatment_2_Intake_Gas_NOx_Sensor_NH3_Correction;
+    float NOx_Sensor_ATI2_Self_diagnosis_Final_Result;
 } getAT2IGC2_t ;
 typedef struct getAT2IGC1 {
-    uint16_t Aftertreatment_2_Intake_Gas_NOx_Sensor_Heater_Ratio;
-    uint16_t Aftertreatment_2_Intake_Gas_NOx_Sensor_New_part_deviation_NOx_Gain;
-    uint8_t Aftertreatment_2_Intake_Gas_NOx_Sensor_New_part_deviation_NOx_Offset;
-    uint16_t NOx_Sensor_ATI2_Operation_Hours_Counter;
+    double Aftertreatment_2_Intake_Gas_NOx_Sensor_Heater_Ratio;
+    double Aftertreatment_2_Intake_Gas_NOx_Sensor_New_part_deviation_NOx_Gain;
+    float Aftertreatment_2_Intake_Gas_NOx_Sensor_New_part_deviation_NOx_Offset;
+    double NOx_Sensor_ATI2_Operation_Hours_Counter;
 } getAT2IGC1_t ;
 typedef struct getAT1OGC2 {
-    uint8_t Aftertreatment_1_Outlet_Gas_NOx_Sensor_Correction_of_Pressure_Lambda;
-    uint8_t Aftertreatment_1_Outlet_Gas_NOx_Sensor_Correction_of_Pressure_NOx;
-    uint8_t Aftertreatment_1_Outlet_Gas_NOx_Sensor_NO2_Correction;
-    uint8_t Aftertreatment_1_Outlet_Gas_NOx_Sensor_NH3_Correction;
-    uint8_t NOx_Sensor_ATO1_Self_diagnosis_Final_Result;
+    float Aftertreatment_1_Outlet_Gas_NOx_Sensor_Correction_of_Pressure_Lambda;
+    float Aftertreatment_1_Outlet_Gas_NOx_Sensor_Correction_of_Pressure_NOx;
+    float Aftertreatment_1_Outlet_Gas_NOx_Sensor_NO2_Correction;
+    float Aftertreatment_1_Outlet_Gas_NOx_Sensor_NH3_Correction;
+    float NOx_Sensor_ATO1_Self_diagnosis_Final_Result;
 } getAT1OGC2_t ;
 typedef struct getAT1OGC1 {
-    uint16_t Aftertreatment_1_Outlet_Gas_NOx_Sensor_Heater_Ratio;
-    uint16_t Aftertreatment_1_Outlet_Gas_NOx_Sensor_New_Part_Deviation_NOx_Gain;
-    uint8_t Aftertreatment_1_Outlet_Gas_NOx_Sensor_New_Part_Deviation_NOx_Offset;
-    uint16_t NOx_Sensor_ATO1_Operation_Hours_Counter;
+    double Aftertreatment_1_Outlet_Gas_NOx_Sensor_Heater_Ratio;
+    double Aftertreatment_1_Outlet_Gas_NOx_Sensor_New_Part_Deviation_NOx_Gain;
+    float Aftertreatment_1_Outlet_Gas_NOx_Sensor_New_Part_Deviation_NOx_Offset;
+    double NOx_Sensor_ATO1_Operation_Hours_Counter;
 } getAT1OGC1_t ;
 typedef struct getAT1IGC2 {
-    uint8_t Aftertreatment_1_Intake_Gas_NOx_Sensor_Correction_of_Pressure_Lambda;
-    uint8_t Aftertreatment_1_Intake_Gas_NOx_Sensor_Correction_of_Pressure_NOx;
-    uint8_t Aftertreatment_1_Intake_Gas_NOx_Sensor_NO2_Correction;
-    uint8_t Aftertreatment_1_Intake_Gas_NOx_Sensor_NH3_Correction;
-    uint8_t NOx_Sensor_ATI1_Self_diagnosis_Final_Result;
+    float Aftertreatment_1_Intake_Gas_NOx_Sensor_Correction_of_Pressure_Lambda;
+    float Aftertreatment_1_Intake_Gas_NOx_Sensor_Correction_of_Pressure_NOx;
+    float Aftertreatment_1_Intake_Gas_NOx_Sensor_NO2_Correction;
+    float Aftertreatment_1_Intake_Gas_NOx_Sensor_NH3_Correction;
+    float NOx_Sensor_ATI1_Self_diagnosis_Final_Result;
 } getAT1IGC2_t ;
 typedef struct getAT1IGC1 {
-    uint16_t Aftertreatment_1_Intake_Gas_NOx_Sensor_Heater_Ratio;
-    uint16_t Aftertreatment_1_Intake_Gas_NOx_Sensor_New_part_deviation_NOx_Gain;
-    uint8_t Aftertreatment_1_Intake_Gas_NOx_Sensor_New_part_deviation_NOx_Offset;
-    uint16_t NOx_Sensor_ATI1_Operation_Hours_Counter;
+    double Aftertreatment_1_Intake_Gas_NOx_Sensor_Heater_Ratio;
+    double Aftertreatment_1_Intake_Gas_NOx_Sensor_New_part_deviation_NOx_Gain;
+    float Aftertreatment_1_Intake_Gas_NOx_Sensor_New_part_deviation_NOx_Offset;
+    double NOx_Sensor_ATI1_Operation_Hours_Counter;
 } getAT1IGC1_t ;
 typedef struct getMSI1 {
     struct MSI1_byte1 {
@@ -1902,8 +1902,8 @@ typedef struct getMSI1 {
     struct MSI1_byte3 bt3 ;
 } getMSI1_t ;
 typedef struct getMSCI {
-    uint8_t Magnet_Boost_Time;
-    uint16_t Magnet_Rated_Power;
+    float Magnet_Boost_Time;
+    double Magnet_Rated_Power;
 } getMSCI_t ;
 typedef struct getBCH2 {
     struct BCH2_byte1 {
@@ -1911,8 +1911,8 @@ typedef struct getBCH2 {
         uint8_t Battery_Charger_2_Power_Line_State:2;
     }BCH2_byte1;
     struct BCH2_byte1 bt1 ;
-    uint16_t Battery_Charger_2_Output_Voltage;
-    uint16_t Battery_Charger_2_Output_Current;
+    double Battery_Charger_2_Output_Voltage;
+    double Battery_Charger_2_Output_Current;
 } getBCH2_t ;
 typedef struct getBCH1 {
     struct BCH1_byte1 {
@@ -1920,8 +1920,8 @@ typedef struct getBCH1 {
         uint8_t Battery_Charger_1_Power_Line_State:2;
     }BCH1_byte1;
     struct BCH1_byte1 bt1 ;
-    uint16_t Battery_Charger_1_Output_Voltage;
-    uint16_t Battery_Charger_1_Output_Current;
+    double Battery_Charger_1_Output_Voltage;
+    double Battery_Charger_1_Output_Current;
 } getBCH1_t ;
 typedef struct getOCSI {
     struct OCSI_byte1 {
@@ -2013,145 +2013,145 @@ typedef struct getCSI {
     struct CSI_byte9 bt9 ;
 } getCSI_t ;
 typedef struct getILI {
-    uint16_t Driver_Airbag_Ignitor_Loop_1st_Stage___Resistance;
-    uint16_t Passenger_Airbag_Ignitor_Loop_1st_Stage___Resistance;
-    uint16_t Driver_Airbag_Ignitor_Loop_2nd_Stage___Resistance;
-    uint16_t Passenger_Airbag_Ignitor_Loop_2nd_Stage___Resistance;
-    uint16_t Driver_Belt_Tensioner_Ignitior_Loop___Resistance;
-    uint16_t Passenger_Belt_Tensioner_Ignitor_Loop___Resistance;
-    uint16_t Side_Bag_Ignitor_Loop_1___Left___Resistance;
-    uint16_t Side_Bag_Ignitor_Loop_2___Left___Resistance;
-    uint16_t Side_Bag_Ignitor_Loop_1___Right___Resistance;
-    uint16_t Side_Bag_Ignitor_Loop_2___Right___Resistance;
-    uint16_t Special_Ignitor_Loop_1___Resistance;
-    uint16_t Special_Ignitor_Loop_2___Resistance;
-    uint16_t Special_Ignitor_Loop_3___Resistance;
-    uint16_t Special_Ignitor_Loop_4___Resistance;
-    uint16_t Special_Ignitor_Loop_5___Resistance;
-    uint16_t Special_Ignitor_Loop_6___Resistance;
-    uint16_t Special_Ignitor_Loop_7___Resistance;
-    uint16_t Special_Ignitor_Loop_8___Resistance;
-    uint16_t Special_Ignitor_Loop_9___Resistance;
-    uint16_t Special_Ignitor_Loop_10___Resistance;
-    uint16_t Special_Ignitor_Loop_11___Resistance;
-    uint16_t Special_Ignitor_Loop_12___Resistance;
-    uint16_t Special_Ignitor_Loop_13___Resistance;
-    uint16_t Special_Ignitor_Loop_14___Resistance;
-    uint16_t Special_Ignitor_Loop_15___Resistance;
-    uint16_t Special_Ignitor_Loop_16___Resistance;
-    uint16_t Special_Ignitor_Loop_17___Resistance;
-    uint16_t Special_Ignitor_Loop_18___Resistance;
-    uint16_t Special_Ignitor_Loop_19___Resistance;
-    uint16_t Special_Ignitor_Loop_20___Resistance;
-    uint16_t Special_Ignitor_Loop_21___Resistance;
-    uint16_t Special_Ignitor_Loop_22___Resistance;
-    uint16_t Special_Ignitor_Loop_23___Resistance;
-    uint16_t Special_Ignitor_Loop_24___Resistance;
-    uint16_t Special_Ignitor_Loop_25___Resistance;
-    uint16_t Special_Ignitor_Loop_26___Resistance;
-    uint16_t Special_Ignitor_Loop_27___Resistance;
-    uint16_t Special_Ignitor_Loop_28___Resistance;
-    uint16_t Special_Ignitor_Loop_29___Resistance;
-    uint16_t Special_Ignitor_Loop_30___Resistance;
-    uint16_t Special_Ignitor_Loop_31___Resistance;
-    uint16_t Special_Ignitor_Loop_32___Resistance;
-    uint16_t Special_Ignitor_Loop_33___Resistance;
-    uint16_t Special_Ignitor_Loop_34___Resistance;
-    uint16_t Special_Ignitor_Loop_35___Resistance;
-    uint16_t Special_Ignitor_Loop_36___Resistance;
-    uint16_t Special_Ignitor_Loop_37___Resistance;
-    uint16_t Special_Ignitor_Loop_38___Resistance;
-    uint16_t Special_Ignitor_Loop_39___Resistance;
-    uint16_t Special_Ignitor_Loop_40___Resistance;
-    uint16_t Special_Ignitor_Loop_41___Resistance;
-    uint16_t Special_Ignitor_Loop_42___Resistance;
-    uint16_t Special_Ignitor_Loop_43___Resistance;
-    uint16_t Special_Ignitor_Loop_44___Resistance;
-    uint16_t Special_Ignitor_Loop_45___Resistance;
-    uint16_t Special_Ignitor_Loop_46___Resistance;
-    uint16_t Special_Ignitor_Loop_47___Resistance;
-    uint16_t Special_Ignitor_Loop_48___Resistance;
-    uint16_t Special_Ignitor_Loop_49___Resistance;
-    uint16_t Special_Ignitor_Loop_50___Resistance;
-    uint16_t Special_Ignitor_Loop_51___Resistance;
-    uint16_t Special_Ignitor_Loop_52___Resistance;
-    uint16_t Special_Ignitor_Loop_53___Resistance;
-    uint16_t Special_Ignitor_Loop_54___Resistance;
-    uint16_t Special_Ignitor_Loop_55___Resistance;
-    uint16_t Special_Ignitor_Loop_56___Resistance;
-    uint16_t Special_Ignitor_Loop_57___Resistance;
-    uint16_t Special_Ignitor_Loop_58___Resistance;
-    uint16_t Special_Ignitor_Loop_59___Resistance;
-    uint16_t Special_Ignitor_Loop_60___Resistance;
-    uint16_t Special_Ignitor_Loop_61___Resistance;
-    uint16_t Special_Ignitor_Loop_62___Resistance;
-    uint16_t Special_Ignitor_Loop_63___Resistance;
-    uint16_t Special_Ignitor_Loop_64___Resistance;
-    uint16_t Special_Ignitor_Loop_65___Resistance;
-    uint16_t Special_Ignitor_Loop_66___Resistance;
-    uint16_t Special_Ignitor_Loop_67___Resistance;
-    uint16_t Special_Ignitor_Loop_68___Resistance;
-    uint16_t Special_Ignitor_Loop_69___Resistance;
-    uint16_t Special_Ignitor_Loop_70___Resistance;
-    uint16_t Special_Ignitor_Loop_71___Resistance;
-    uint16_t Special_Ignitor_Loop_72___Resistance;
-    uint16_t Special_Ignitor_Loop_73___Resistance;
-    uint16_t Special_Ignitor_Loop_74___Resistance;
-    uint16_t Special_Ignitor_Loop_75___Resistance;
-    uint16_t Special_Ignitor_Loop_76___Resistance;
-    uint16_t Special_Ignitor_Loop_77___Resistance;
-    uint16_t Special_Ignitor_Loop_78___Resistance;
-    uint16_t Special_Ignitor_Loop_79___Resistance;
-    uint16_t Special_Ignitor_Loop_80___Resistance;
-    uint16_t Special_Ignitor_Loop_81___Resistance;
-    uint16_t Special_Ignitor_Loop_82___Resistance;
-    uint16_t Special_Ignitor_Loop_83___Resistance;
-    uint16_t Special_Ignitor_Loop_84___Resistance;
-    uint16_t Special_Ignitor_Loop_85___Resistance;
-    uint16_t Special_Ignitor_Loop_86___Resistance;
-    uint16_t Special_Ignitor_Loop_87___Resistance;
-    uint16_t Special_Ignitor_Loop_88___Resistance;
-    uint16_t Special_Ignitor_Loop_89___Resistance;
-    uint16_t Special_Ignitor_Loop_90___Resistance;
+    double Driver_Airbag_Ignitor_Loop_1st_Stage___Resistance;
+    double Passenger_Airbag_Ignitor_Loop_1st_Stage___Resistance;
+    double Driver_Airbag_Ignitor_Loop_2nd_Stage___Resistance;
+    double Passenger_Airbag_Ignitor_Loop_2nd_Stage___Resistance;
+    double Driver_Belt_Tensioner_Ignitior_Loop___Resistance;
+    double Passenger_Belt_Tensioner_Ignitor_Loop___Resistance;
+    double Side_Bag_Ignitor_Loop_1___Left___Resistance;
+    double Side_Bag_Ignitor_Loop_2___Left___Resistance;
+    double Side_Bag_Ignitor_Loop_1___Right___Resistance;
+    double Side_Bag_Ignitor_Loop_2___Right___Resistance;
+    double Special_Ignitor_Loop_1___Resistance;
+    double Special_Ignitor_Loop_2___Resistance;
+    double Special_Ignitor_Loop_3___Resistance;
+    double Special_Ignitor_Loop_4___Resistance;
+    double Special_Ignitor_Loop_5___Resistance;
+    double Special_Ignitor_Loop_6___Resistance;
+    double Special_Ignitor_Loop_7___Resistance;
+    double Special_Ignitor_Loop_8___Resistance;
+    double Special_Ignitor_Loop_9___Resistance;
+    double Special_Ignitor_Loop_10___Resistance;
+    double Special_Ignitor_Loop_11___Resistance;
+    double Special_Ignitor_Loop_12___Resistance;
+    double Special_Ignitor_Loop_13___Resistance;
+    double Special_Ignitor_Loop_14___Resistance;
+    double Special_Ignitor_Loop_15___Resistance;
+    double Special_Ignitor_Loop_16___Resistance;
+    double Special_Ignitor_Loop_17___Resistance;
+    double Special_Ignitor_Loop_18___Resistance;
+    double Special_Ignitor_Loop_19___Resistance;
+    double Special_Ignitor_Loop_20___Resistance;
+    double Special_Ignitor_Loop_21___Resistance;
+    double Special_Ignitor_Loop_22___Resistance;
+    double Special_Ignitor_Loop_23___Resistance;
+    double Special_Ignitor_Loop_24___Resistance;
+    double Special_Ignitor_Loop_25___Resistance;
+    double Special_Ignitor_Loop_26___Resistance;
+    double Special_Ignitor_Loop_27___Resistance;
+    double Special_Ignitor_Loop_28___Resistance;
+    double Special_Ignitor_Loop_29___Resistance;
+    double Special_Ignitor_Loop_30___Resistance;
+    double Special_Ignitor_Loop_31___Resistance;
+    double Special_Ignitor_Loop_32___Resistance;
+    double Special_Ignitor_Loop_33___Resistance;
+    double Special_Ignitor_Loop_34___Resistance;
+    double Special_Ignitor_Loop_35___Resistance;
+    double Special_Ignitor_Loop_36___Resistance;
+    double Special_Ignitor_Loop_37___Resistance;
+    double Special_Ignitor_Loop_38___Resistance;
+    double Special_Ignitor_Loop_39___Resistance;
+    double Special_Ignitor_Loop_40___Resistance;
+    double Special_Ignitor_Loop_41___Resistance;
+    double Special_Ignitor_Loop_42___Resistance;
+    double Special_Ignitor_Loop_43___Resistance;
+    double Special_Ignitor_Loop_44___Resistance;
+    double Special_Ignitor_Loop_45___Resistance;
+    double Special_Ignitor_Loop_46___Resistance;
+    double Special_Ignitor_Loop_47___Resistance;
+    double Special_Ignitor_Loop_48___Resistance;
+    double Special_Ignitor_Loop_49___Resistance;
+    double Special_Ignitor_Loop_50___Resistance;
+    double Special_Ignitor_Loop_51___Resistance;
+    double Special_Ignitor_Loop_52___Resistance;
+    double Special_Ignitor_Loop_53___Resistance;
+    double Special_Ignitor_Loop_54___Resistance;
+    double Special_Ignitor_Loop_55___Resistance;
+    double Special_Ignitor_Loop_56___Resistance;
+    double Special_Ignitor_Loop_57___Resistance;
+    double Special_Ignitor_Loop_58___Resistance;
+    double Special_Ignitor_Loop_59___Resistance;
+    double Special_Ignitor_Loop_60___Resistance;
+    double Special_Ignitor_Loop_61___Resistance;
+    double Special_Ignitor_Loop_62___Resistance;
+    double Special_Ignitor_Loop_63___Resistance;
+    double Special_Ignitor_Loop_64___Resistance;
+    double Special_Ignitor_Loop_65___Resistance;
+    double Special_Ignitor_Loop_66___Resistance;
+    double Special_Ignitor_Loop_67___Resistance;
+    double Special_Ignitor_Loop_68___Resistance;
+    double Special_Ignitor_Loop_69___Resistance;
+    double Special_Ignitor_Loop_70___Resistance;
+    double Special_Ignitor_Loop_71___Resistance;
+    double Special_Ignitor_Loop_72___Resistance;
+    double Special_Ignitor_Loop_73___Resistance;
+    double Special_Ignitor_Loop_74___Resistance;
+    double Special_Ignitor_Loop_75___Resistance;
+    double Special_Ignitor_Loop_76___Resistance;
+    double Special_Ignitor_Loop_77___Resistance;
+    double Special_Ignitor_Loop_78___Resistance;
+    double Special_Ignitor_Loop_79___Resistance;
+    double Special_Ignitor_Loop_80___Resistance;
+    double Special_Ignitor_Loop_81___Resistance;
+    double Special_Ignitor_Loop_82___Resistance;
+    double Special_Ignitor_Loop_83___Resistance;
+    double Special_Ignitor_Loop_84___Resistance;
+    double Special_Ignitor_Loop_85___Resistance;
+    double Special_Ignitor_Loop_86___Resistance;
+    double Special_Ignitor_Loop_87___Resistance;
+    double Special_Ignitor_Loop_88___Resistance;
+    double Special_Ignitor_Loop_89___Resistance;
+    double Special_Ignitor_Loop_90___Resistance;
 } getILI_t ;
 typedef struct getAT1WUDOC {
-    uint16_t Aftertreatment_1_Warm_Up_Diesel_Oxidation_Catalyst_Intake_Temperature;
-    uint16_t Aftertreatment_1_Warm_Up_Diesel_Oxidation_Catalyst_Outlet_Temperature;
+    double Aftertreatment_1_Warm_Up_Diesel_Oxidation_Catalyst_Intake_Temperature;
+    double Aftertreatment_1_Warm_Up_Diesel_Oxidation_Catalyst_Outlet_Temperature;
 } getAT1WUDOC_t ;
 typedef struct getDPF2S {
-    uint8_t Diesel_Particulate_Filter_2_Soot_Mass;
-    uint8_t Diesel_Particulate_Filter_2_Soot_Density;
-    uint16_t Diesel_Particulate_Filter_2_Mean_Soot_Signal;
-    uint16_t Diesel_Particulate_Filter_2_Median_Soot_Signal;
+    float Diesel_Particulate_Filter_2_Soot_Mass;
+    float Diesel_Particulate_Filter_2_Soot_Density;
+    double Diesel_Particulate_Filter_2_Mean_Soot_Signal;
+    double Diesel_Particulate_Filter_2_Median_Soot_Signal;
     struct DPF2S_byte7 {
         uint8_t Diesel_Particulate_Filter_2_Soot_Sensor_Preliminary_FMI:5;
     }DPF2S_byte7;
     struct DPF2S_byte7 bt7 ;
-    uint8_t Diesel_Particulate_Filter_2_Soot_Sensor_ECU_Internal_Temperature;
+    float Diesel_Particulate_Filter_2_Soot_Sensor_ECU_Internal_Temperature;
 } getDPF2S_t ;
 typedef struct getDPF1S {
-    uint8_t Diesel_Particulate_Filter_1_Soot_Mass;
-    uint8_t Diesel_Particulate_Filter_1_Soot_Density;
-    uint16_t Diesel_Particulate_Filter_1_Mean_Soot_Signal;
-    uint16_t Diesel_Particulate_Filter_1_Median_Soot_Signal;
+    float Diesel_Particulate_Filter_1_Soot_Mass;
+    float Diesel_Particulate_Filter_1_Soot_Density;
+    double Diesel_Particulate_Filter_1_Mean_Soot_Signal;
+    double Diesel_Particulate_Filter_1_Median_Soot_Signal;
     struct DPF1S_byte7 {
         uint8_t Diesel_Particulate_Filter_1_Soot_Sensor_Preliminary_FMI:5;
     }DPF1S_byte7;
     struct DPF1S_byte7 bt7 ;
-    uint8_t Diesel_Particulate_Filter_1_Soot_Sensor_ECU_Internal_Temperature;
+    float Diesel_Particulate_Filter_1_Soot_Sensor_ECU_Internal_Temperature;
 } getDPF1S_t ;
 typedef struct getATDT2 {
-    uint16_t Aftertreatment_1_Three_Way_Catalyst_Differential_Gas_Temperature;
-    uint16_t Aftertreatment_2_Three_Way_Catalyst_Differential_Gas_Temperature;
+    double Aftertreatment_1_Three_Way_Catalyst_Differential_Gas_Temperature;
+    double Aftertreatment_2_Three_Way_Catalyst_Differential_Gas_Temperature;
 } getATDT2_t ;
 typedef struct getATDT1 {
-    uint16_t Aftertreatment_1_Gas_Oxidation_Catalyst_Differential_Gas_Temperature;
-    uint16_t Aftertreatment_2_Gas_Oxidation_Catalyst_Differential_Gas_Temperature;
+    double Aftertreatment_1_Gas_Oxidation_Catalyst_Differential_Gas_Temperature;
+    double Aftertreatment_2_Gas_Oxidation_Catalyst_Differential_Gas_Temperature;
 } getATDT1_t ;
 typedef struct getA2DOC {
-    uint16_t Aftertreatment_2_Diesel_Oxidation_Catalyst_Intake_Gas_Temperature;
-    uint16_t Aftertreatment_2_Diesel_Oxidation_Catalyst_Outlet_Gas_Temperature;
-    uint16_t Aftertreatment_2_Diesel_Oxidation_Catalyst_Differential_Pressure;
+    double Aftertreatment_2_Diesel_Oxidation_Catalyst_Intake_Gas_Temperature;
+    double Aftertreatment_2_Diesel_Oxidation_Catalyst_Outlet_Gas_Temperature;
+    double Aftertreatment_2_Diesel_Oxidation_Catalyst_Differential_Pressure;
     struct A2DOC_byte7 {
         uint8_t Aftertreatment_2_Diesel_Oxidation_Catalyst_Intake_Gas_Temperature_Preliminary_FMI:5;
         uint8_t Aftertreatment_2_Diesel_Oxidation_Catalyst_Outlet_Gas_Temperature_Preliminary_FMI:5;
@@ -2163,9 +2163,9 @@ typedef struct getA2DOC {
     struct A2DOC_byte8 bt8 ;
 } getA2DOC_t ;
 typedef struct getA1DOC {
-    uint16_t Aftertreatment_1_Diesel_Oxidation_Catalyst_Intake_Gas_Temperature;
-    uint16_t Aftertreatment_1_Diesel_Oxidation_Catalyst_Outlet_Gas_Temperature;
-    uint16_t Aftertreatment_1_Diesel_Oxidation_Catalyst_Differential_Pressure;
+    double Aftertreatment_1_Diesel_Oxidation_Catalyst_Intake_Gas_Temperature;
+    double Aftertreatment_1_Diesel_Oxidation_Catalyst_Outlet_Gas_Temperature;
+    double Aftertreatment_1_Diesel_Oxidation_Catalyst_Differential_Pressure;
     struct A1DOC_byte7 {
         uint8_t Aftertreatment_1_Diesel_Oxidation_Catalyst_Intake_Gas_Temperature_Preliminary_FMI:5;
         uint8_t Aftertreatment_1_Diesel_Oxidation_Catalyst_Outlet_Gas_Temperature_Preliminary_FMI:5;
@@ -2177,9 +2177,9 @@ typedef struct getA1DOC {
     struct A1DOC_byte8 bt8 ;
 } getA1DOC_t ;
 typedef struct getA2GOC {
-    uint16_t Aftertreatment_2_Gas_Oxidation_Catalyst_Intake_Gas_Temperature;
-    uint16_t Aftertreatment_2_Gas_Oxidation_Catalyst_Outlet_Gas_Temperature;
-    uint16_t Aftertreatment_2_Gas_Oxidation_Catalyst_Differential_Pressure;
+    double Aftertreatment_2_Gas_Oxidation_Catalyst_Intake_Gas_Temperature;
+    double Aftertreatment_2_Gas_Oxidation_Catalyst_Outlet_Gas_Temperature;
+    double Aftertreatment_2_Gas_Oxidation_Catalyst_Differential_Pressure;
     struct A2GOC_byte7 {
         uint8_t Aftertreatment_2_Gas_Oxidation_Catalyst_Intake_Gas_Temperature_Preliminary_FMI:5;
         uint8_t Aftertreatment_2_Gas_Oxidation_Catalyst_Outlet_Gas_Temperature_Preliminary_FMI:5;
@@ -2191,9 +2191,9 @@ typedef struct getA2GOC {
     struct A2GOC_byte8 bt8 ;
 } getA2GOC_t ;
 typedef struct getA1GOC {
-    uint16_t Aftertreatment_1_Gas_Oxidation_Catalyst_Intake_Gas_Temperature;
-    uint16_t Aftertreatment_1_Gas_Oxidation_Catalyst_Outlet_Gas_Temperature;
-    uint16_t Aftertreatment_1_Gas_Oxidation_Catalyst_Differential_Pressure;
+    double Aftertreatment_1_Gas_Oxidation_Catalyst_Intake_Gas_Temperature;
+    double Aftertreatment_1_Gas_Oxidation_Catalyst_Outlet_Gas_Temperature;
+    double Aftertreatment_1_Gas_Oxidation_Catalyst_Differential_Pressure;
     struct A1GOC_byte7 {
         uint8_t Aftertreatment_1_Gas_Oxidation_Catalyst_Intake_Gas_Temperature_Preliminary_FMI:5;
         uint8_t Aftertreatment_1_Gas_Oxidation_Catalyst_Outlet_Gas_Temperature_Preliminary_FMI:5;
@@ -2702,30 +2702,30 @@ typedef struct getBJM4 {
     struct BJM4_byte8 bt8 ;
 } getBJM4_t ;
 typedef struct getFD2 {
-    uint8_t Estimated_Percent_Fan_2_Speed;
+    float Estimated_Percent_Fan_2_Speed;
     struct FD2_byte2 {
         uint8_t Fan_2_Drive_State:4;
     }FD2_byte2;
     struct FD2_byte2 bt2 ;
-    uint16_t Fan_2_Speed;
-    uint16_t Hydraulic_Fan_2_Motor_Pressure;
-    uint8_t Fan_2_Drive_Bypass_Command_Status;
+    double Fan_2_Speed;
+    double Hydraulic_Fan_2_Motor_Pressure;
+    float Fan_2_Drive_Bypass_Command_Status;
 } getFD2_t ;
 typedef struct getA2DEFSI {
-    uint16_t Aftertreatment_2_Diesel_Exhaust_Fluid_Pump_Motor_Speed;
-    uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Pump_Drive_Percentage;
-    uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Return_Valve;
-    uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Fill_Valve_Command;
+    double Aftertreatment_2_Diesel_Exhaust_Fluid_Pump_Motor_Speed;
+    float Aftertreatment_2_Diesel_Exhaust_Fluid_Pump_Drive_Percentage;
+    float Aftertreatment_2_Diesel_Exhaust_Fluid_Return_Valve;
+    float Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Fill_Valve_Command;
     struct A2DEFSI_byte6 {
         uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Pump_State:2;
     }A2DEFSI_byte6;
     struct A2DEFSI_byte6 bt6 ;
-    uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Drain_Valve_Command;
+    float Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Drain_Valve_Command;
 } getA2DEFSI_t ;
 typedef struct getA2SCRRT2I {
-    uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Level;
-    uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Temperature;
-    uint16_t Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Level_2;
+    float Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Level;
+    float Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Temperature;
+    double Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Level_2;
     struct A2SCRRT2I_byte5 {
         uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Level_Preliminary_FMI:5;
     }A2SCRRT2I_byte5;
@@ -2744,9 +2744,9 @@ typedef struct getA2SCRRT2I {
     struct A2SCRRT2I_byte8 bt8 ;
 } getA2SCRRT2I_t ;
 typedef struct getA2SCRRT1I {
-    uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Level;
-    uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Temperature;
-    uint16_t Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Level_2;
+    float Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Level;
+    float Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Temperature;
+    double Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Level_2;
     struct A2SCRRT1I_byte5 {
         uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Level_Preliminary_FMI:5;
     }A2SCRRT1I_byte5;
@@ -2755,16 +2755,16 @@ typedef struct getA2SCRRT1I {
         uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_1_Temperature_Preliminary_FMI:5;
     }A2SCRRT1I_byte6;
     struct A2SCRRT1I_byte6 bt6 ;
-    uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Heater;
+    float Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Heater;
     struct A2SCRRT1I_byte8 {
         uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_1_Heater_Preliminary_FMI:5;
     }A2SCRRT1I_byte8;
     struct A2SCRRT1I_byte8 bt8 ;
 } getA2SCRRT1I_t ;
 typedef struct getA2DEFI {
-    uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Temperature_2;
-    uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Concentration;
-    uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Conductivity;
+    float Aftertreatment_2_Diesel_Exhaust_Fluid_Temperature_2;
+    float Aftertreatment_2_Diesel_Exhaust_Fluid_Concentration;
+    float Aftertreatment_2_Diesel_Exhaust_Fluid_Conductivity;
     struct A2DEFI_byte4 {
         uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Temperature_2_Preliminary_FMI:5;
     }A2DEFI_byte4;
@@ -2779,24 +2779,24 @@ typedef struct getA2DEFI {
     struct A2DEFI_byte6 bt6 ;
 } getA2DEFI_t ;
 typedef struct getA2SCRSI {
-    uint16_t Aftertreatment_2_Diesel_Exhaust_Fluid_Average_Consumption;
-    uint16_t Aftertreatment_2_SCR_Commanded_Catalyst_Diesel_Exhaust_Fluid_Consumption;
-    uint8_t Aftertreatment_2_SCR_Conversion_Efficiency;
+    double Aftertreatment_2_Diesel_Exhaust_Fluid_Average_Consumption;
+    double Aftertreatment_2_SCR_Commanded_Catalyst_Diesel_Exhaust_Fluid_Consumption;
+    float Aftertreatment_2_SCR_Conversion_Efficiency;
 } getA2SCRSI_t ;
 typedef struct getA2SCREGT1 {
-    uint16_t Aftertreatment_2_SCR_Catalyst_Intake_Gas_Temperature;
+    double Aftertreatment_2_SCR_Catalyst_Intake_Gas_Temperature;
     struct A2SCREGT1_byte3 {
         uint8_t Aftertreatment_2_SCR_Catalyst_Intake_Gas_Temperature_Preliminary_FMI:5;
     }A2SCREGT1_byte3;
     struct A2SCREGT1_byte3 bt3 ;
-    uint16_t Aftertreatment_2_SCR_Catalyst_Outlet_Gas_Temperature;
+    double Aftertreatment_2_SCR_Catalyst_Outlet_Gas_Temperature;
     struct A2SCREGT1_byte6 {
         uint8_t Aftertreatment_2_SCR_Catalyst_Outlet_Gas_Temperature_Preliminary_FMI:5;
     }A2SCREGT1_byte6;
     struct A2SCREGT1_byte6 bt6 ;
 } getA2SCREGT1_t ;
 typedef struct getA2SCREGP {
-    uint16_t Aftertreatment_2_SCR_Exhaust_Gas_Differential_Pressure;
+    double Aftertreatment_2_SCR_Exhaust_Gas_Differential_Pressure;
     struct A2SCREGP_byte3 {
         uint8_t Aftertreatment_2_SCR_Exhaust_Gas_Differential_Pressure_Preliminary_FMI:5;
     }A2SCREGP_byte3;
@@ -2815,13 +2815,13 @@ typedef struct getA2SCRDSR2 {
         uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Line_Heater_4:2;
     }A2SCRDSR2_byte2;
     struct A2SCRDSR2_byte2 bt2 ;
-    uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Heater_Command;
-    uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Heater_Command;
+    float Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Heater_Command;
+    float Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Heater_Command;
 } getA2SCRDSR2_t ;
 typedef struct getA2SCRDSI2 {
-    uint8_t Aftertreatment_2_SCR_Dosing_Air_Assist_Absolute_Pressure;
-    uint8_t Aftertreatment_2_SCR_Dosing_Air_Assist_Valve;
-    uint8_t Aftertreatment_2_Diesel_Exhaust_Fluid_Dosing_Temperature;
+    float Aftertreatment_2_SCR_Dosing_Air_Assist_Absolute_Pressure;
+    float Aftertreatment_2_SCR_Dosing_Air_Assist_Valve;
+    float Aftertreatment_2_Diesel_Exhaust_Fluid_Dosing_Temperature;
     struct A2SCRDSI2_byte4 {
         uint8_t Aftertreatment_2_SCR_Dosing_Valve_Exhaust_Temp__Reduction_Request:3;
         uint8_t Aftertreatment_2_SCR_Feedback_Control_Status:3;
@@ -2849,20 +2849,20 @@ typedef struct getA2SCRDSI2 {
     struct A2SCRDSI2_byte8 bt8 ;
 } getA2SCRDSI2_t ;
 typedef struct getA1DEFSI {
-    uint16_t Aftertreatment_1_Diesel_Exhaust_Fluid_Pump_Motor_Speed;
-    uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Pump_Drive_Percentage;
-    uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Return_Valve;
-    uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Fill_Valve_Command;
+    double Aftertreatment_1_Diesel_Exhaust_Fluid_Pump_Motor_Speed;
+    float Aftertreatment_1_Diesel_Exhaust_Fluid_Pump_Drive_Percentage;
+    float Aftertreatment_1_Diesel_Exhaust_Fluid_Return_Valve;
+    float Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Fill_Valve_Command;
     struct A1DEFSI_byte6 {
         uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Pump_State:2;
     }A1DEFSI_byte6;
     struct A1DEFSI_byte6 bt6 ;
-    uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Drain_Valve_Command;
+    float Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Drain_Valve_Command;
 } getA1DEFSI_t ;
 typedef struct getA1SCRRT2I {
-    uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Level;
-    uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Temperature;
-    uint16_t Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Level_2;
+    float Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Level;
+    float Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Temperature;
+    double Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Level_2;
     struct A1SCRRT2I_byte5 {
         uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Level_Preliminary_FMI:5;
     }A1SCRRT2I_byte5;
@@ -2871,26 +2871,26 @@ typedef struct getA1SCRRT2I {
         uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Temperature_Prelminary_FMI:5;
     }A1SCRRT2I_byte6;
     struct A1SCRRT2I_byte6 bt6 ;
-    uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Heater;
+    float Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Heater;
     struct A1SCRRT2I_byte8 {
         uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Heater_Prelminary_FMI:5;
     }A1SCRRT2I_byte8;
     struct A1SCRRT2I_byte8 bt8 ;
 } getA1SCRRT2I_t ;
 typedef struct getA1SCREGT1 {
-    uint16_t Aftertreatment_1_SCR_Catalyst_Intake_Gas_Temperature;
+    double Aftertreatment_1_SCR_Catalyst_Intake_Gas_Temperature;
     struct A1SCREGT1_byte3 {
         uint8_t Aftertreatment_1_SCR_Catalyst_Intake_Gas_Temperature_Preliminary_FMI:5;
     }A1SCREGT1_byte3;
     struct A1SCREGT1_byte3 bt3 ;
-    uint16_t Aftertreatment_1_SCR_Catalyst_Outlet_Gas_Temperature;
+    double Aftertreatment_1_SCR_Catalyst_Outlet_Gas_Temperature;
     struct A1SCREGT1_byte6 {
         uint8_t Aftertreatment_1_SCR_Catalyst_Outlet_Gas_Temperature_Preliminary_FMI:5;
     }A1SCREGT1_byte6;
     struct A1SCREGT1_byte6 bt6 ;
 } getA1SCREGT1_t ;
 typedef struct getA1SCREGP {
-    uint16_t Aftertreatment_1_SCR_Exhaust_Gas_Differential_Pressure;
+    double Aftertreatment_1_SCR_Exhaust_Gas_Differential_Pressure;
     struct A1SCREGP_byte3 {
         uint8_t Aftertreatment_1_SCR_Exhaust_Gas_Differential_Pressure_Preliminary_FMI:5;
     }A1SCREGP_byte3;
@@ -2909,14 +2909,14 @@ typedef struct getA1SCRDSR2 {
         uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Line_Heater_4:2;
     }A1SCRDSR2_byte2;
     struct A1SCRDSR2_byte2 bt2 ;
-    uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Heater_Command;
-    uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Heater_Command;
-    uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Pump_Heater_Command;
+    float Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Heater_Command;
+    float Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Heater_Command;
+    float Aftertreatment_1_Diesel_Exhaust_Fluid_Pump_Heater_Command;
 } getA1SCRDSR2_t ;
 typedef struct getA1SCRDSI2 {
-    uint8_t Aftertreatment_1_SCR_Dosing_Air_Assist_Absolute_Pressure;
-    uint8_t Aftertreatment_1_SCR_Dosing_Air_Assist_Valve;
-    uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Dosing_Temperature;
+    float Aftertreatment_1_SCR_Dosing_Air_Assist_Absolute_Pressure;
+    float Aftertreatment_1_SCR_Dosing_Air_Assist_Valve;
+    float Aftertreatment_1_Diesel_Exhaust_Fluid_Dosing_Temperature;
     struct A1SCRDSI2_byte4 {
         uint8_t Aftertreatment_1_SCR_Dosing_Valve_Exhaust_Temperature_Reduction_Request:3;
         uint8_t Aftertreatment_1_SCR_Feedback_Control_Status:3;
@@ -2944,18 +2944,18 @@ typedef struct getA1SCRDSI2 {
     struct A1SCRDSI2_byte8 bt8 ;
 } getA1SCRDSI2_t ;
 typedef struct getAT2FC2 {
-    uint16_t Aftertreatment_2_Fuel_Pressure_2;
+    double Aftertreatment_2_Fuel_Pressure_2;
     struct AT2FC2_byte3 {
         uint8_t Aftertreatment_2_Fuel_Pump_Relay_Control:2;
         uint8_t Aftertreatment_2_Fuel_Flow_Diverter_Valve_Control:2;
     }AT2FC2_byte3;
     struct AT2FC2_byte3 bt3 ;
-    uint16_t Aftertreatment_2_Fuel_Pressure_2_Control;
+    double Aftertreatment_2_Fuel_Pressure_2_Control;
 } getAT2FC2_t ;
 typedef struct getAT2TWCC {
-    uint16_t Aftertreatment_2_Three_Way_Catalytic_Converter_Intake_Gas_Temperature;
-    uint16_t Aftertreatment_2_Three_Way_Catalytic_Converter_Outlet_Gas_Temperature;
-    uint16_t Aftertreatment_2_Three_Way_Catalytic_Converter_Differential_Pressure;
+    double Aftertreatment_2_Three_Way_Catalytic_Converter_Intake_Gas_Temperature;
+    double Aftertreatment_2_Three_Way_Catalytic_Converter_Outlet_Gas_Temperature;
+    double Aftertreatment_2_Three_Way_Catalytic_Converter_Differential_Pressure;
     struct AT2TWCC_byte7 {
         uint8_t Aftertreatment_2_Three_Way_Catalytic_Converter_Intake_Gas_Temperature_Preliminary_FMI:5;
         uint8_t Aftertreatment_2_Three_Way_Catalytic_Converter_Outlet_Gas_Temperature_Preliminary_FMI:5;
@@ -2967,9 +2967,9 @@ typedef struct getAT2TWCC {
     struct AT2TWCC_byte8 bt8 ;
 } getAT2TWCC_t ;
 typedef struct getAT1TWCC {
-    uint16_t Aftertreatment_1_Three_Way_Catalytic_Converter_Intake_Gas_Temperature;
-    uint16_t Aftertreatment_1_Three_Way_Catalytic_Converter_Outlet_Gas_Temperature;
-    uint16_t Aftertreatment_1_Three_Way_Catalytic_Converter_Differential_Pressure;
+    double Aftertreatment_1_Three_Way_Catalytic_Converter_Intake_Gas_Temperature;
+    double Aftertreatment_1_Three_Way_Catalytic_Converter_Outlet_Gas_Temperature;
+    double Aftertreatment_1_Three_Way_Catalytic_Converter_Differential_Pressure;
     struct AT1TWCC_byte7 {
         uint8_t Aftertreatment_1_Three_Way_Catalytic_Converter_Intake_Gas_Temperature_Preliminary_FMI:5;
         uint8_t Aftertreatment_1_Three_Way_Catalytic_Converter_Outlet_Gas_Temperature_Preliminary_FMI:5;
@@ -2981,16 +2981,16 @@ typedef struct getAT1TWCC {
     struct AT1TWCC_byte8 bt8 ;
 } getAT1TWCC_t ;
 typedef struct getO2FT2 {
-    uint16_t Long_term_Fuel_Trim___Bank_2;
-    uint16_t Short_term_Fuel_Trim___Bank_2;
+    double Long_term_Fuel_Trim___Bank_2;
+    double Short_term_Fuel_Trim___Bank_2;
     struct O2FT2_byte5 {
         uint8_t Engine_Exhaust_Gas_Oxygen_Sensor_Closed_Loop_Operation_Bank_2:4;
     }O2FT2_byte5;
     struct O2FT2_byte5 bt5 ;
 } getO2FT2_t ;
 typedef struct getO2FT1 {
-    uint16_t Long_term_Fuel_Trim___Bank_1;
-    uint16_t Short_term_Fuel_Trim___Bank_1;
+    double Long_term_Fuel_Trim___Bank_1;
+    double Short_term_Fuel_Trim___Bank_1;
     struct O2FT1_byte5 {
         uint8_t Engine_Exhaust_Gas_Oxygen_Sensor_Closed_Loop_Operation_Bank_1:4;
     }O2FT1_byte5;
@@ -3001,40 +3001,40 @@ typedef struct getACCVC {
         uint8_t Aftercooler_Coolant_Thermostat_Mode:2;
     }ACCVC_byte1;
     struct ACCVC_byte1 bt1 ;
-    uint8_t Desired_Aftercooler_Coolant_Intake_Temperature;
-    uint8_t Desired_Aftercooler_Coolant_Thermostat_Opening;
+    float Desired_Aftercooler_Coolant_Intake_Temperature;
+    float Desired_Aftercooler_Coolant_Thermostat_Opening;
 } getACCVC_t ;
 typedef struct getECCVC {
     struct ECCVC_byte1 {
         uint8_t Engine_Coolant_Thermostat_Mode:2;
     }ECCVC_byte1;
     struct ECCVC_byte1 bt1 ;
-    uint8_t Desired_Engine_Coolant_Pump_Outlet_Temperature;
-    uint8_t Desired_Engine_Coolant_Thermostat_Opening;
-    uint8_t Engine_Auxiliary_Cooler_Supply_Valve_1_Actuator_Command;
-    uint8_t Engine_Auxiliary_Cooler_Supply_Valve_2_Actuator_Command;
+    float Desired_Engine_Coolant_Pump_Outlet_Temperature;
+    float Desired_Engine_Coolant_Thermostat_Opening;
+    float Engine_Auxiliary_Cooler_Supply_Valve_1_Actuator_Command;
+    float Engine_Auxiliary_Cooler_Supply_Valve_2_Actuator_Command;
 } getECCVC_t ;
 typedef struct getEAI {
-    uint16_t Engine_Exhaust_Gas_Temperature_Average;
-    uint16_t Engine_Exhaust_Gas_Temperature_Average___Bank_1;
-    uint16_t Engine_Exhaust_Gas_Temperature_Average___Bank_2;
+    double Engine_Exhaust_Gas_Temperature_Average;
+    double Engine_Exhaust_Gas_Temperature_Average___Bank_1;
+    double Engine_Exhaust_Gas_Temperature_Average___Bank_2;
 } getEAI_t ;
 typedef struct getAT1FC2 {
-    uint16_t Aftertreatment_1_Fuel_Pressure_2;
+    double Aftertreatment_1_Fuel_Pressure_2;
     struct AT1FC2_byte3 {
         uint8_t Aftertreatment_1_Fuel_Pump_Relay_Control:2;
         uint8_t Aftertreatment_1_Fuel_Flow_Diverter_Valve_Control:2;
     }AT1FC2_byte3;
     struct AT1FC2_byte3 bt3 ;
-    uint16_t Aftertreatment_1_Fuel_Pressure_2_Actuator_Control;
-    uint8_t Aftertreatment_1_Hydrocarbon_Doser_Intake_Fuel_Temperature;
+    double Aftertreatment_1_Fuel_Pressure_2_Actuator_Control;
+    float Aftertreatment_1_Hydrocarbon_Doser_Intake_Fuel_Temperature;
 } getAT1FC2_t ;
 typedef struct getET4 {
-    uint8_t Engine_Coolant_Temperature_2;
-    uint8_t Engine_Coolant_Pump_Outlet_Temperature;
-    uint8_t Engine_Coolant_Thermostat_Opening;
-    uint16_t Engine_Exhaust_Valve_Actuation_System_Oil_Temperature;
-    uint16_t Engine_Exhaust_Gas_Recirculation_1_Mixer_Intake_Temperature;
+    float Engine_Coolant_Temperature_2;
+    float Engine_Coolant_Pump_Outlet_Temperature;
+    float Engine_Coolant_Thermostat_Opening;
+    double Engine_Exhaust_Valve_Actuation_System_Oil_Temperature;
+    double Engine_Exhaust_Gas_Recirculation_1_Mixer_Intake_Temperature;
 } getET4_t ;
 typedef struct getZNVW {
     struct ZNVW_byte1 {
@@ -3043,23 +3043,23 @@ typedef struct getZNVW {
     struct ZNVW_byte1 bt1 ;
 } getZNVW_t ;
 typedef struct getGCVW {
-    uint32_t Gross_Combination_Weight;
-    uint32_t Net_Vehicle_Weight_Change;
+    long float Gross_Combination_Weight;
+    long float Net_Vehicle_Weight_Change;
 } getGCVW_t ;
 typedef struct getAGCW {
     struct AGCW_byte1 {
         uint8_t Axle_Group_Location:4;
     }AGCW_byte1;
     struct AGCW_byte1 bt1 ;
-    uint16_t Axle_Group_Empty_Weight_Calibration;
-    uint16_t Axle_Group_Full_Weight_Calibration;
+    double Axle_Group_Empty_Weight_Calibration;
+    double Axle_Group_Full_Weight_Calibration;
 } getAGCW_t ;
 typedef struct getAGW {
     struct AGW_byte1 {
         uint8_t Axle_Group_Location:4;
     }AGW_byte1;
     struct AGW_byte1 bt1 ;
-    uint16_t Axle_Group_Weight;
+    double Axle_Group_Weight;
 } getAGW_t ;
 typedef struct getAAGW {
     struct AAGW_byte1 {
@@ -3090,28 +3090,28 @@ typedef struct getAAGW {
     struct AAGW_byte4 bt4 ;
 } getAAGW_t ;
 typedef struct getAT2AC2 {
-    uint16_t Aftertreatment_2_Secondary_Air_Differential_Pressure;
-    uint16_t Aftertreatment_2_Secondary_Air_Temperature;
-    uint16_t Aftertreatment_2_Secondary_Air_Mass_Flow;
-    uint16_t Aftertreatment_2_Secondary_Air_Pressure;
+    double Aftertreatment_2_Secondary_Air_Differential_Pressure;
+    double Aftertreatment_2_Secondary_Air_Temperature;
+    double Aftertreatment_2_Secondary_Air_Mass_Flow;
+    double Aftertreatment_2_Secondary_Air_Pressure;
 } getAT2AC2_t ;
 typedef struct getAT1AC2 {
-    uint16_t Aftertreatment_1_Secondary_Air_Differential_Pressure;
-    uint16_t Aftertreatment_1_Secondary_Air_Temperature;
-    uint16_t Aftertreatment_1_Secondary_Air_Mass_Flow;
-    uint16_t Aftertreatment_1_Secondary_Air_Pressure;
+    double Aftertreatment_1_Secondary_Air_Differential_Pressure;
+    double Aftertreatment_1_Secondary_Air_Temperature;
+    double Aftertreatment_1_Secondary_Air_Mass_Flow;
+    double Aftertreatment_1_Secondary_Air_Pressure;
 } getAT1AC2_t ;
 typedef struct getSCR1 {
-    uint16_t Aftertreatment_1_Diesel_Exhaust_Fluid_Average_Consumption;
-    uint16_t Aftertreatment_1_Commanded_Diesel_Exhaust_Fluid_Consumption;
-    uint8_t Aftertreatment_1_SCR_Conversion_Efficiency;
-    uint16_t Aftertreatment_1_SCR_Operator_Inducement_Active_Traveled_Distance;
+    double Aftertreatment_1_Diesel_Exhaust_Fluid_Average_Consumption;
+    double Aftertreatment_1_Commanded_Diesel_Exhaust_Fluid_Consumption;
+    float Aftertreatment_1_SCR_Conversion_Efficiency;
+    double Aftertreatment_1_SCR_Operator_Inducement_Active_Traveled_Distance;
 } getSCR1_t ;
 typedef struct getEEC8 {
-    uint16_t Engine_Exhaust_Gas_Recirculation_1__EGR1__Valve_2_Control;
-    uint16_t Engine_Exhaust_Gas_Recirculation_1__EGR1__Cooler_Intake_Temperature;
-    uint16_t Engine_Exhaust_Gas_Recirculation_1__EGR1__Cooler_Intake_Gas_Absolute_Pressure;
-    uint8_t Engine_Exhaust_Gas_Recirculation_1__EGR1__Cooler_Efficiency;
+    double Engine_Exhaust_Gas_Recirculation_1__EGR1__Valve_2_Control;
+    double Engine_Exhaust_Gas_Recirculation_1__EGR1__Cooler_Intake_Temperature;
+    double Engine_Exhaust_Gas_Recirculation_1__EGR1__Cooler_Intake_Gas_Absolute_Pressure;
+    float Engine_Exhaust_Gas_Recirculation_1__EGR1__Cooler_Efficiency;
 } getEEC8_t ;
 typedef struct getDRC {
     struct DRC_byte1 {
@@ -3192,72 +3192,72 @@ typedef struct getBSA {
     struct BSA_byte8 bt8 ;
 } getBSA_t ;
 typedef struct getESV6 {
-    uint16_t Engine_Spark_Plug_21;
-    uint16_t Engine_Spark_Plug_22;
-    uint16_t Engine_Spark_Plug_23;
-    uint16_t Engine_Spark_Plug_24;
+    double Engine_Spark_Plug_21;
+    double Engine_Spark_Plug_22;
+    double Engine_Spark_Plug_23;
+    double Engine_Spark_Plug_24;
 } getESV6_t ;
 typedef struct getESV5 {
-    uint16_t Engine_Spark_Plug_17;
-    uint16_t Engine_Spark_Plug_18;
-    uint16_t Engine_Spark_Plug_19;
-    uint16_t Engine_Spark_Plug_20;
+    double Engine_Spark_Plug_17;
+    double Engine_Spark_Plug_18;
+    double Engine_Spark_Plug_19;
+    double Engine_Spark_Plug_20;
 } getESV5_t ;
 typedef struct getESV4 {
-    uint16_t Engine_Spark_Plug_13;
-    uint16_t Engine_Spark_Plug_14;
-    uint16_t Engine_Spark_Plug_15;
-    uint16_t Engine_Spark_Plug_16;
+    double Engine_Spark_Plug_13;
+    double Engine_Spark_Plug_14;
+    double Engine_Spark_Plug_15;
+    double Engine_Spark_Plug_16;
 } getESV4_t ;
 typedef struct getESV3 {
-    uint16_t Engine_Spark_Plug_9;
-    uint16_t Engine_Spark_Plug_10;
-    uint16_t Engine_Spark_Plug_11;
-    uint16_t Engine_Spark_Plug_12;
+    double Engine_Spark_Plug_9;
+    double Engine_Spark_Plug_10;
+    double Engine_Spark_Plug_11;
+    double Engine_Spark_Plug_12;
 } getESV3_t ;
 typedef struct getESV2 {
-    uint16_t Engine_Spark_Plug_5;
-    uint16_t Engine_Spark_Plug_6;
-    uint16_t Engine_Spark_Plug_7;
-    uint16_t Engine_Spark_Plug_8;
+    double Engine_Spark_Plug_5;
+    double Engine_Spark_Plug_6;
+    double Engine_Spark_Plug_7;
+    double Engine_Spark_Plug_8;
 } getESV2_t ;
 typedef struct getESV1 {
-    uint16_t Engine_Spark_Plug_1;
-    uint16_t Engine_Spark_Plug_2;
-    uint16_t Engine_Spark_Plug_3;
-    uint16_t Engine_Spark_Plug_4;
+    double Engine_Spark_Plug_1;
+    double Engine_Spark_Plug_2;
+    double Engine_Spark_Plug_3;
+    double Engine_Spark_Plug_4;
 } getESV1_t ;
 typedef struct getAT2TI {
-    uint32_t Aftertreatment_2_Diesel_Particulate_Filter_Trip_Fuel_Used;
-    uint32_t Aftertreatment_2_Diesel_Particulate_Filter_Trip_Active_Regeneration_Time;
-    uint32_t Aftertreatment_2_Diesel_Particulate_Filter_Trip_Disabled_Time;
-    uint32_t Aftertreatment_2_Diesel_Particulate_Filter_Trip_Number_of_Active_Regenerations;
-    uint32_t Aftertreatment_2_Diesel_Particulate_Filter_Trip_Passive_Regeneration_Time;
-    uint32_t Aftertreatment_2_Diesel_Particulate_Filter_Trip_Number_of_Passive_Regenerations;
-    uint32_t Aftertreatment_2_Diesel_Particulate_Filter_Trip_Number_of_Active_Regeneration_Inhibit_Requests;
-    uint32_t Aftertreatment_2_Diesel_Particulate_Filter_Trip_Number_of_Active_Regeneration_Manual_Requests;
+    long float Aftertreatment_2_Diesel_Particulate_Filter_Trip_Fuel_Used;
+    long float Aftertreatment_2_Diesel_Particulate_Filter_Trip_Active_Regeneration_Time;
+    long float Aftertreatment_2_Diesel_Particulate_Filter_Trip_Disabled_Time;
+    long float Aftertreatment_2_Diesel_Particulate_Filter_Trip_Number_of_Active_Regenerations;
+    long float Aftertreatment_2_Diesel_Particulate_Filter_Trip_Passive_Regeneration_Time;
+    long float Aftertreatment_2_Diesel_Particulate_Filter_Trip_Number_of_Passive_Regenerations;
+    long float Aftertreatment_2_Diesel_Particulate_Filter_Trip_Number_of_Active_Regeneration_Inhibit_Requests;
+    long float Aftertreatment_2_Diesel_Particulate_Filter_Trip_Number_of_Active_Regeneration_Manual_Requests;
 } getAT2TI_t ;
 typedef struct getAT1TI {
-    uint32_t Aftertreatment_1_Diesel_Particulate_Filter_Trip_Fuel_Used;
-    uint32_t Aftertreatment_1_Diesel_Particulate_Filter_Trip_Active_Regeneration_Time;
-    uint32_t Aftertreatment_1_Diesel_Particulate_Filter_Trip_Disabled_Time;
-    uint32_t Aftertreatment_1_Diesel_Particulate_Filter_Trip_Number_of_Active_Regenerations;
-    uint32_t Aftertreatment_1_Diesel_Particulate_Filter_Trip_Passive_Regeneration_Time;
-    uint32_t Aftertreatment_1_Diesel_Particulate_Filter_Trip_Number_of_Passive_Regenerations;
-    uint32_t Aftertreatment_1_Diesel_Particulate_Filter_Trip_Number_of_Active_Regeneration_Inhibit_Requests;
-    uint32_t Aftertreatment_1_Diesel_Particulate_Filter_Trip_Number_of_Active_Regeneration_Manual_Requests;
+    long float Aftertreatment_1_Diesel_Particulate_Filter_Trip_Fuel_Used;
+    long float Aftertreatment_1_Diesel_Particulate_Filter_Trip_Active_Regeneration_Time;
+    long float Aftertreatment_1_Diesel_Particulate_Filter_Trip_Disabled_Time;
+    long float Aftertreatment_1_Diesel_Particulate_Filter_Trip_Number_of_Active_Regenerations;
+    long float Aftertreatment_1_Diesel_Particulate_Filter_Trip_Passive_Regeneration_Time;
+    long float Aftertreatment_1_Diesel_Particulate_Filter_Trip_Number_of_Passive_Regenerations;
+    long float Aftertreatment_1_Diesel_Particulate_Filter_Trip_Number_of_Active_Regeneration_Inhibit_Requests;
+    long float Aftertreatment_1_Diesel_Particulate_Filter_Trip_Number_of_Active_Regeneration_Manual_Requests;
 } getAT1TI_t ;
 typedef struct getAT2S {
-    uint8_t Diesel_Particulate_Filter_2_Soot_Load_Percent;
-    uint8_t Diesel_Particulate_Filter_2_Ash_Load_Percent;
-    uint32_t Diesel_Particulate_Filter_2_Time_Since_Last_Active_Regeneration;
-    uint16_t Aftertreatment_2_Diesel_Particulate_Filter_Soot_Load_Regeneration_Threshold;
+    float Diesel_Particulate_Filter_2_Soot_Load_Percent;
+    float Diesel_Particulate_Filter_2_Ash_Load_Percent;
+    long float Diesel_Particulate_Filter_2_Time_Since_Last_Active_Regeneration;
+    double Aftertreatment_2_Diesel_Particulate_Filter_Soot_Load_Regeneration_Threshold;
 } getAT2S_t ;
 typedef struct getAT1S {
-    uint8_t Diesel_Particulate_Filter_1_Soot_Load_Percent;
-    uint8_t Diesel_Particulate_Filter_1_Ash_Load_Percent;
-    uint32_t Diesel_Particulate_Filter_1_Time_Since_Last_Active_Regeneration;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_Soot_Load_Regeneration_Threshold;
+    float Diesel_Particulate_Filter_1_Soot_Load_Percent;
+    float Diesel_Particulate_Filter_1_Ash_Load_Percent;
+    long float Diesel_Particulate_Filter_1_Time_Since_Last_Active_Regeneration;
+    double Aftertreatment_1_Diesel_Particulate_Filter_Soot_Load_Regeneration_Threshold;
 } getAT1S_t ;
 typedef struct getDPFC1 {
     struct DPFC1_byte1 {
@@ -3323,10 +3323,10 @@ typedef struct getAFSS {
     struct AFSS_byte2 bt2 ;
 } getAFSS_t ;
 typedef struct getEC2 {
-    uint8_t Maximum_Crank_Attempts_per_Start_Attempt;
+    float Maximum_Crank_Attempts_per_Start_Attempt;
 } getEC2_t ;
 typedef struct getEGRBV {
-    uint8_t EGR1_Cooler_Bypass_Actuator_Postion;
+    float EGR1_Cooler_Bypass_Actuator_Postion;
 } getEGRBV_t ;
 typedef struct getTCI {
     struct TCI_byte1 {
@@ -3335,41 +3335,41 @@ typedef struct getTCI {
     struct TCI_byte1 bt1 ;
 } getTCI_t ;
 typedef struct getEFL_P9 {
-    uint16_t Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_17;
-    uint16_t Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_18;
-    uint16_t Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_19;
-    uint16_t Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_20;
+    double Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_17;
+    double Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_18;
+    double Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_19;
+    double Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_20;
 } getEFL_P9_t ;
 typedef struct getEFL_P8 {
-    uint16_t Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_13;
-    uint16_t Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_14;
-    uint16_t Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_15;
-    uint16_t Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_16;
+    double Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_13;
+    double Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_14;
+    double Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_15;
+    double Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_16;
 } getEFL_P8_t ;
 typedef struct getEFL_P7 {
-    uint16_t Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_9;
-    uint16_t Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_10;
-    uint16_t Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_11;
-    uint16_t Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_12;
+    double Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_9;
+    double Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_10;
+    double Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_11;
+    double Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_12;
 } getEFL_P7_t ;
 typedef struct getEFL_P6 {
-    uint16_t Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_5;
-    uint16_t Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_6;
-    uint16_t Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_7;
-    uint16_t Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_8;
+    double Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_5;
+    double Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_6;
+    double Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_7;
+    double Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_8;
 } getEFL_P6_t ;
 typedef struct getEFL_P5 {
-    uint16_t Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_1;
-    uint16_t Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_2;
-    uint16_t Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_3;
-    uint16_t Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_4;
+    double Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_1;
+    double Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_2;
+    double Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_3;
+    double Engine_Intake_Valve_Actuation_Oil_Pressure_for_Cylinder_4;
 } getEFL_P5_t ;
 typedef struct getVDS2 {
-    uint16_t Vehicle_Roll;
+    double Vehicle_Roll;
 } getVDS2_t ;
 typedef struct getJ2012 {
-    uint8_t Number_of_J2012_DTCs;
-    uint64_t J2012_DTC;
+    float Number_of_J2012_DTCs;
+    long double J2012_DTC;
     struct J2012_byte7 {
         uint8_t J2012_DTC_Status:1;
         uint8_t J2012_DTC_Occurrence_Count:7;
@@ -3377,12 +3377,12 @@ typedef struct getJ2012 {
     struct J2012_byte7 bt7 ;
 } getJ2012_t ;
 typedef struct getAT2GP {
-    uint16_t Diesel_Particulate_Filter_Intake_Pressure_2;
-    uint16_t Diesel_Particulate_Filter_Outlet_Pressure_2;
+    double Diesel_Particulate_Filter_Intake_Pressure_2;
+    double Diesel_Particulate_Filter_Outlet_Pressure_2;
 } getAT2GP_t ;
 typedef struct getAT1GP {
-    uint16_t Diesel_Particulate_Filter_Intake_Pressure_1;
-    uint16_t Diesel_Particulate_Filter_Outlet_Pressure_1;
+    double Diesel_Particulate_Filter_Intake_Pressure_1;
+    double Diesel_Particulate_Filter_Outlet_Pressure_1;
 } getAT1GP_t ;
 typedef struct getAETC {
     struct AETC_byte1 {
@@ -3397,7 +3397,7 @@ typedef struct getEOI {
         uint8_t Fuel_Pump_Primer_Control:2;
     }EOI_byte1;
     struct EOI_byte1 bt1 ;
-    uint16_t Time_Remaining_in_Engine_Operating_State;
+    double Time_Remaining_in_Engine_Operating_State;
     struct EOI_byte4 {
         uint8_t Engine_Fuel_Shutoff_Vent_Control:2;
         uint8_t Engine_Fuel_Shutoff_1_Control:2;
@@ -3418,13 +3418,13 @@ typedef struct getEOI {
         uint8_t Engine_Emergency__Immediate__Shutdown_Indication:2;
     }EOI_byte6;
     struct EOI_byte6 bt6 ;
-    uint8_t Engine_Derate_Request;
+    float Engine_Derate_Request;
 } getEOI_t ;
 typedef struct getEEC7 {
-    uint16_t Engine_Exhaust_Gas_Recirculation_1_Valve_Position;
-    uint16_t Engine_Exhaust_Gas_Recirculation_1_Valve_2_Position;
-    uint16_t Engine_Crankcase_Breather_Oil_Separator_Speed;
-    uint16_t Commanded_Engine_Intake_Manifold_Pressure;
+    double Engine_Exhaust_Gas_Recirculation_1_Valve_Position;
+    double Engine_Exhaust_Gas_Recirculation_1_Valve_2_Position;
+    double Engine_Crankcase_Breather_Oil_Separator_Speed;
+    double Commanded_Engine_Intake_Manifold_Pressure;
 } getEEC7_t ;
 typedef struct getTRF2 {
     struct TRF2_byte1 {
@@ -3433,10 +3433,10 @@ typedef struct getTRF2 {
         uint8_t Transmission_Overheat_Indicator:2;
     }TRF2_byte1;
     struct TRF2_byte1 bt1 ;
-    uint16_t Transmission_Torque_Converter_Oil_Outlet_Temperature;
-    uint8_t Transmission_Oil_Life_Remaining;
-    uint16_t Transmission_Oil_Temperature_2;
-    uint8_t Transmission_Oil_Level_2_High___Low;
+    double Transmission_Torque_Converter_Oil_Outlet_Temperature;
+    float Transmission_Oil_Life_Remaining;
+    double Transmission_Oil_Temperature_2;
+    float Transmission_Oil_Level_2_High___Low;
     struct TRF2_byte8 {
         uint8_t Transmission_Oil_Level_2_Countdown_Timer:4;
         uint8_t Transmission_Oil_Level_2_Measurement_Status:4;
@@ -3444,33 +3444,33 @@ typedef struct getTRF2 {
     struct TRF2_byte8 bt8 ;
 } getTRF2_t ;
 typedef struct getAT1HI {
-    uint32_t Aftertreatment_1_Total_Fuel_Used;
-    uint32_t Aftertreatment_1_Total_Regeneration_Time;
-    uint32_t Aftertreatment_1_Total_Disabled_Time;
-    uint32_t Aftertreatment_1_Total_Number_of_Active_Regenerations;
-    uint32_t Aftertreatment_1_Diesel_Particulate_Filter_Total_Passive_Regeneration_Time;
-    uint32_t Aftertreatment_1_Diesel_Particulate_Filter_Total_Number_of_Passive_Regenerations;
-    uint32_t Aftertreatment_1_Diesel_Particulate_Filter_Total_Number_of_Active_Regeneration_Inhibit_Requests;
-    uint32_t Aftertreatment_1_Diesel_Particulate_Filter_Total_Number_of_Active_Regeneration_Manual_Requests;
-    uint32_t Aftertreatment_1_Average_Time_Between_Active_Regenerations;
-    uint32_t Aftertreatment_1_Average_Distance_Between_Active_DPF_Regenerations;
+    long float Aftertreatment_1_Total_Fuel_Used;
+    long float Aftertreatment_1_Total_Regeneration_Time;
+    long float Aftertreatment_1_Total_Disabled_Time;
+    long float Aftertreatment_1_Total_Number_of_Active_Regenerations;
+    long float Aftertreatment_1_Diesel_Particulate_Filter_Total_Passive_Regeneration_Time;
+    long float Aftertreatment_1_Diesel_Particulate_Filter_Total_Number_of_Passive_Regenerations;
+    long float Aftertreatment_1_Diesel_Particulate_Filter_Total_Number_of_Active_Regeneration_Inhibit_Requests;
+    long float Aftertreatment_1_Diesel_Particulate_Filter_Total_Number_of_Active_Regeneration_Manual_Requests;
+    long float Aftertreatment_1_Average_Time_Between_Active_Regenerations;
+    long float Aftertreatment_1_Average_Distance_Between_Active_DPF_Regenerations;
 } getAT1HI_t ;
 typedef struct getAT2HI {
-    uint32_t Aftertreatment_2_Total_Fuel_Used;
-    uint32_t Aftertreatment_2_Total_Regeneration_Time;
-    uint32_t Aftertreatment_2_Total_Disabled_Time;
-    uint32_t Aftertreatment_2_Total_Number_of_Active_Regenerations;
-    uint32_t Aftertreatment_2_Diesel_Particulate_Filter_Total_Passive_Regeneration_Time;
-    uint32_t Aftertreatment_2_Diesel_Particulate_Filter_Total_Number_of_Passive_Regenerations;
-    uint32_t Aftertreatment_2_Diesel_Particulate_Filter_Total_Number_of_Active_Regeneration_Inhibit_Requests;
-    uint32_t Aftertreatment_2_Diesel_Particulate_Filter_Total_Number_of_Active_Regeneration_Manual_Requests;
-    uint32_t Aftertreatment_2_Average_Time_Between_Active_Regenerations;
-    uint32_t Aftertreatment_2_Average_Distance_Between_Active_DPF_Regenerations;
+    long float Aftertreatment_2_Total_Fuel_Used;
+    long float Aftertreatment_2_Total_Regeneration_Time;
+    long float Aftertreatment_2_Total_Disabled_Time;
+    long float Aftertreatment_2_Total_Number_of_Active_Regenerations;
+    long float Aftertreatment_2_Diesel_Particulate_Filter_Total_Passive_Regeneration_Time;
+    long float Aftertreatment_2_Diesel_Particulate_Filter_Total_Number_of_Passive_Regenerations;
+    long float Aftertreatment_2_Diesel_Particulate_Filter_Total_Number_of_Active_Regeneration_Inhibit_Requests;
+    long float Aftertreatment_2_Diesel_Particulate_Filter_Total_Number_of_Active_Regeneration_Manual_Requests;
+    long float Aftertreatment_2_Average_Time_Between_Active_Regenerations;
+    long float Aftertreatment_2_Average_Distance_Between_Active_DPF_Regenerations;
 } getAT2HI_t ;
 typedef struct getA1DEFI {
-    uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Temperature_2;
-    uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Concentration;
-    uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Conductivity;
+    float Aftertreatment_1_Diesel_Exhaust_Fluid_Temperature_2;
+    float Aftertreatment_1_Diesel_Exhaust_Fluid_Concentration;
+    float Aftertreatment_1_Diesel_Exhaust_Fluid_Conductivity;
     struct A1DEFI_byte4 {
         uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Temperature_2_Preliminary_FMI:5;
     }A1DEFI_byte4;
@@ -3485,22 +3485,22 @@ typedef struct getA1DEFI {
     struct A1DEFI_byte6 bt6 ;
 } getA1DEFI_t ;
 typedef struct getSEP2 {
-    uint16_t Sensor_supply_voltage_5;
-    uint16_t Sensor_supply_voltage_6;
-    uint16_t Sensor_supply_voltage_7;
-    uint16_t Sensor_supply_voltage_8;
+    double Sensor_supply_voltage_5;
+    double Sensor_supply_voltage_6;
+    double Sensor_supply_voltage_7;
+    double Sensor_supply_voltage_8;
 } getSEP2_t ;
 typedef struct getSEP1 {
-    uint16_t Sensor_supply_voltage_1;
-    uint16_t Sensor_supply_voltage_2;
-    uint16_t Sensor_supply_voltage_3;
-    uint16_t Sensor_supply_voltage_4;
+    double Sensor_supply_voltage_1;
+    double Sensor_supply_voltage_2;
+    double Sensor_supply_voltage_3;
+    double Sensor_supply_voltage_4;
 } getSEP1_t ;
 typedef struct getAT2AC1 {
-    uint16_t Aftertreatment_2_Supply_Air_Pressure;
-    uint16_t Aftertreatment_2_Purge_Air_Pressure;
-    uint16_t Aftertreatment_2_Air_Pressure_Control;
-    uint8_t Aftertreatment_2_Air_Pressure_Actuator_Position;
+    double Aftertreatment_2_Supply_Air_Pressure;
+    double Aftertreatment_2_Purge_Air_Pressure;
+    double Aftertreatment_2_Air_Pressure_Control;
+    float Aftertreatment_2_Air_Pressure_Actuator_Position;
     struct AT2AC1_byte7 {
         uint8_t Aftertreatment_2_Air_Pressure_Actuator_Position:1;
     }AT2AC1_byte7;
@@ -3514,10 +3514,10 @@ typedef struct getAT2AC1 {
     struct AT2AC1_byte8 bt8 ;
 } getAT2AC1_t ;
 typedef struct getAT1AC1 {
-    uint16_t Aftertreatment_1_Supply_Air_Pressure;
-    uint16_t Aftertreatment_1_Purge_Air_Pressure;
-    uint16_t Aftertreatment_1_Air_Pressure_Control;
-    uint8_t Aftertreatment_1_Air_Pressure_Actuator_Position;
+    double Aftertreatment_1_Supply_Air_Pressure;
+    double Aftertreatment_1_Purge_Air_Pressure;
+    double Aftertreatment_1_Air_Pressure_Control;
+    float Aftertreatment_1_Air_Pressure_Actuator_Position;
     struct AT1AC1_byte7 {
         uint8_t Aftertreatment_1_Air_Pressure_Actuator_Position:1;
     }AT1AC1_byte7;
@@ -3531,9 +3531,9 @@ typedef struct getAT1AC1 {
     struct AT1AC1_byte8 bt8 ;
 } getAT1AC1_t ;
 typedef struct getAT2FC1 {
-    uint16_t Aftertreatment_2_Fuel_Pressure_1;
-    uint16_t Aftertreatment_2_Fuel_Rate;
-    uint16_t Aftertreatment_2_Fuel_Pressure_1_Control;
+    double Aftertreatment_2_Fuel_Pressure_1;
+    double Aftertreatment_2_Fuel_Rate;
+    double Aftertreatment_2_Fuel_Pressure_1_Control;
     struct AT2FC1_byte7 {
         uint8_t Aftertreatment_2_Fuel_Drain_Actuator:2;
         uint8_t Aftertreatment_2_Ignition:2;
@@ -3541,12 +3541,12 @@ typedef struct getAT2FC1 {
         uint8_t Aftertreatment_2_Fuel_Enable_Actuator:2;
     }AT2FC1_byte7;
     struct AT2FC1_byte7 bt7 ;
-    uint8_t Aftertreatment_2_Fuel_Injector_1_Heater_Control;
+    float Aftertreatment_2_Fuel_Injector_1_Heater_Control;
 } getAT2FC1_t ;
 typedef struct getAT1FC1 {
-    uint16_t Aftertreatment_1_Fuel_Pressure_1;
-    uint16_t Aftertreatment_1_Fuel_Rate;
-    uint16_t Aftertreatment_1_Fuel_Pressure_1_Control;
+    double Aftertreatment_1_Fuel_Pressure_1;
+    double Aftertreatment_1_Fuel_Rate;
+    double Aftertreatment_1_Fuel_Pressure_1_Control;
     struct AT1FC1_byte7 {
         uint8_t Aftertreatment_1_Fuel_Drain_Actuator:2;
         uint8_t Aftertreatment_1_Ignition:2;
@@ -3554,20 +3554,20 @@ typedef struct getAT1FC1 {
         uint8_t Aftertreatment_1_Fuel_Enable_Actuator:2;
     }AT1FC1_byte7;
     struct AT1FC1_byte7 bt7 ;
-    uint8_t Aftertreatment_1_Fuel_Injector_1_Heater_Control;
+    float Aftertreatment_1_Fuel_Injector_1_Heater_Control;
 } getAT1FC1_t ;
 typedef struct getGFI {
-    uint16_t Engine_Fuel_Valve_2_Intake_Absolute_Pressure;
-    uint16_t Engine_Gas_2_Mass_Flow_Rate;
-    uint8_t Engine_Fuel_Temperature_2;
-    uint16_t Engine_Fuel;
+    double Engine_Fuel_Valve_2_Intake_Absolute_Pressure;
+    double Engine_Gas_2_Mass_Flow_Rate;
+    float Engine_Fuel_Temperature_2;
+    double Engine_Fuel;
 } getGFI_t ;
 typedef struct getEEC6 {
-    uint16_t Engine_Turbocharger_Compressor_Bypass_Actuator_1_Command;
-    uint8_t Engine_Variable_Geometry_Turbocharger_Actuator_1;
-    uint8_t Engine_Turbocharger_Compressor_Bypass_Actuator_1;
-    uint16_t Engine_Turbocharger_Compressor_Bypass_Actuator_2_command;
-    uint8_t Engine_Desired_Turbocharger_Compressor_Bypass_Actuator_1_Position;
+    double Engine_Turbocharger_Compressor_Bypass_Actuator_1_Command;
+    float Engine_Variable_Geometry_Turbocharger_Actuator_1;
+    float Engine_Turbocharger_Compressor_Bypass_Actuator_1;
+    double Engine_Turbocharger_Compressor_Bypass_Actuator_2_command;
+    float Engine_Desired_Turbocharger_Compressor_Bypass_Actuator_1_Position;
     struct EEC6_byte8 {
         uint8_t Engine_Turbocharger_Compressor_Bypass_Actuator_1_Preliminary_FMI:5;
         uint8_t Engine_Turbocharger_Compressor_Bypass_Actuator_1_Temperature_Status:3;
@@ -3688,7 +3688,7 @@ typedef struct getWCM2 {
         uint8_t Network_Antenna_Status_2:8;
     }WCM2_byte3;
     struct WCM2_byte3 bt3 ;
-    uint8_t Network_Signal_Strength_2;
+    float Network_Signal_Strength_2;
     struct WCM2_byte5 {
         uint8_t Wireless_Communication_Network_Type_2:8;
     }WCM2_byte5;
@@ -3707,19 +3707,19 @@ typedef struct getWCM1 {
         uint8_t Network_Antenna_Status_1:8;
     }WCM1_byte3;
     struct WCM1_byte3 bt3 ;
-    uint8_t Network_Signal_Strength_1;
+    float Network_Signal_Strength_1;
     struct WCM1_byte5 {
         uint8_t Wireless_Communication_Network_Type_1:8;
     }WCM1_byte5;
     struct WCM1_byte5 bt5 ;
 } getWCM1_t ;
 typedef struct getEFL_P4 {
-    uint8_t Engine_Charge_Air_Cooler_1_Intake_Pressure;
-    uint8_t Engine_Charge_Air_Cooler_2_Intake_Pressure;
-    uint8_t Engine_Coolant_Pump_Differential_Pressure;
-    uint16_t Engine_Centrifugal_Oil_Filter_speed;
-    uint8_t Engine_Intercooler_Coolant_Level;
-    uint8_t Engine_Charge_Air_Cooler_Outlet_Pressure;
+    float Engine_Charge_Air_Cooler_1_Intake_Pressure;
+    float Engine_Charge_Air_Cooler_2_Intake_Pressure;
+    float Engine_Coolant_Pump_Differential_Pressure;
+    double Engine_Centrifugal_Oil_Filter_speed;
+    float Engine_Intercooler_Coolant_Level;
+    float Engine_Charge_Air_Cooler_Outlet_Pressure;
 } getEFL_P4_t ;
 typedef struct getFWSS2 {
     struct FWSS2_byte1 {
@@ -3728,16 +3728,16 @@ typedef struct getFWSS2 {
         uint8_t Fifth_Wheel_Lock_Couple_Status_Indicator:2;
     }FWSS2_byte1;
     struct FWSS2_byte1 bt1 ;
-    uint8_t Fifth_Wheel_Slider_Position;
+    float Fifth_Wheel_Slider_Position;
     struct FWSS2_byte3 {
         uint8_t Fifth_Wheel_Slider_Lock_Indicator:2;
     }FWSS2_byte3;
     struct FWSS2_byte3 bt3 ;
 } getFWSS2_t ;
 typedef struct getAT2IMG {
-    uint16_t Aftertreatment_2_Exhaust_Gas_Temperature_2;
-    uint16_t Aftertreatment_2_Diesel_Particulate_Filter_Intermediate_Gas_Temperature;
-    uint16_t Aftertreatment_2_Diesel_Particulate_Filter_Differential_Pressure;
+    double Aftertreatment_2_Exhaust_Gas_Temperature_2;
+    double Aftertreatment_2_Diesel_Particulate_Filter_Intermediate_Gas_Temperature;
+    double Aftertreatment_2_Diesel_Particulate_Filter_Differential_Pressure;
     struct AT2IMG_byte7 {
         uint8_t Aftertreatment_2_Exhaust_Gas_Temperature_2_Preliminary_FMI:5;
         uint8_t Aftertreatment_2_Diesel_Particulate_Filter_Delta_Pressure_Preliminary_FMI:5;
@@ -3749,8 +3749,8 @@ typedef struct getAT2IMG {
     struct AT2IMG_byte8 bt8 ;
 } getAT2IMG_t ;
 typedef struct getAT2OG2 {
-    uint16_t Aftertreatment_2_Exhaust_Gas_Temperature_3;
-    uint16_t Aftertreatment_2_Diesel_Particulate_Filter_Outlet_Gas_Temperature;
+    double Aftertreatment_2_Exhaust_Gas_Temperature_3;
+    double Aftertreatment_2_Diesel_Particulate_Filter_Outlet_Gas_Temperature;
     struct AT2OG2_byte5 {
         uint8_t Aftertreatment_2_Exhaust_Gas_Temperature_3_Preliminary_FMI:5;
     }AT2OG2_byte5;
@@ -3761,8 +3761,8 @@ typedef struct getAT2OG2 {
     struct AT2OG2_byte6 bt6 ;
 } getAT2OG2_t ;
 typedef struct getAT2IG2 {
-    uint16_t Aftertreatment_2_Exhaust_Gas_Temperature_1;
-    uint16_t Aftertreatment_2_Diesel_Particulate_Filter_Intake_Gas_Temperature;
+    double Aftertreatment_2_Exhaust_Gas_Temperature_1;
+    double Aftertreatment_2_Diesel_Particulate_Filter_Intake_Gas_Temperature;
     struct AT2IG2_byte5 {
         uint8_t Aftertreatment_2_Exhaust_Gas_Temperature_1_Preliminary_FMI:5;
     }AT2IG2_byte5;
@@ -3773,9 +3773,9 @@ typedef struct getAT2IG2 {
     struct AT2IG2_byte6 bt6 ;
 } getAT2IG2_t ;
 typedef struct getAT1IMG {
-    uint16_t Aftertreatment_1_Exhaust_Gas_Temperature_2;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_Intermediate_Gas_Temperature;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_Differential_Pressure;
+    double Aftertreatment_1_Exhaust_Gas_Temperature_2;
+    double Aftertreatment_1_Diesel_Particulate_Filter_Intermediate_Gas_Temperature;
+    double Aftertreatment_1_Diesel_Particulate_Filter_Differential_Pressure;
     struct AT1IMG_byte7 {
         uint8_t Aftertreatment_1_Exhaust_Gas_Temperature_2_Preliminary_FMI:5;
         uint8_t Aftertreatment_1_Diesel_Particulate_Filter_Delta_Pressure_Preliminary_FMI:5;
@@ -3787,8 +3787,8 @@ typedef struct getAT1IMG {
     struct AT1IMG_byte8 bt8 ;
 } getAT1IMG_t ;
 typedef struct getAT1OG2 {
-    uint16_t Aftertreatment_1_Exhaust_Gas_Temperature_3;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_Outlet_Gas_Temperature;
+    double Aftertreatment_1_Exhaust_Gas_Temperature_3;
+    double Aftertreatment_1_Diesel_Particulate_Filter_Outlet_Gas_Temperature;
     struct AT1OG2_byte5 {
         uint8_t Aftertreatment_1_Exhaust_Gas_Temperature_3_Preliminary_FMI:5;
     }AT1OG2_byte5;
@@ -3799,8 +3799,8 @@ typedef struct getAT1OG2 {
     struct AT1OG2_byte6 bt6 ;
 } getAT1OG2_t ;
 typedef struct getAT1IG2 {
-    uint16_t Aftertreatment_1_Exhaust_Gas_Temperature_1;
-    uint16_t Aftertreatment_1_Diesel_Particulate_Filter_Intake_Gas_Temperature;
+    double Aftertreatment_1_Exhaust_Gas_Temperature_1;
+    double Aftertreatment_1_Diesel_Particulate_Filter_Intake_Gas_Temperature;
     struct AT1IG2_byte5 {
         uint8_t Aftertreatment_1_Exhaust_Gas_Temperature_1_Preliminary_FMI:5;
     }AT1IG2_byte5;
@@ -3815,7 +3815,7 @@ typedef struct getTPRI {
         uint8_t Tire_Location:8;
     }TPRI_byte1;
     struct TPRI_byte1 bt1 ;
-    uint8_t Reference_Tire_Pressure;
+    float Reference_Tire_Pressure;
 } getTPRI_t ;
 typedef struct getTR6 {
     struct TR6_byte1 {
@@ -3856,7 +3856,7 @@ typedef struct getTR5 {
         uint8_t Route_Number:1;
     }TR5_byte6;
     struct TR5_byte6 bt6 ;
-    uint8_t Transfer_Sold;
+    float Transfer_Sold;
 } getTR5_t ;
 typedef struct getTR3 {
     struct TR3_byte1 {
@@ -3871,23 +3871,23 @@ typedef struct getTR3 {
         uint8_t Strobe_Activation_Control_Status:2;
     }TR3_byte2;
     struct TR3_byte2 bt2 ;
-    uint16_t Vehicle_ID;
+    double Vehicle_ID;
 } getTR3_t ;
 typedef struct getTR1 {
-    uint8_t Agency;
-    uint8_t Number_of_bytes_in_the_Transit_Assigned_Route_Identity;
-    uint8_t Number_of_bytes_in_the_Transit_Assigned_Run_Identity;
-    uint8_t Number_of_bytes_in_the_Transit_Assigned_Block_Identity;
+    float Agency;
+    float Number_of_bytes_in_the_Transit_Assigned_Route_Identity;
+    float Number_of_bytes_in_the_Transit_Assigned_Run_Identity;
+    float Number_of_bytes_in_the_Transit_Assigned_Block_Identity;
 } getTR1_t ;
 typedef struct getTR2 {
-    uint8_t Number_of_bytes_in_the_Milepost_Identification;
+    float Number_of_bytes_in_the_Milepost_Identification;
 } getTR2_t ;
 typedef struct getTR7 {
     struct TR7_byte1 {
         uint8_t Type_of_Passenger_Count:8;
     }TR7_byte1;
     struct TR7_byte1 bt1 ;
-    uint8_t Patron_Count;
+    float Patron_Count;
     struct TR7_byte3 {
         uint8_t Silent_Alarm_Status:2;
         uint8_t Vehicle_Use_Status:2;
@@ -3896,26 +3896,26 @@ typedef struct getTR7 {
     struct TR7_byte3 bt3 ;
 } getTR7_t ;
 typedef struct getEFL_P3 {
-    uint16_t Engine_Intake_Valve_Actuation_System_Oil_Pressure;
-    uint8_t Engine_Exhaust_Gas_Recirculation_1_Intake_Pressure;
-    uint16_t Engine_Exhaust_Valve_Actuation_System_Oil_Pressure;
-    uint8_t Engine_Exhaust_Gas_Recirculation_1_Outlet_Pressure;
-    uint16_t Engine_Throttle_Valve_1_Differential_Pressure;
+    double Engine_Intake_Valve_Actuation_System_Oil_Pressure;
+    float Engine_Exhaust_Gas_Recirculation_1_Intake_Pressure;
+    double Engine_Exhaust_Valve_Actuation_System_Oil_Pressure;
+    float Engine_Exhaust_Gas_Recirculation_1_Outlet_Pressure;
+    double Engine_Throttle_Valve_1_Differential_Pressure;
 } getEFL_P3_t ;
 typedef struct getEEC14 {
-    uint16_t Engine_Exhaust_Gas_Recirculation_1_Valve_1_Position_Error;
-    uint16_t Engine_Exhaust_Gas_Recirculation_1_Valve_2_Position_Error;
-    uint16_t Engine_Fuel_Mass_Flow_Rate;
+    double Engine_Exhaust_Gas_Recirculation_1_Valve_1_Position_Error;
+    double Engine_Exhaust_Gas_Recirculation_1_Valve_2_Position_Error;
+    double Engine_Fuel_Mass_Flow_Rate;
     struct EEC14_byte7 {
         uint8_t Fuel_Type:8;
     }EEC14_byte7;
     struct EEC14_byte7 bt7 ;
 } getEEC14_t ;
 typedef struct getEEC15 {
-    uint8_t Accelerator_Pedal_1_Channel_2;
-    uint8_t Accelerator_Pedal_1_Channel_3;
-    uint8_t Accelerator_Pedal_2_Channel_2;
-    uint8_t Accelerator_Pedal_2_Channel_3;
+    float Accelerator_Pedal_1_Channel_2;
+    float Accelerator_Pedal_1_Channel_3;
+    float Accelerator_Pedal_2_Channel_2;
+    float Accelerator_Pedal_2_Channel_3;
 } getEEC15_t ;
 typedef struct getEBC5 {
     struct EBC5_byte1 {
@@ -3930,7 +3930,7 @@ typedef struct getEBC5 {
         uint8_t XBR_Active_Control_Mode:4;
     }EBC5_byte2;
     struct EBC5_byte2 bt2 ;
-    uint8_t XBR_Acceleration_Limit;
+    float XBR_Acceleration_Limit;
     struct EBC5_byte4 {
         uint8_t Parking_Brake_Actuator_Fully_Activated:2;
         uint8_t Emergency_Braking_Active:2;
@@ -3948,7 +3948,7 @@ typedef struct getCSA {
         uint8_t Engine_Start_Enable_Device_2_Configuration:4;
     }CSA_byte2;
     struct CSA_byte2 bt2 ;
-    uint8_t Engine_Cold_Start_Fuel_Igniter_Command;
+    float Engine_Cold_Start_Fuel_Igniter_Command;
     struct CSA_byte4 {
         uint8_t Engine_Cold_Start_Fuel_Igniter_Relay:2;
         uint8_t Engine_Cold_Start_Fuel_Igniter_Relay_Feedback:2;
@@ -3984,7 +3984,7 @@ typedef struct getISCS {
     struct ISCS_byte1 bt1 ;
 } getISCS_t ;
 typedef struct getCMI {
-    uint16_t Total_Count_of_Configuration_Changes_Made;
+    double Total_Count_of_Configuration_Changes_Made;
 } getCMI_t ;
 typedef struct getISC {
     struct ISC_byte1 {
@@ -3999,7 +3999,7 @@ typedef struct getOHECS {
         uint8_t Engine_Alternate_Low_Idle_Switch:2;
     }OHECS_byte1;
     struct OHECS_byte1 bt1 ;
-    uint8_t Engine_Alternate_Rating_Select;
+    float Engine_Alternate_Rating_Select;
     struct OHECS_byte3 {
         uint8_t Engine_Alternate_Droop_Accelerator_1_Select:4;
         uint8_t Engine_Alternate_Droop_Accelerator_2_Select:4;
@@ -4023,8 +4023,8 @@ typedef struct getOEL {
         uint8_t High_Low_Beam_Switch:2;
     }OEL_byte2;
     struct OEL_byte2 bt2 ;
-    uint8_t Operators_Desired_Back_light;
-    uint16_t Operators_Desired___Delayed_Lamp_Off_Time;
+    float Operators_Desired_Back_light;
+    double Operators_Desired___Delayed_Lamp_Off_Time;
 } getOEL_t ;
 typedef struct getOWW {
     struct OWW_byte1 {
@@ -4036,9 +4036,9 @@ typedef struct getOWW {
         uint8_t Rear_Wiper_Switch:4;
     }OWW_byte2;
     struct OWW_byte2 bt2 ;
-    uint8_t Front_Operator_Wiper_Delay_Control;
-    uint8_t Front_Non_operator_Wiper_Delay_Control;
-    uint8_t Rear_Wiper_Delay_Control;
+    float Front_Operator_Wiper_Delay_Control;
+    float Front_Non_operator_Wiper_Delay_Control;
+    float Rear_Wiper_Delay_Control;
     struct OWW_byte6 {
         uint8_t Front_Non_operator_Washer_Switch:3;
         uint8_t Front_Operator_Washer_Switch:3;
@@ -4050,13 +4050,13 @@ typedef struct getOWW {
     struct OWW_byte7 bt7 ;
 } getOWW_t ;
 typedef struct getIC2 {
-    uint8_t Engine_Air_Filter_2_Differential_Pressure;
-    uint8_t Engine_Air_Filter_3_Differential_Pressure;
-    uint8_t Engine_Air_Filter_4_Differential_Pressure;
-    uint8_t Engine_Intake_Manifold_2_Pressure;
-    uint8_t Engine_Intake_Manifold_1_Absolute_Pressure;
-    uint16_t Engine_Intake_Manifold_1_Absolute_Pressure__High_Resolution_;
-    uint8_t Engine_Intake_Manifold_2_Absolute_Pressure;
+    float Engine_Air_Filter_2_Differential_Pressure;
+    float Engine_Air_Filter_3_Differential_Pressure;
+    float Engine_Air_Filter_4_Differential_Pressure;
+    float Engine_Intake_Manifold_2_Pressure;
+    float Engine_Intake_Manifold_1_Absolute_Pressure;
+    double Engine_Intake_Manifold_1_Absolute_Pressure__High_Resolution_;
+    float Engine_Intake_Manifold_2_Absolute_Pressure;
 } getIC2_t ;
 typedef struct getFMS {
     struct FMS_byte1 {
@@ -4064,17 +4064,17 @@ typedef struct getFMS {
         uint8_t FMS_standard_Requests_Supported:2;
     }FMS_byte1;
     struct FMS_byte1 bt1 ;
-    uint32_t FMS_standard_SW_version_supported_;
+    long float FMS_standard_SW_version_supported_;
 } getFMS_t ;
 typedef struct getEP {
-    uint16_t Keep_Alive_Battery_Consumption;
-    uint8_t Data_Memory_Usage;
+    double Keep_Alive_Battery_Consumption;
+    float Data_Memory_Usage;
 } getEP_t ;
 typedef struct getTCI6 {
-    uint16_t Engine_Turbocharger_1_Compressor_Outlet_Temperature;
-    uint16_t Engine_Turbocharger_2_Compressor_Outlet_Temperature;
-    uint16_t Engine_Turbocharger_3_Compressor_Outlet_Temperature;
-    uint16_t Engine_Turbocharger_4_Compressor_Outlet_Temperature;
+    double Engine_Turbocharger_1_Compressor_Outlet_Temperature;
+    double Engine_Turbocharger_2_Compressor_Outlet_Temperature;
+    double Engine_Turbocharger_3_Compressor_Outlet_Temperature;
+    double Engine_Turbocharger_4_Compressor_Outlet_Temperature;
 } getTCI6_t ;
 typedef struct getCM3 {
     struct CM3_byte1 {
@@ -4092,16 +4092,16 @@ typedef struct getCM3 {
     struct CM3_byte3 bt3 ;
 } getCM3_t ;
 typedef struct getEEC5 {
-    uint16_t Engine_Turbocharger_1_Calculated_Turbine_Intake_Temperature;
-    uint16_t Engine_Turbocharger_1_Calculated_Turbine_Outlet_Temperature;
-    uint16_t Engine_Exhaust_Gas_Recirculation_1__EGR1__Valve_Control;
+    double Engine_Turbocharger_1_Calculated_Turbine_Intake_Temperature;
+    double Engine_Turbocharger_1_Calculated_Turbine_Outlet_Temperature;
+    double Engine_Exhaust_Gas_Recirculation_1__EGR1__Valve_Control;
     struct EEC5_byte7 {
         uint8_t Engine_Variable_Geometry_Turbocharger__VGT__Air_Control_Shutoff_Valve:2;
         uint8_t Engine_Fuel_Control_Control_Mode:2;
         uint8_t Engine_Variable_Geometry_Turbocharger_1_Control_Mode:2;
     }EEC5_byte7;
     struct EEC5_byte7 bt7 ;
-    uint8_t Engine_Variable_Geometry_Turbocharger__VGT__1_Actuator_Position;
+    float Engine_Variable_Geometry_Turbocharger__VGT__1_Actuator_Position;
 } getEEC5_t ;
 typedef struct getBJM1 {
     struct BJM1_byte1 {
@@ -4331,42 +4331,42 @@ typedef struct getFWD {
     struct FWD_byte1 bt1 ;
 } getFWD_t ;
 typedef struct getAMB2 {
-    uint8_t Solar_Intensity_Percent;
-    uint8_t Solar_Sensor_Maximum;
-    uint16_t Specific_Humidity;
-    uint16_t Calculated_Ambient_Air_Temperature;
-    uint16_t Barometric_Absolute_Pressure__High_Resolution_;
+    float Solar_Intensity_Percent;
+    float Solar_Sensor_Maximum;
+    double Specific_Humidity;
+    double Calculated_Ambient_Air_Temperature;
+    double Barometric_Absolute_Pressure__High_Resolution_;
 } getAMB2_t ;
 typedef struct getCACI {
-    uint8_t Cab_A_C_Refrigerant_Compressor_Outlet_Pressure;
+    float Cab_A_C_Refrigerant_Compressor_Outlet_Pressure;
 } getCACI_t ;
 typedef struct getSPR {
-    uint8_t Pneumatic_Supply_Pressure_Request;
-    uint8_t Parking_and_or_Trailer_Air_Pressure_Request;
-    uint8_t Service_Brake_Air_Pressure_Request_Circuit_1;
-    uint8_t Service_Brake_Air_Pressure_Request_Circuit_2;
-    uint8_t Auxiliary_Equipment_Supply_Pressure_Request;
-    uint8_t Air_Suspension_Supply_Pressure_Request;
+    float Pneumatic_Supply_Pressure_Request;
+    float Parking_and_or_Trailer_Air_Pressure_Request;
+    float Service_Brake_Air_Pressure_Request_Circuit_1;
+    float Service_Brake_Air_Pressure_Request_Circuit_2;
+    float Auxiliary_Equipment_Supply_Pressure_Request;
+    float Air_Suspension_Supply_Pressure_Request;
 } getSPR_t ;
 typedef struct getEOAC {
-    uint8_t Travel_Velocity_Control_Position;
+    float Travel_Velocity_Control_Position;
 } getEOAC_t ;
 typedef struct getEPD {
-    uint8_t Payload_Percentage;
+    float Payload_Percentage;
 } getEPD_t ;
 typedef struct getMVS {
-    uint8_t Maximum_Vehicle_Speed_Limit_1;
-    uint8_t Maximum_Vehicle_Speed_Limit_2;
-    uint8_t Maximum_Vehicle_Speed_Limit_3;
-    uint8_t Maximum_Vehicle_Speed_Limit_4;
-    uint8_t Maximum_Vehicle_Speed_Limit_5;
-    uint8_t Maximum_Vehicle_Speed_Limit_6;
-    uint8_t Maximum_Vehicle_Speed_Limit_7;
-    uint8_t Applied_Vehicle_Speed_Limit;
+    float Maximum_Vehicle_Speed_Limit_1;
+    float Maximum_Vehicle_Speed_Limit_2;
+    float Maximum_Vehicle_Speed_Limit_3;
+    float Maximum_Vehicle_Speed_Limit_4;
+    float Maximum_Vehicle_Speed_Limit_5;
+    float Maximum_Vehicle_Speed_Limit_6;
+    float Maximum_Vehicle_Speed_Limit_7;
+    float Applied_Vehicle_Speed_Limit;
 } getMVS_t ;
 typedef struct getHBS {
-    uint8_t Hydraulic_Brake_Pressure_Circuit_1;
-    uint8_t Hydraulic_Brake_Pressure_Circuit_2;
+    float Hydraulic_Brake_Pressure_Circuit_1;
+    float Hydraulic_Brake_Pressure_Circuit_2;
     struct HBS_byte3 {
         uint8_t Hydraulic_Brake_Pressure_Warning_State_Circuit_1:2;
         uint8_t Hydraulic_Brake_Pressure_Warning_State_Circuit_2:2;
@@ -4381,8 +4381,8 @@ typedef struct getHBS {
     struct HBS_byte4 bt4 ;
 } getHBS_t ;
 typedef struct getET {
-    uint16_t Engine_Exhaust_Gas_Temperature___Right_Manifold;
-    uint16_t Engine_Exhaust_Gas_Temperature___Left_Manifold;
+    double Engine_Exhaust_Gas_Temperature___Right_Manifold;
+    double Engine_Exhaust_Gas_Temperature___Left_Manifold;
 } getET_t ;
 typedef struct getLD {
     struct LD_byte1 {
@@ -4521,7 +4521,7 @@ typedef struct getETC7 {
         uint8_t Transmission_Mode_1_Indicator:2;
     }ETC7_byte3;
     struct ETC7_byte3 bt3 ;
-    uint8_t Transmission_Requested_Gear_Feedback;
+    float Transmission_Requested_Gear_Feedback;
     struct ETC7_byte5 {
         uint8_t Transmission_Mode_5_Indicator:2;
         uint8_t Transmission_Mode_6_Indicator:2;
@@ -4536,7 +4536,7 @@ typedef struct getETC7 {
     struct ETC7_byte6 bt6 ;
 } getETC7_t ;
 typedef struct getTCFG2 {
-    uint16_t Transmission_Torque_Limit;
+    double Transmission_Torque_Limit;
 } getTCFG2_t ;
 typedef struct getML {
     struct ML_byte1 {
@@ -4555,11 +4555,11 @@ typedef struct getML {
         uint8_t Black_Out_Work_Lamp_Select:2;
     }ML_byte4;
     struct ML_byte4 bt4 ;
-    uint8_t Operators_Black_Out_Intensity_Selection;
+    float Operators_Black_Out_Intensity_Selection;
 } getML_t ;
 typedef struct getTAVG {
-    uint16_t Engine_Total_Average_Fuel_Rate;
-    uint16_t Engine_Total_Average_Fuel_Economy;
+    double Engine_Total_Average_Fuel_Rate;
+    double Engine_Total_Average_Fuel_Economy;
 } getTAVG_t ;
 typedef struct getDC1 {
     struct DC1_byte1 {
@@ -4589,8 +4589,8 @@ typedef struct getVDC1 {
     struct VDC1_byte3 bt3 ;
 } getVDC1_t ;
 typedef struct getBT1 {
-    uint8_t Battery_1_Temperature;
-    uint8_t Battery_2_Temperature;
+    float Battery_1_Temperature;
+    float Battery_2_Temperature;
 } getBT1_t ;
 typedef struct getACC2 {
     struct ACC2_byte1 {
@@ -4600,38 +4600,38 @@ typedef struct getACC2 {
     struct ACC2_byte1 bt1 ;
 } getACC2_t ;
 typedef struct getVEP3 {
-    uint16_t Alternator_Current__High_Range_Resolution_;
-    uint16_t Net_Battery_Current__High_Range_Resolution_;
+    double Alternator_Current__High_Range_Resolution_;
+    double Net_Battery_Current__High_Range_Resolution_;
 } getVEP3_t ;
 typedef struct getRTC1 {
-    uint8_t Low_Limit_Threshold_for_Maximum_RPM_from_Retarder;
-    uint8_t High_Limit_Threshold_for_Minimum_Continuous_RPM_from_Retarder;
-    uint8_t Low_Limit_Threshold_for_Maximum_Torque_from_Retarder;
-    uint8_t High_Limit_Threshold_for_Minimum_Continuous_Torque_from_Retarder;
-    uint8_t Maximum_Continuous_Retarder_Speed;
-    uint8_t Minimum_Continuous_Retarder_Speed;
-    uint8_t Maximum_Continuous_Retarder_Torque;
-    uint8_t Minimum_Continuous_Retarder_Torque;
+    float Low_Limit_Threshold_for_Maximum_RPM_from_Retarder;
+    float High_Limit_Threshold_for_Minimum_Continuous_RPM_from_Retarder;
+    float Low_Limit_Threshold_for_Maximum_Torque_from_Retarder;
+    float High_Limit_Threshold_for_Minimum_Continuous_Torque_from_Retarder;
+    float Maximum_Continuous_Retarder_Speed;
+    float Minimum_Continuous_Retarder_Speed;
+    float Maximum_Continuous_Retarder_Torque;
+    float Minimum_Continuous_Retarder_Torque;
 } getRTC1_t ;
 typedef struct getECT1 {
-    uint8_t Engine_Low_Limit_Threshold_for_Maximum_RPM_from_Engine;
-    uint8_t Engine_High_Limit_Threshold_for_Minimum_Continuous_Engine_RPM;
-    uint8_t Engine_Low_Limit_Threshold_for_Maximum_Torque_from_Engine;
-    uint8_t Engine_High_Limit_Threshold_for_Minimum_Continuous_Torque_from_Engine;
-    uint8_t Engine_Maximum_Continuous_RPM;
-    uint8_t Engine_Minimum_Continuous_RPM;
-    uint8_t Engine_Maximum_Continuous_Torque;
-    uint8_t Engine_Minimum_Continuous_Torque;
+    float Engine_Low_Limit_Threshold_for_Maximum_RPM_from_Engine;
+    float Engine_High_Limit_Threshold_for_Minimum_Continuous_Engine_RPM;
+    float Engine_Low_Limit_Threshold_for_Maximum_Torque_from_Engine;
+    float Engine_High_Limit_Threshold_for_Minimum_Continuous_Torque_from_Engine;
+    float Engine_Maximum_Continuous_RPM;
+    float Engine_Minimum_Continuous_RPM;
+    float Engine_Maximum_Continuous_Torque;
+    float Engine_Minimum_Continuous_Torque;
 } getECT1_t ;
 typedef struct getGFD {
-    uint16_t Specific_Heat_Ratio;
-    uint16_t Reference_Engine_Gas_Mass_Flow_Rate;
-    uint16_t Fuel_energy_content;
+    double Specific_Heat_Ratio;
+    double Reference_Engine_Gas_Mass_Flow_Rate;
+    double Fuel_energy_content;
 } getGFD_t ;
 typedef struct getAT1T1I {
-    uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Level;
-    uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Temperature;
-    uint16_t Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Level_2;
+    float Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Level;
+    float Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Temperature;
+    double Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Level_2;
     struct AT1T1I_byte5 {
         uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Level_Preliminary_FMI:5;
         uint8_t Aftertreatment_Selective_Catalytic_Reduction_Operator_Inducement_Active:3;
@@ -4642,16 +4642,16 @@ typedef struct getAT1T1I {
         uint8_t Aftertreatment_SCR_Operator_Inducement_Severity:3;
     }AT1T1I_byte6;
     struct AT1T1I_byte6 bt6 ;
-    uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Heater;
+    float Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Heater;
     struct AT1T1I_byte8 {
         uint8_t Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_1_Heater_Preliminary_FMI:5;
     }AT1T1I_byte8;
     struct AT1T1I_byte8 bt8 ;
 } getAT1T1I_t ;
 typedef struct getASC5 {
-    uint8_t Damper_Stiffness_Front_Axle;
-    uint8_t Damper_Stiffness_Rear_Axle;
-    uint8_t Damper_Stiffness_Lift___Tag_Axle;
+    float Damper_Stiffness_Front_Axle;
+    float Damper_Stiffness_Rear_Axle;
+    float Damper_Stiffness_Lift___Tag_Axle;
     struct ASC5_byte4 {
         uint8_t Electronic_Shock_Absorber_Control_Mode__:2;
         uint8_t Electronic_Shock_Absorber_Control_Mode___Rear_Axle:2;
@@ -4660,13 +4660,13 @@ typedef struct getASC5 {
     struct ASC5_byte4 bt4 ;
 } getASC5_t ;
 typedef struct getASC4 {
-    uint16_t Bellow_Pressure_Front_Axle_Left;
-    uint16_t Bellow_Pressure_Front_Axle_Right;
-    uint16_t Bellow_Pressure_Rear_Axle_Left;
-    uint16_t Bellow_Pressure_Rear_Axle_Right;
-    uint16_t Relative_Level_Front_Axle_Right;
-    uint16_t Relative_Level_Rear_Axle_Left;
-    uint16_t Relative_Level_Rear_Axle_Right;
+    double Bellow_Pressure_Front_Axle_Left;
+    double Bellow_Pressure_Front_Axle_Right;
+    double Bellow_Pressure_Rear_Axle_Left;
+    double Bellow_Pressure_Rear_Axle_Right;
+    double Relative_Level_Front_Axle_Right;
+    double Relative_Level_Rear_Axle_Left;
+    double Relative_Level_Rear_Axle_Right;
 } getASC4_t ;
 typedef struct getASC1 {
     struct ASC1_byte1 {
@@ -4734,29 +4734,29 @@ typedef struct getBM {
     struct BM_byte1 bt1 ;
 } getBM_t ;
 typedef struct getCCC {
-    uint16_t Auxiliary_Heater_Maximum_Output_Power;
+    double Auxiliary_Heater_Maximum_Output_Power;
 } getCCC_t ;
 typedef struct getVF {
-    uint8_t Hydraulic_Temperature;
+    float Hydraulic_Temperature;
     struct VF_byte2 {
         uint8_t Hydraulic_Oil_Filter_Restriction_Switch:2;
         uint8_t Winch_Oil_Pressure_Switch:2;
     }VF_byte2;
     struct VF_byte2 bt2 ;
-    uint8_t Hydraulic_Oil_Level;
+    float Hydraulic_Oil_Level;
 } getVF_t ;
 typedef struct getET3 {
-    uint16_t Engine_Intake_Manifold_1_Air_Temperature__High_Resolution_;
-    uint16_t Engine_Coolant_Temperature__High_Resolution_;
-    uint16_t Engine_Intake_Valve_Actuation_System_Oil_Temperature;
-    uint16_t Engine_Charge_Air_Cooler_1_Outlet_Temperature;
+    double Engine_Intake_Manifold_1_Air_Temperature__High_Resolution_;
+    double Engine_Coolant_Temperature__High_Resolution_;
+    double Engine_Intake_Valve_Actuation_System_Oil_Temperature;
+    double Engine_Charge_Air_Cooler_1_Outlet_Temperature;
 } getET3_t ;
 typedef struct getEFS {
-    uint8_t Engine_Oil_Level_Remote_Reservoir;
-    uint8_t Engine_Fuel_Supply_Pump_Intake_Pressure;
-    uint8_t Engine_Fuel_Filter__suction_side__Differential_Pressure;
-    uint8_t Engine_Waste_Oil_Reservoir_Level;
-    uint8_t Engine_Oil_Filter_Outlet_Pressure;
+    float Engine_Oil_Level_Remote_Reservoir;
+    float Engine_Fuel_Supply_Pump_Intake_Pressure;
+    float Engine_Fuel_Filter__suction_side__Differential_Pressure;
+    float Engine_Waste_Oil_Reservoir_Level;
+    float Engine_Oil_Filter_Outlet_Pressure;
     struct EFS_byte6 {
         uint8_t Engine_Oil_Priming_Pump_Switch:2;
         uint8_t Engine_Oil_Priming_State:2;
@@ -4795,13 +4795,13 @@ typedef struct getTCO1 {
         uint8_t Direction_indicator:2;
     }TCO1_byte4;
     struct TCO1_byte4 bt4 ;
-    uint16_t Tachograph_output_shaft_speed;
-    uint16_t Tachograph_vehicle_speed;
+    double Tachograph_output_shaft_speed;
+    double Tachograph_vehicle_speed;
 } getTCO1_t ;
 typedef struct getHTR {
-    uint8_t Auxiliary_Heater_Output_Coolant_Temperature;
-    uint8_t Auxiliary_Heater_Input_Air_Temperature;
-    uint8_t Auxiliary_Heater_Output_Power_Percent;
+    float Auxiliary_Heater_Output_Coolant_Temperature;
+    float Auxiliary_Heater_Input_Air_Temperature;
+    float Auxiliary_Heater_Output_Power_Percent;
     struct HTR_byte4 {
         uint8_t Auxiliary_Heater_Mode:4;
     }HTR_byte4;
@@ -4815,21 +4815,21 @@ typedef struct getHTR {
     struct HTR_byte5 bt5 ;
 } getHTR_t ;
 typedef struct getHRW {
-    uint16_t Front_Axle_Left_Wheel_Speed;
-    uint16_t Front_axle_right_wheel_speed;
-    uint16_t Rear_axle_left_wheel_speed;
-    uint16_t Rear_axle_right_wheel_speed;
+    double Front_Axle_Left_Wheel_Speed;
+    double Front_axle_right_wheel_speed;
+    double Rear_axle_left_wheel_speed;
+    double Rear_axle_right_wheel_speed;
 } getHRW_t ;
 typedef struct getACC1 {
-    uint8_t Speed_of_forward_vehicle;
-    uint8_t Distance_to_forward_vehicle;
-    uint8_t Adaptive_Cruise_Control_Set_Speed;
+    float Speed_of_forward_vehicle;
+    float Distance_to_forward_vehicle;
+    float Adaptive_Cruise_Control_Set_Speed;
     struct ACC1_byte4 {
         uint8_t Adaptive_Cruise_Control_Mode:3;
         uint8_t Adaptive_cruise_control_set_distance_mode:3;
     }ACC1_byte4;
     struct ACC1_byte4 bt4 ;
-    uint16_t Road_curvature;
+    double Road_curvature;
     struct ACC1_byte7 {
         uint8_t ACC_Target_Detected:2;
         uint8_t ACC_System_Shutoff_Warning:2;
@@ -4839,13 +4839,13 @@ typedef struct getACC1 {
     struct ACC1_byte7 bt7 ;
 } getACC1_t ;
 typedef struct getCVW {
-    uint16_t Powered_Vehicle_Weight;
-    uint16_t Gross_Combination_Vehicle_Weight;
+    double Powered_Vehicle_Weight;
+    double Gross_Combination_Vehicle_Weight;
 } getCVW_t ;
 typedef struct getLTP {
-    uint16_t Laser_Tracer_Target_Deviation;
-    uint16_t Laser_Tracer_Vertical_Distance;
-    uint8_t Laser_Tracer_Horizontal_Deviation;
+    double Laser_Tracer_Target_Deviation;
+    double Laser_Tracer_Vertical_Distance;
+    float Laser_Tracer_Horizontal_Deviation;
     struct LTP_byte6 {
         uint8_t LED_Display_Data_2:8;
     }LTP_byte6;
@@ -4856,7 +4856,7 @@ typedef struct getLTP {
     struct LTP_byte7 bt7 ;
 } getLTP_t ;
 typedef struct getLBC {
-    uint16_t Blade_Duration_and_Direction;
+    double Blade_Duration_and_Direction;
     struct LBC_byte3 {
         uint8_t Blade_Control_Mode:8;
     }LBC_byte3;
@@ -4872,17 +4872,17 @@ typedef struct getLBC {
     struct LBC_byte5 bt5 ;
 } getLBC_t ;
 typedef struct getLMP {
-    uint16_t Mast_Position;
+    double Mast_Position;
 } getLMP_t ;
 typedef struct getLSP {
-    uint16_t Modify_Leveling_System_Set_Point;
-    uint32_t Blade_Height_Set_Point___High_Resolution;
+    double Modify_Leveling_System_Set_Point;
+    long float Blade_Height_Set_Point___High_Resolution;
 } getLSP_t ;
 typedef struct getLVD {
-    uint16_t Laser_Strike_Vertical_Deviation;
-    uint8_t Laser_Receiver_Type;
-    uint16_t Laser_Strike_Data_Latency;
-    uint16_t Absolute_Laser_Strike_Position;
+    double Laser_Strike_Vertical_Deviation;
+    float Laser_Receiver_Type;
+    double Laser_Strike_Data_Latency;
+    double Absolute_Laser_Strike_Position;
 } getLVD_t ;
 typedef struct getLVDD {
     struct LVDD_byte1 {
@@ -4901,12 +4901,12 @@ typedef struct getLVDD {
     struct LVDD_byte3 bt3 ;
 } getLVDD_t ;
 typedef struct getAP {
-    uint16_t Auxiliary_Vacuum_Pressure_Reading;
-    uint16_t Auxiliary_Gage_Pressure_Reading_1;
-    uint16_t Auxiliary_Absolute_Pressure_Reading;
+    double Auxiliary_Vacuum_Pressure_Reading;
+    double Auxiliary_Gage_Pressure_Reading_1;
+    double Auxiliary_Absolute_Pressure_Reading;
 } getAP_t ;
 typedef struct getTP1 {
-    uint8_t Tire_Pressure_Check_Interval;
+    float Tire_Pressure_Check_Interval;
     struct TP1_byte2 {
         uint8_t Steer_Channel_Mode:4;
     }TP1_byte2;
@@ -4931,141 +4931,141 @@ typedef struct getTP1 {
     struct TP1_byte5 bt5 ;
 } getTP1_t ;
 typedef struct getTP2 {
-    uint16_t Trailer_Tag_Or_Push_Channel_Tire_Pressure_Target;
-    uint16_t Drive_Channel_Tire_Pressure_Target;
-    uint16_t Steer_Channel_Tire_Pressure_Target;
+    double Trailer_Tag_Or_Push_Channel_Tire_Pressure_Target;
+    double Drive_Channel_Tire_Pressure_Target;
+    double Steer_Channel_Tire_Pressure_Target;
 } getTP2_t ;
 typedef struct getTP3 {
-    uint16_t Trailer_Tag_Or_Push_Channel_Tire_Pressure;
-    uint16_t Drive_Channel_Tire_Pressure;
-    uint16_t Steer_Channel_Tire_Pressure;
+    double Trailer_Tag_Or_Push_Channel_Tire_Pressure;
+    double Drive_Channel_Tire_Pressure;
+    double Steer_Channel_Tire_Pressure;
 } getTP3_t ;
 typedef struct getCT1 {
-    uint16_t Engine_Cylinder_1_Combustion_Time;
-    uint16_t Engine_Cylinder_2_Combustion_Time;
-    uint16_t Engine_Cylinder_3_Combustion_Time;
-    uint16_t Engine_Cylinder_4_Combustion_Time;
+    double Engine_Cylinder_1_Combustion_Time;
+    double Engine_Cylinder_2_Combustion_Time;
+    double Engine_Cylinder_3_Combustion_Time;
+    double Engine_Cylinder_4_Combustion_Time;
 } getCT1_t ;
 typedef struct getCT2 {
-    uint16_t Engine_Cylinder_5_Combustion_Time;
-    uint16_t Engine_Cylinder_6_Combustion_Time;
-    uint16_t Engine_Cylinder_7_Combustion_Time;
-    uint16_t Engine_Cylinder_8_Combustion_Time;
+    double Engine_Cylinder_5_Combustion_Time;
+    double Engine_Cylinder_6_Combustion_Time;
+    double Engine_Cylinder_7_Combustion_Time;
+    double Engine_Cylinder_8_Combustion_Time;
 } getCT2_t ;
 typedef struct getCT3 {
-    uint16_t Engine_Cylinder_9_Combustion_Time;
-    uint16_t Engine_Cylinder_10_Combustion_Time;
-    uint16_t Engine_Cylinder_11_Combustion_Time;
-    uint16_t Engine_Cylinder_12_Combustion_Time;
+    double Engine_Cylinder_9_Combustion_Time;
+    double Engine_Cylinder_10_Combustion_Time;
+    double Engine_Cylinder_11_Combustion_Time;
+    double Engine_Cylinder_12_Combustion_Time;
 } getCT3_t ;
 typedef struct getCT4 {
-    uint16_t Engine_Cylinder_13_Combustion_Time;
-    uint16_t Engine_Cylinder_14_Combustion_Time;
-    uint16_t Engine_Cylinder_15_Combustion_Time;
-    uint16_t Engine_Cylinder_16_Combustion_Time;
+    double Engine_Cylinder_13_Combustion_Time;
+    double Engine_Cylinder_14_Combustion_Time;
+    double Engine_Cylinder_15_Combustion_Time;
+    double Engine_Cylinder_16_Combustion_Time;
 } getCT4_t ;
 typedef struct getCT5 {
-    uint16_t Engine_Cylinder_17_Combustion_Time;
-    uint16_t Engine_Cylinder_18_Combustion_Time;
-    uint16_t Engine_Cylinder_19_Combustion_Time;
-    uint16_t Engine_Cylinder_20_Combustion_Time;
+    double Engine_Cylinder_17_Combustion_Time;
+    double Engine_Cylinder_18_Combustion_Time;
+    double Engine_Cylinder_19_Combustion_Time;
+    double Engine_Cylinder_20_Combustion_Time;
 } getCT5_t ;
 typedef struct getCT6 {
-    uint16_t Engine_Desired_Combustion_Time;
-    uint16_t Engine_Average_Combustion_Time;
+    double Engine_Desired_Combustion_Time;
+    double Engine_Average_Combustion_Time;
 } getCT6_t ;
 typedef struct getGFI2 {
-    uint16_t Engine_Fuel_Flow_Rate_1;
-    uint16_t Engine_Fuel_Flow_Rate_2;
-    uint8_t Engine_Fuel_Valve_1_Position;
-    uint8_t Engine_Fuel_Valve_2_Position;
-    uint8_t Engine_Requested_Fuel_Valve_1_Position;
-    uint8_t Engine_Requested_Fuel_Valve_2_Position;
+    double Engine_Fuel_Flow_Rate_1;
+    double Engine_Fuel_Flow_Rate_2;
+    float Engine_Fuel_Valve_1_Position;
+    float Engine_Fuel_Valve_2_Position;
+    float Engine_Requested_Fuel_Valve_1_Position;
+    float Engine_Requested_Fuel_Valve_2_Position;
 } getGFI2_t ;
 typedef struct getIT1 {
-    uint16_t Engine_Cylinder_1_Ignition_Timing;
-    uint16_t Engine_Cylinder_2_Ignition_Timing;
-    uint16_t Engine_Cylinder_3_Ignition_Timing;
-    uint16_t Engine_Cylinder_4_Ignition_Timing;
+    double Engine_Cylinder_1_Ignition_Timing;
+    double Engine_Cylinder_2_Ignition_Timing;
+    double Engine_Cylinder_3_Ignition_Timing;
+    double Engine_Cylinder_4_Ignition_Timing;
 } getIT1_t ;
 typedef struct getIT2 {
-    uint16_t Engine_Cylinder_5_Ignition_Timing;
-    uint16_t Engine_Cylinder_6_Ignition_Timing;
-    uint16_t Engine_Cylinder_7_Ignition_Timing;
-    uint16_t Engine_Cylinder_8_Ignition_Timing;
+    double Engine_Cylinder_5_Ignition_Timing;
+    double Engine_Cylinder_6_Ignition_Timing;
+    double Engine_Cylinder_7_Ignition_Timing;
+    double Engine_Cylinder_8_Ignition_Timing;
 } getIT2_t ;
 typedef struct getIT3 {
-    uint16_t Engine_Cylinder_9_Ignition_Timing;
-    uint16_t Engine_Cylinder_10_Ignition_Timing;
-    uint16_t Engine_Cylinder_11_Ignition_Timing;
-    uint16_t Engine_Cylinder_12_Ignition_Timing;
+    double Engine_Cylinder_9_Ignition_Timing;
+    double Engine_Cylinder_10_Ignition_Timing;
+    double Engine_Cylinder_11_Ignition_Timing;
+    double Engine_Cylinder_12_Ignition_Timing;
 } getIT3_t ;
 typedef struct getIT4 {
-    uint16_t Engine_Cylinder_13_Ignition_Timing;
-    uint16_t Engine_Cylinder_14_Ignition_Timing;
-    uint16_t Engine_Cylinder_15_Ignition_Timing;
-    uint16_t Engine_Cylinder_16_Ignition_Timing;
+    double Engine_Cylinder_13_Ignition_Timing;
+    double Engine_Cylinder_14_Ignition_Timing;
+    double Engine_Cylinder_15_Ignition_Timing;
+    double Engine_Cylinder_16_Ignition_Timing;
 } getIT4_t ;
 typedef struct getIT5 {
-    uint16_t Engine_Cylinder_17_Ignition_Timing;
-    uint16_t Engine_Cylinder_18_Ignition_Timing;
-    uint16_t Engine_Cylinder_19_Ignition_Timing;
-    uint16_t Engine_Cylinder_20_Ignition_Timing;
+    double Engine_Cylinder_17_Ignition_Timing;
+    double Engine_Cylinder_18_Ignition_Timing;
+    double Engine_Cylinder_19_Ignition_Timing;
+    double Engine_Cylinder_20_Ignition_Timing;
 } getIT5_t ;
 typedef struct getIT6 {
-    uint16_t Engine_Desired_Ignition_Timing_1;
-    uint16_t Engine_Desired_Ignition_Timing_2;
-    uint16_t Engine_Desired_Ignition_Timing_3;
-    uint16_t Engine_Actual_Ignition_Timing;
+    double Engine_Desired_Ignition_Timing_1;
+    double Engine_Desired_Ignition_Timing_2;
+    double Engine_Desired_Ignition_Timing_3;
+    double Engine_Actual_Ignition_Timing;
 } getIT6_t ;
 typedef struct getISO1 {
-    uint8_t Engine_Cylinder_1_Ignition_Transformer_Secondary_Output;
-    uint8_t Engine_Cylinder_2_Ignition_Transformer_Secondary_Output;
-    uint8_t Engine_Cylinder_3_Ignition_Transformer_Secondary_Output;
-    uint8_t Engine_Cylinder_4_Ignition_Transformer_Secondary_Output;
-    uint8_t Engine_Cylinder_5_Ignition_Transformer_Secondary_Output;
-    uint8_t Engine_Cylinder_6_Ignition_Transformer_Secondary_Output;
-    uint8_t Engine_Cylinder_7_Ignition_Transformer_Secondary_Output;
-    uint8_t Engine_Cylinder_8_Ignition_Transformer_Secondary_Output;
+    float Engine_Cylinder_1_Ignition_Transformer_Secondary_Output;
+    float Engine_Cylinder_2_Ignition_Transformer_Secondary_Output;
+    float Engine_Cylinder_3_Ignition_Transformer_Secondary_Output;
+    float Engine_Cylinder_4_Ignition_Transformer_Secondary_Output;
+    float Engine_Cylinder_5_Ignition_Transformer_Secondary_Output;
+    float Engine_Cylinder_6_Ignition_Transformer_Secondary_Output;
+    float Engine_Cylinder_7_Ignition_Transformer_Secondary_Output;
+    float Engine_Cylinder_8_Ignition_Transformer_Secondary_Output;
 } getISO1_t ;
 typedef struct getISO2 {
-    uint8_t Engine_Cylinder_9_Ignition_Transformer_Secondary_Output;
-    uint8_t Engine_Cylinder_10_Ignition_Transformer_Secondary_Output;
-    uint8_t Engine_Cylinder_11_Ignition_Transformer_Secondary_Output;
-    uint8_t Engine_Cylinder_12_Ignition_Transformer_Secondary_Output;
-    uint8_t Engine_Cylinder_13_Ignition_Transformer_Secondary_Output;
-    uint8_t Engine_Cylinder_14_Ignition_Transformer_Secondary_Output;
-    uint8_t Engine_Cylinder_15_Ignition_Transformer_Secondary_Output;
-    uint8_t Engine_Cylinder_16_Ignition_Transformer_Secondary_Output;
+    float Engine_Cylinder_9_Ignition_Transformer_Secondary_Output;
+    float Engine_Cylinder_10_Ignition_Transformer_Secondary_Output;
+    float Engine_Cylinder_11_Ignition_Transformer_Secondary_Output;
+    float Engine_Cylinder_12_Ignition_Transformer_Secondary_Output;
+    float Engine_Cylinder_13_Ignition_Transformer_Secondary_Output;
+    float Engine_Cylinder_14_Ignition_Transformer_Secondary_Output;
+    float Engine_Cylinder_15_Ignition_Transformer_Secondary_Output;
+    float Engine_Cylinder_16_Ignition_Transformer_Secondary_Output;
 } getISO2_t ;
 typedef struct getISO3 {
-    uint8_t Engine_Cylinder_17_Ignition_Transformer_Secondary_Output;
-    uint8_t Engine_Cylinder_18_Ignition_Transformer_Secondary_Output;
-    uint8_t Engine_Cylinder_19_Ignition_Transformer_Secondary_Output;
-    uint8_t Engine_Cylinder_20_Ignition_Transformer_Secondary_Output;
+    float Engine_Cylinder_17_Ignition_Transformer_Secondary_Output;
+    float Engine_Cylinder_18_Ignition_Transformer_Secondary_Output;
+    float Engine_Cylinder_19_Ignition_Transformer_Secondary_Output;
+    float Engine_Cylinder_20_Ignition_Transformer_Secondary_Output;
 } getISO3_t ;
 typedef struct getGFP {
-    uint16_t Engine_Fuel_Valve_1_Intake_Absolute_Pressure;
-    uint16_t Engine_Fuel_Valve_Differential_Pressure;
-    uint16_t Engine_Air_to_Fuel_Differential_Pressure;
-    uint16_t Engine_Fuel;
+    double Engine_Fuel_Valve_1_Intake_Absolute_Pressure;
+    double Engine_Fuel_Valve_Differential_Pressure;
+    double Engine_Air_to_Fuel_Differential_Pressure;
+    double Engine_Fuel;
 } getGFP_t ;
 typedef struct getAAI {
-    uint8_t Auxiliary_Temperature_1;
-    uint8_t Auxiliary_Temperature_2;
-    uint8_t Auxiliary_Pressure_1;
-    uint8_t Auxiliary_Pressure_2;
-    uint16_t Auxiliary_Level;
-    uint8_t Relative_Humidity;
+    float Auxiliary_Temperature_1;
+    float Auxiliary_Temperature_2;
+    float Auxiliary_Pressure_1;
+    float Auxiliary_Pressure_2;
+    double Auxiliary_Level;
+    float Relative_Humidity;
 } getAAI_t ;
 typedef struct getVEP2 {
-    uint16_t Battery_Potential___Power_Input_2;
-    uint16_t ECU_Power_Output_Supply_Voltage_1;
-    uint16_t ECU_Power_Output_Supply_Voltage_2;
-    uint16_t ECU_Power_Output_Supply_Voltage_3;
+    double Battery_Potential___Power_Input_2;
+    double ECU_Power_Output_Supply_Voltage_1;
+    double ECU_Power_Output_Supply_Voltage_2;
+    double ECU_Power_Output_Supply_Voltage_3;
 } getVEP2_t ;
 typedef struct getSP2 {
-    uint16_t Engine_External_Shutdown_Air_Supply_Pressure;
+    double Engine_External_Shutdown_Air_Supply_Pressure;
 } getSP2_t ;
 typedef struct getFL {
     struct FL_byte1 {
@@ -5075,315 +5075,315 @@ typedef struct getFL {
     struct FL_byte1 bt1 ;
 } getFL_t ;
 typedef struct getEI {
-    uint8_t Engine_Pre_filter_Oil_Pressure;
-    uint16_t Engine_Exhaust_Gas_Pressure_1;
-    uint8_t Engine_Fuel_Rack_Position;
-    uint16_t Engine_Gas_Mass_Flow_Rate_1;
-    uint16_t Instantaneous_Estimated_Brake_Power;
+    float Engine_Pre_filter_Oil_Pressure;
+    double Engine_Exhaust_Gas_Pressure_1;
+    float Engine_Fuel_Rack_Position;
+    double Engine_Gas_Mass_Flow_Rate_1;
+    double Instantaneous_Estimated_Brake_Power;
 } getEI_t ;
 typedef struct getEES {
-    uint16_t Electrical_Load;
+    double Electrical_Load;
     struct EES_byte3 {
         uint8_t Safety_Wire_Status:2;
     }EES_byte3;
     struct EES_byte3 bt3 ;
 } getEES_t ;
 typedef struct getEAC {
-    uint8_t Engine_Auxiliary_Coolant_Pressure;
-    uint8_t Engine_Auxiliary_Coolant_Temperature;
-    uint8_t Sea_Water_Pump_Outlet_Pressure;
-    uint8_t Engine_Extended_Range_Coolant_Pressure;
+    float Engine_Auxiliary_Coolant_Pressure;
+    float Engine_Auxiliary_Coolant_Temperature;
+    float Sea_Water_Pump_Outlet_Pressure;
+    float Engine_Extended_Range_Coolant_Pressure;
 } getEAC_t ;
 typedef struct getRBI {
-    uint32_t Engine_Operation_Time_Since_Rebuild;
+    long float Engine_Operation_Time_Since_Rebuild;
 } getRBI_t ;
 typedef struct getTCW {
-    uint8_t Engine_Turbocharger_Wastegate_Actuator_1_Position;
-    uint8_t Engine_Turbocharger_Wastegate_Actuator_2_Position;
-    uint8_t Engine_Turbocharger_Wastegate_Actuator_3_Position;
-    uint8_t Engine_Turbocharger_Wastegate_Actuator_4_Position;
-    uint8_t Engine_Turbocharger_Wastegate_Actuator_Control_Air_Pressure;
-    uint8_t Engine_Desired_Turbocharger_Wastegate_Actuator_1_Position;
+    float Engine_Turbocharger_Wastegate_Actuator_1_Position;
+    float Engine_Turbocharger_Wastegate_Actuator_2_Position;
+    float Engine_Turbocharger_Wastegate_Actuator_3_Position;
+    float Engine_Turbocharger_Wastegate_Actuator_4_Position;
+    float Engine_Turbocharger_Wastegate_Actuator_Control_Air_Pressure;
+    float Engine_Desired_Turbocharger_Wastegate_Actuator_1_Position;
     struct TCW_byte7 {
         uint8_t Engine_Turbocharger_Wastegate_Actuator_1_Preliminary_FMI:5;
         uint8_t Engine_Turbocharger_Wastegate_Actuator_1_Temperature_Status:3;
     }TCW_byte7;
     struct TCW_byte7 bt7 ;
-    uint8_t Engine_Desired_Turbocharger_Wastegate_Actuator_2_Position;
+    float Engine_Desired_Turbocharger_Wastegate_Actuator_2_Position;
 } getTCW_t ;
 typedef struct getTCI5 {
-    uint16_t Engine_Turbocharger_1_Turbine_Outlet_Temperature;
-    uint16_t Engine_Turbocharger_2_Turbine_Outlet_Temperature;
-    uint16_t Engine_Turbocharger_3_Turbine_Outlet_Temperature;
-    uint16_t Engine_Turbocharger_4_Turbine_Outlet_Temperature;
+    double Engine_Turbocharger_1_Turbine_Outlet_Temperature;
+    double Engine_Turbocharger_2_Turbine_Outlet_Temperature;
+    double Engine_Turbocharger_3_Turbine_Outlet_Temperature;
+    double Engine_Turbocharger_4_Turbine_Outlet_Temperature;
 } getTCI5_t ;
 typedef struct getTCI4 {
-    uint16_t Engine_Turbocharger_1_Turbine_Intake_Temperature;
-    uint16_t Engine_Turbocharger_2_Turbine_Intake_Temperature;
-    uint16_t Engine_Turbocharger_3_Turbine_Intake_Temperature;
-    uint16_t Engine_Turbocharger_4_Turbine_Intake_Temperature;
+    double Engine_Turbocharger_1_Turbine_Intake_Temperature;
+    double Engine_Turbocharger_2_Turbine_Intake_Temperature;
+    double Engine_Turbocharger_3_Turbine_Intake_Temperature;
+    double Engine_Turbocharger_4_Turbine_Intake_Temperature;
 } getTCI4_t ;
 typedef struct getTCI3 {
-    uint16_t Engine_Turbocharger_1_Compressor_Intake_Pressure;
-    uint16_t Engine_Turbocharger_2_Compressor_Intake_Pressure;
-    uint16_t Engine_Turbocharger_3_Compressor_Intake_Pressure;
-    uint16_t Engine_Turbocharger_4_Compressor_Intake_Pressure;
+    double Engine_Turbocharger_1_Compressor_Intake_Pressure;
+    double Engine_Turbocharger_2_Compressor_Intake_Pressure;
+    double Engine_Turbocharger_3_Compressor_Intake_Pressure;
+    double Engine_Turbocharger_4_Compressor_Intake_Pressure;
 } getTCI3_t ;
 typedef struct getTCI2 {
-    uint16_t Engine_Turbocharger_1_Compressor_Intake_Temperature;
-    uint16_t Engine_Turbocharger_2_Compressor_Intake_Temperature;
-    uint16_t Engine_Turbocharger_3_Compressor_Intake_Temperature;
-    uint16_t Engine_Turbocharger_4_Compressor_Intake_Temperature;
+    double Engine_Turbocharger_1_Compressor_Intake_Temperature;
+    double Engine_Turbocharger_2_Compressor_Intake_Temperature;
+    double Engine_Turbocharger_3_Compressor_Intake_Temperature;
+    double Engine_Turbocharger_4_Compressor_Intake_Temperature;
 } getTCI2_t ;
 typedef struct getTCI1 {
-    uint8_t Engine_Turbocharger_Lube_Oil_Pressure_2;
-    uint16_t Engine_Turbocharger_2_Speed;
-    uint16_t Engine_Turbocharger_3_Speed;
-    uint16_t Engine_Turbocharger_4_Speed;
+    float Engine_Turbocharger_Lube_Oil_Pressure_2;
+    double Engine_Turbocharger_2_Speed;
+    double Engine_Turbocharger_3_Speed;
+    double Engine_Turbocharger_4_Speed;
 } getTCI1_t ;
 typedef struct getMBT3 {
-    uint16_t Engine_Main_Bearing_9_Temperature;
-    uint16_t Engine_Main_Bearing_10_Temperature;
-    uint16_t Engine_Main_Bearing_11_Temperature;
+    double Engine_Main_Bearing_9_Temperature;
+    double Engine_Main_Bearing_10_Temperature;
+    double Engine_Main_Bearing_11_Temperature;
 } getMBT3_t ;
 typedef struct getMBT2 {
-    uint16_t Engine_Main_Bearing_5_Temperature;
-    uint16_t Engine_Main_Bearing_6_Temperature;
-    uint16_t Engine_Main_Bearing_7_Temperature;
-    uint16_t Engine_Main_Bearing_8_Temperature;
+    double Engine_Main_Bearing_5_Temperature;
+    double Engine_Main_Bearing_6_Temperature;
+    double Engine_Main_Bearing_7_Temperature;
+    double Engine_Main_Bearing_8_Temperature;
 } getMBT2_t ;
 typedef struct getMBT1 {
-    uint16_t Engine_Main_Bearing_1_Temperature;
-    uint16_t Engine_Main_Bearing_2_Temperature;
-    uint16_t Engine_Main_Bearing_3_Temperature;
-    uint16_t Engine_Main_Bearing_4_Temperature;
+    double Engine_Main_Bearing_1_Temperature;
+    double Engine_Main_Bearing_2_Temperature;
+    double Engine_Main_Bearing_3_Temperature;
+    double Engine_Main_Bearing_4_Temperature;
 } getMBT1_t ;
 typedef struct getEPT5 {
-    uint16_t Engine_Exhaust_Gas_Port_17_Temperature;
-    uint16_t Engine_Exhaust_Gas_Port_18_Temperature;
-    uint16_t Engine_Exhaust_Gas_Port_19_Temperature;
-    uint16_t Engine_Exhaust_Gas_Port_20_Temperature;
+    double Engine_Exhaust_Gas_Port_17_Temperature;
+    double Engine_Exhaust_Gas_Port_18_Temperature;
+    double Engine_Exhaust_Gas_Port_19_Temperature;
+    double Engine_Exhaust_Gas_Port_20_Temperature;
 } getEPT5_t ;
 typedef struct getEPT4 {
-    uint16_t Engine_Exhaust_Gas_Port_13_Temperature;
-    uint16_t Engine_Exhaust_Gas_Port_14_Temperature;
-    uint16_t Engine_Exhaust_Gas_Port_15_Temperature;
-    uint16_t Engine_Exhaust_Gas_Port_16_Temperature;
+    double Engine_Exhaust_Gas_Port_13_Temperature;
+    double Engine_Exhaust_Gas_Port_14_Temperature;
+    double Engine_Exhaust_Gas_Port_15_Temperature;
+    double Engine_Exhaust_Gas_Port_16_Temperature;
 } getEPT4_t ;
 typedef struct getEPT3 {
-    uint16_t Engine_Exhaust_Gas_Port_9_Temperature;
-    uint16_t Engine_Exhaust_Gas_Port_10_Temperature;
-    uint16_t Engine_Exhaust_Gas_Port_11_Temperature;
-    uint16_t Engine_Exhaust_Gas_Port_12_Temperature;
+    double Engine_Exhaust_Gas_Port_9_Temperature;
+    double Engine_Exhaust_Gas_Port_10_Temperature;
+    double Engine_Exhaust_Gas_Port_11_Temperature;
+    double Engine_Exhaust_Gas_Port_12_Temperature;
 } getEPT3_t ;
 typedef struct getEPT2 {
-    uint16_t Engine_Exhaust_Gas_Port_5_Temperature;
-    uint16_t Engine_Exhaust_Gas_Port_6_Temperature;
-    uint16_t Engine_Exhaust_Gas_Port_7_Temperature;
-    uint16_t Engine_Exhaust_Gas_Port_8_Temperature;
+    double Engine_Exhaust_Gas_Port_5_Temperature;
+    double Engine_Exhaust_Gas_Port_6_Temperature;
+    double Engine_Exhaust_Gas_Port_7_Temperature;
+    double Engine_Exhaust_Gas_Port_8_Temperature;
 } getEPT2_t ;
 typedef struct getEPT1 {
-    uint16_t Engine_Exhaust_Gas_Port_1_Temperature;
-    uint16_t Engine_Exhaust_Gas_Port_2_Temperature;
-    uint16_t Engine_Exhaust_Gas_Port_3_Temperature;
-    uint16_t Engine_Exhaust_Gas_Port_4_Temperature;
+    double Engine_Exhaust_Gas_Port_1_Temperature;
+    double Engine_Exhaust_Gas_Port_2_Temperature;
+    double Engine_Exhaust_Gas_Port_3_Temperature;
+    double Engine_Exhaust_Gas_Port_4_Temperature;
 } getEPT1_t ;
 typedef struct getET2 {
-    uint16_t Engine_Oil_Temperature_2;
-    uint16_t Engine_ECU_Temperature;
-    uint16_t Engine_Exhaust_Gas_Recirculation_1_Differential_Pressure;
-    uint16_t Engine_Exhaust_Gas_Recirculation_1_Temperature;
+    double Engine_Oil_Temperature_2;
+    double Engine_ECU_Temperature;
+    double Engine_Exhaust_Gas_Recirculation_1_Differential_Pressure;
+    double Engine_Exhaust_Gas_Recirculation_1_Temperature;
 } getET2_t ;
 typedef struct getIMT2 {
-    uint8_t Engine_Intake_Manifold_2_Temperature;
-    uint8_t Engine_Intake_Manifold_3_Temperature;
-    uint8_t Engine_Intake_Manifold_4_Temperature;
-    uint8_t Engine_Intake_Manifold_5_Temperature;
-    uint8_t Engine_Intake_Manifold_6_Temperature;
+    float Engine_Intake_Manifold_2_Temperature;
+    float Engine_Intake_Manifold_3_Temperature;
+    float Engine_Intake_Manifold_4_Temperature;
+    float Engine_Intake_Manifold_5_Temperature;
+    float Engine_Intake_Manifold_6_Temperature;
 } getIMT2_t ;
 typedef struct getIMT1 {
-    uint16_t Engine_Turbocharger_1_Boost_Pressure;
-    uint16_t Engine_Turbocharger_2_Boost_Pressure;
-    uint16_t Engine_Turbocharger_3_Boost_Pressure;
-    uint16_t Engine_Turbocharger_4_Boost_Pressure;
+    double Engine_Turbocharger_1_Boost_Pressure;
+    double Engine_Turbocharger_2_Boost_Pressure;
+    double Engine_Turbocharger_3_Boost_Pressure;
+    double Engine_Turbocharger_4_Boost_Pressure;
 } getIMT1_t ;
 typedef struct getAT {
-    uint8_t Engine_Alternator_Bearing_1_Temperature;
-    uint8_t Engine_Alternator_Bearing_2_Temperature;
-    uint8_t Engine_Alternator_Winding_1_Temperature;
-    uint8_t Engine_Alternator_Winding_2_Temperature;
-    uint8_t Engine_Alternator_Winding_3_Temperature;
+    float Engine_Alternator_Bearing_1_Temperature;
+    float Engine_Alternator_Bearing_2_Temperature;
+    float Engine_Alternator_Winding_1_Temperature;
+    float Engine_Alternator_Winding_2_Temperature;
+    float Engine_Alternator_Winding_3_Temperature;
 } getAT_t ;
 typedef struct getACTL {
-    uint8_t Articulation_Angle;
+    float Articulation_Angle;
 } getACTL_t ;
 typedef struct getEO1 {
-    uint16_t Engine_Desired_Rated_Exhaust_Oxygen;
-    uint16_t Engine_Desired_Exhaust_Oxygen;
-    uint16_t Engine_Actual_Exhaust_Oxygen;
-    uint8_t Engine_Exhaust_Gas_Oxygen_Sensor_Fueling_Correction;
+    double Engine_Desired_Rated_Exhaust_Oxygen;
+    double Engine_Desired_Exhaust_Oxygen;
+    double Engine_Actual_Exhaust_Oxygen;
+    float Engine_Exhaust_Gas_Oxygen_Sensor_Fueling_Correction;
     struct EO1_byte8 {
         uint8_t Engine_Exhaust_Gas_Oxygen_Sensor_Closed_Loop_Operation:2;
     }EO1_byte8;
     struct EO1_byte8 bt8 ;
 } getEO1_t ;
 typedef struct getAF2 {
-    uint8_t Engine_Gaseous_Fuel_Correction_Factor;
-    uint16_t Engine_Desired_Absolute_Intake_Manifold_Pressure__Turbo_Boost_Limit_;
-    uint8_t Engine_Turbocharger_Wastegate_Valve_Position;
-    uint8_t Engine_Gas_Mass_Flow_Sensor_Fueling_Correction;
+    float Engine_Gaseous_Fuel_Correction_Factor;
+    double Engine_Desired_Absolute_Intake_Manifold_Pressure__Turbo_Boost_Limit_;
+    float Engine_Turbocharger_Wastegate_Valve_Position;
+    float Engine_Gas_Mass_Flow_Sensor_Fueling_Correction;
 } getAF2_t ;
 typedef struct getETC6 {
-    uint8_t Recommended_Gear;
-    uint8_t Highest_Possible_Gear;
-    uint8_t Lowest_Possible_Gear;
-    uint8_t Clutch_Life_Remaining;
+    float Recommended_Gear;
+    float Highest_Possible_Gear;
+    float Lowest_Possible_Gear;
+    float Clutch_Life_Remaining;
 } getETC6_t ;
 typedef struct getEBC4 {
-    uint8_t Brake_Lining_Remaining_Front_Axle_Left_Wheel;
-    uint8_t Brake_Lining_Remaining_Front_Axle_Right_Wheel;
-    uint8_t Brake_Lining_Remaining_Rear_Axle_1_Left_Wheel;
-    uint8_t Brake_Lining_Remaining_Rear_Axle_1_Right_Wheel;
-    uint8_t Brake_Lining_Remaining_Rear_Axle_2_Left_Wheel;
-    uint8_t Brake_Lining_Remaining_Rear_Axle_2_Right_Wheel;
-    uint8_t Brake_Lining_Remaining_Rear_Axle_3_Left_Wheel;
-    uint8_t Brake_Lining_Remaining_Rear_Axle_3_Right_Wheel;
+    float Brake_Lining_Remaining_Front_Axle_Left_Wheel;
+    float Brake_Lining_Remaining_Front_Axle_Right_Wheel;
+    float Brake_Lining_Remaining_Rear_Axle_1_Left_Wheel;
+    float Brake_Lining_Remaining_Rear_Axle_1_Right_Wheel;
+    float Brake_Lining_Remaining_Rear_Axle_2_Left_Wheel;
+    float Brake_Lining_Remaining_Rear_Axle_2_Right_Wheel;
+    float Brake_Lining_Remaining_Rear_Axle_3_Left_Wheel;
+    float Brake_Lining_Remaining_Rear_Axle_3_Right_Wheel;
 } getEBC4_t ;
 typedef struct getEBC3 {
-    uint8_t Brake_Application_Pressure_High_Range_Front_Axle_Left_Wheel;
-    uint8_t Brake_Application_Pressure_High_Range_Front_Axle_Right_Wheel;
-    uint8_t Brake_Application_Pressure_High_Range_Rear_Axle_1_Left_Wheel;
-    uint8_t Brake_Application_Pressure_High_Range_Rear_Axle_1_Right_Wheel;
-    uint8_t Brake_Application_Pressure_High_Range_Rear_Axle_2_Left_Wheel;
-    uint8_t Brake_Application_Pressure_High_Range_Rear_Axle_2_Right_Wheel;
-    uint8_t Brake_Application_Pressure_High_Range_Rear_Axle_3_Left_Wheel;
-    uint8_t Brake_Application_Pressure_High_Range_Rear_Axle_3_Right_Wheel;
+    float Brake_Application_Pressure_High_Range_Front_Axle_Left_Wheel;
+    float Brake_Application_Pressure_High_Range_Front_Axle_Right_Wheel;
+    float Brake_Application_Pressure_High_Range_Rear_Axle_1_Left_Wheel;
+    float Brake_Application_Pressure_High_Range_Rear_Axle_1_Right_Wheel;
+    float Brake_Application_Pressure_High_Range_Rear_Axle_2_Left_Wheel;
+    float Brake_Application_Pressure_High_Range_Rear_Axle_2_Right_Wheel;
+    float Brake_Application_Pressure_High_Range_Rear_Axle_3_Left_Wheel;
+    float Brake_Application_Pressure_High_Range_Rear_Axle_3_Right_Wheel;
 } getEBC3_t ;
 typedef struct getAIR1 {
-    uint8_t Pneumatic_Supply_Pressure;
-    uint8_t Parking_and_or_Trailer_Air_Pressure;
-    uint8_t Service_Brake_Circuit_1_Air_Pressure;
-    uint8_t Service_Brake_Circuit_2_Air_Pressure;
-    uint8_t Auxiliary_Equipment_Supply_Pressure;
-    uint8_t Air_Suspension_Supply_Pressure;
+    float Pneumatic_Supply_Pressure;
+    float Parking_and_or_Trailer_Air_Pressure;
+    float Service_Brake_Circuit_1_Air_Pressure;
+    float Service_Brake_Circuit_2_Air_Pressure;
+    float Auxiliary_Equipment_Supply_Pressure;
+    float Air_Suspension_Supply_Pressure;
     struct AIR1_byte7 {
         uint8_t Air_Compressor_Status:2;
     }AIR1_byte7;
     struct AIR1_byte7 bt7 ;
 } getAIR1_t ;
 typedef struct getGFC {
-    uint32_t Trip_Fuel__Gaseous_;
-    uint32_t Total_Fuel_Used__Gaseous_;
+    long float Trip_Fuel__Gaseous_;
+    long float Total_Fuel_Used__Gaseous_;
 } getGFC_t ;
 typedef struct getTTI2 {
-    uint32_t Trip_Cruise_Time;
-    uint32_t Trip_PTO_Governor_Time;
-    uint32_t Trip_Engine_Running_Time;
-    uint32_t Trip_Idle_Time;
-    uint32_t Trip_Air_Compressor_On_Time;
+    long float Trip_Cruise_Time;
+    long float Trip_PTO_Governor_Time;
+    long float Trip_Engine_Running_Time;
+    long float Trip_Idle_Time;
+    long float Trip_Air_Compressor_On_Time;
 } getTTI2_t ;
 typedef struct getEH {
-    uint32_t Total_ECU_Distance;
-    uint32_t Total_ECU_Run_Time;
+    long float Total_ECU_Distance;
+    long float Total_ECU_Run_Time;
 } getEH_t ;
 typedef struct getGFI1 {
-    uint32_t Total_Engine_PTO_Governor_Fuel_Used__Gaseous_;
-    uint16_t Trip_Average_Fuel_Rate__Gaseous_;
-    uint16_t Engine_Fuel_Specific_Gravity;
+    long float Total_Engine_PTO_Governor_Fuel_Used__Gaseous_;
+    double Trip_Average_Fuel_Rate__Gaseous_;
+    double Engine_Fuel_Specific_Gravity;
 } getGFI1_t ;
 typedef struct getLFI {
-    uint32_t Total_Engine_PTO_Governor_Fuel_Used;
-    uint16_t Trip_Average_Fuel_Rate;
-    uint16_t Flexible_Fuel_Percentage;
+    long float Total_Engine_PTO_Governor_Fuel_Used;
+    double Trip_Average_Fuel_Rate;
+    double Flexible_Fuel_Percentage;
 } getLFI_t ;
 typedef struct getTTI1 {
-    uint32_t Trip_Time_in_VSL;
-    uint32_t Trip_Time_in_Top_Gear;
-    uint32_t Trip_Time_in_Gear_Down;
-    uint32_t Trip_Time_in_Derate_by_Engine;
+    long float Trip_Time_in_VSL;
+    long float Trip_Time_in_Top_Gear;
+    long float Trip_Time_in_Gear_Down;
+    long float Trip_Time_in_Derate_by_Engine;
 } getTTI1_t ;
 typedef struct getTSI {
-    uint16_t Trip_Number_of_Hot_Shutdowns;
-    uint16_t Trip_Number_of_Idle_Shutdowns;
-    uint16_t Trip_Number_of_Idle_Shutdown_Overrides;
-    uint16_t Trip_Sudden_Decelerations;
+    double Trip_Number_of_Hot_Shutdowns;
+    double Trip_Number_of_Idle_Shutdowns;
+    double Trip_Number_of_Idle_Shutdown_Overrides;
+    double Trip_Sudden_Decelerations;
 } getTSI_t ;
 typedef struct getTVI {
-    uint16_t Trip_Maximum_Vehicle_Speed;
-    uint32_t Trip_Cruise_Distance;
+    double Trip_Maximum_Vehicle_Speed;
+    long float Trip_Cruise_Distance;
 } getTVI_t ;
 typedef struct getLF {
-    uint16_t Trip_Maximum_Engine_Speed;
-    uint16_t Trip_Average_Engine_Speed;
-    uint8_t Trip_Drive_Average_Load_Factor;
-    uint8_t Total_Drive_Average_Load_Factor;
-    uint32_t Total_Engine_Cruise_Time;
+    double Trip_Maximum_Engine_Speed;
+    double Trip_Average_Engine_Speed;
+    float Trip_Drive_Average_Load_Factor;
+    float Total_Drive_Average_Load_Factor;
+    long float Total_Engine_Cruise_Time;
 } getLF_t ;
 typedef struct getGTFI {
-    uint32_t Trip_Drive_Fuel_Used__Gaseous_;
-    uint32_t Trip_PTO_Governor_Moving_Fuel_Used__Gaseous_;
-    uint32_t Trip_PTO_Governor_Non_moving_Fuel_Used__Gaseous_;
-    uint32_t Trip_Vehicle_Idle_Fuel_Used__Gaseous_;
-    uint32_t Trip_Cruise_Fuel_Used__Gaseous_;
-    uint16_t Trip_Drive_Fuel_Economy__Gaseous_;
+    long float Trip_Drive_Fuel_Used__Gaseous_;
+    long float Trip_PTO_Governor_Moving_Fuel_Used__Gaseous_;
+    long float Trip_PTO_Governor_Non_moving_Fuel_Used__Gaseous_;
+    long float Trip_Vehicle_Idle_Fuel_Used__Gaseous_;
+    long float Trip_Cruise_Fuel_Used__Gaseous_;
+    double Trip_Drive_Fuel_Economy__Gaseous_;
 } getGTFI_t ;
 typedef struct getLTFI {
-    uint32_t Trip_Drive_Fuel_Used;
-    uint32_t Trip_PTO_Governor_Moving_Fuel_Used;
-    uint32_t Trip_PTO_Governor_Non_moving_Fuel_Used;
-    uint32_t Trip_Vehicle_Idle_Fuel_Used;
-    uint32_t Trip_Cruise_Fuel_Used;
-    uint16_t Trip_Drive_Fuel_Economy;
+    long float Trip_Drive_Fuel_Used;
+    long float Trip_PTO_Governor_Moving_Fuel_Used;
+    long float Trip_PTO_Governor_Non_moving_Fuel_Used;
+    long float Trip_Vehicle_Idle_Fuel_Used;
+    long float Trip_Cruise_Fuel_Used;
+    double Trip_Drive_Fuel_Economy;
 } getLTFI_t ;
 typedef struct getTDI {
-    uint32_t Trip_Distance_on_VSL;
-    uint32_t Trip_Gear_Down_Distance;
-    uint32_t Trip_Distance_in_Top_Gear;
+    long float Trip_Distance_on_VSL;
+    long float Trip_Gear_Down_Distance;
+    long float Trip_Distance_in_Top_Gear;
 } getTDI_t ;
 typedef struct getTFI {
-    uint32_t Trip_Fan_On_Time;
-    uint32_t Trip_Fan_On_Time_Due_to_the_Engine_System;
-    uint32_t Trip_Fan_On_Time_Due_to_a_Manual_Switch;
-    uint32_t Trip_Fan_On_Time_Due_to_the_A_C_System;
+    long float Trip_Fan_On_Time;
+    long float Trip_Fan_On_Time_Due_to_the_Engine_System;
+    long float Trip_Fan_On_Time_Due_to_a_Manual_Switch;
+    long float Trip_Fan_On_Time_Due_to_the_A_C_System;
 } getTFI_t ;
 typedef struct getCBI {
-    uint32_t Total_Compression_Brake_Distance;
-    uint32_t Trip_Compression_Brake_Distance;
-    uint32_t Trip_Service_Brake_Distance;
-    uint32_t Trip_Service_Brake_Applications;
+    long float Total_Compression_Brake_Distance;
+    long float Trip_Compression_Brake_Distance;
+    long float Trip_Service_Brake_Distance;
+    long float Trip_Service_Brake_Applications;
 } getCBI_t ;
 typedef struct getFD1 {
-    uint8_t Estimated_Percent_Fan_Speed;
+    float Estimated_Percent_Fan_Speed;
     struct FD1_byte2 {
         uint8_t Fan_Drive_State:4;
     }FD1_byte2;
     struct FD1_byte2 bt2 ;
-    uint16_t Fan_Speed;
-    uint16_t Hydraulic_Fan_Motor_Pressure;
-    uint8_t Fan_Drive_Bypass_Command_Status;
+    double Fan_Speed;
+    double Hydraulic_Fan_Motor_Pressure;
+    float Fan_Drive_Bypass_Command_Status;
 } getFD1_t ;
 typedef struct getEEC4 {
-    uint16_t Engine_Rated_Power;
-    uint16_t Engine_Rated_Speed;
+    double Engine_Rated_Power;
+    double Engine_Rated_Speed;
     struct EEC4_byte5 {
         uint8_t Engine_Rotation_Direction:2;
         uint8_t Engine_Intake_Manifold_Pressure_Control_Mode:2;
     }EEC4_byte5;
     struct EEC4_byte5 bt5 ;
-    uint8_t Crank_Attempt_Count_on_Present_Start_Attempt;
+    float Crank_Attempt_Count_on_Present_Start_Attempt;
 } getEEC4_t ;
 typedef struct getEBC2 {
-    uint16_t Front_Axle_Speed;
-    uint8_t Relative_Speed__Front_Axle_Left_Wheel;
-    uint8_t Relative_Speed__Front_Axle_Right_Wheel;
-    uint8_t Relative_Speed__Rear_Axle_1_Left_Wheel;
-    uint8_t Relative_Speed__Rear_Axle_1_Right_Wheel;
-    uint8_t Relative_Speed__Rear_Axle_2_Left_Wheel;
-    uint8_t Relative_Speed__Rear_Axle_2_Right_Wheel;
+    double Front_Axle_Speed;
+    float Relative_Speed__Front_Axle_Left_Wheel;
+    float Relative_Speed__Front_Axle_Right_Wheel;
+    float Relative_Speed__Rear_Axle_1_Left_Wheel;
+    float Relative_Speed__Rear_Axle_1_Right_Wheel;
+    float Relative_Speed__Rear_Axle_2_Left_Wheel;
+    float Relative_Speed__Rear_Axle_2_Right_Wheel;
 } getEBC2_t ;
 typedef struct getVDHR {
-    uint32_t High_Resolution_Total_Vehicle_Distance;
-    uint32_t High_Resolution_Trip_Distance;
+    long float High_Resolution_Total_Vehicle_Distance;
+    long float High_Resolution_Trip_Distance;
 } getVDHR_t ;
 typedef struct getERC2 {
     struct ERC2_byte1 {
@@ -5405,12 +5405,12 @@ typedef struct getETC5 {
     struct ETC5_byte2 bt2 ;
 } getETC5_t ;
 typedef struct getETC4 {
-    uint8_t Transmission_Synchronizer_Clutch_Value;
-    uint8_t Transmission_Synchronizer_Brake_Value;
+    float Transmission_Synchronizer_Clutch_Value;
+    float Transmission_Synchronizer_Brake_Value;
 } getETC4_t ;
 typedef struct getETC3 {
-    uint8_t Transmission_Shift_Finger_Gear_Position;
-    uint8_t Transmission_Shift_Finger_Rail_Position;
+    float Transmission_Shift_Finger_Gear_Position;
+    float Transmission_Shift_Finger_Rail_Position;
     struct ETC3_byte3 {
         uint8_t Transmission_Shift_Finger_Neutral_Indicator:2;
         uint8_t Transmission_Shift_Finger_Engagement_Indicator:2;
@@ -5440,7 +5440,7 @@ typedef struct getETC3 {
     struct ETC3_byte6 bt6 ;
 } getETC3_t ;
 typedef struct getAS {
-    uint16_t Alternator_Speed;
+    double Alternator_Speed;
     struct AS_byte3 {
         uint8_t Alternator_1_Status:2;
         uint8_t Alternator_2_Status:2;
@@ -5478,39 +5478,39 @@ typedef struct getAUXIO1 {
         uint8_t Auxiliary_I_O_13:2;
     }AUXIO1_byte4;
     struct AUXIO1_byte4 bt4 ;
-    uint16_t Auxiliary_I_O_Channel_1;
-    uint16_t Auxiliary_I_O_Channel_2;
+    double Auxiliary_I_O_Channel_1;
+    double Auxiliary_I_O_Channel_2;
 } getAUXIO1_t ;
 typedef struct getSOFT {
-    uint8_t Number_of_Software_Identification_Fields;
+    float Number_of_Software_Identification_Fields;
 } getSOFT_t ;
 typedef struct getEFL_P2 {
-    uint16_t Engine_Injection_Control_Pressure;
-    uint16_t Engine_Injector_Metering_Rail_1_Pressure;
-    uint16_t Engine_Injector_Timing_Rail_1_Pressure;
-    uint16_t Engine_Injector_Metering_Rail_2_Pressure;
+    double Engine_Injection_Control_Pressure;
+    double Engine_Injector_Metering_Rail_1_Pressure;
+    double Engine_Injector_Timing_Rail_1_Pressure;
+    double Engine_Injector_Metering_Rail_2_Pressure;
 } getEFL_P2_t ;
 typedef struct getIO {
-    uint32_t Engine_Total_Idle_Fuel_Used;
-    uint32_t Engine_Total_Idle_Hours;
+    long float Engine_Total_Idle_Fuel_Used;
+    long float Engine_Total_Idle_Hours;
 } getIO_t ;
 typedef struct getTC {
-    uint8_t Engine_Turbocharger_Lube_Oil_Pressure_1;
-    uint16_t Engine_Turbocharger_1_Speed;
+    float Engine_Turbocharger_Lube_Oil_Pressure_1;
+    double Engine_Turbocharger_1_Speed;
     struct TC_byte4 {
         uint8_t Engine_Turbocharger_Oil_Level_Switch:2;
     }TC_byte4;
     struct TC_byte4 bt4 ;
 } getTC_t ;
 typedef struct getAIR2 {
-    uint8_t Engine_Air_Start_Pressure;
+    float Engine_Air_Start_Pressure;
 } getAIR2_t ;
 typedef struct getEEC3 {
-    uint8_t Nominal_Friction___Percent_Torque;
-    uint16_t Engine_s_Desired_Operating_Speed;
-    uint8_t Engine_s_Desired_Operating_Speed_Asymmetry_Adjustment;
-    uint8_t Estimated_Engine_Parasitic_Losses___Percent_Torque;
-    uint16_t Aftertreatment_1_Exhaust_Gas_Mass_Flow;
+    float Nominal_Friction___Percent_Torque;
+    double Engine_s_Desired_Operating_Speed;
+    float Engine_s_Desired_Operating_Speed_Asymmetry_Adjustment;
+    float Estimated_Engine_Parasitic_Losses___Percent_Torque;
+    double Aftertreatment_1_Exhaust_Gas_Mass_Flow;
     struct EEC3_byte8 {
         uint8_t Aftertreatment_1_Intake_Dew_Point:2;
         uint8_t Aftertreatment_1_Exhaust_Dew_Point:2;
@@ -5520,13 +5520,13 @@ typedef struct getEEC3 {
     struct EEC3_byte8 bt8 ;
 } getEEC3_t ;
 typedef struct getVD {
-    uint32_t Trip_Distance;
-    uint32_t Total_Vehicle_Distance;
+    long float Trip_Distance;
+    long float Total_Vehicle_Distance;
 } getVD_t ;
 typedef struct getTCFG {
-    uint8_t Number_of_Reverse_Gear_Ratios;
-    uint8_t Number_of_Forward_Gear_Ratios;
-    uint16_t Transmission_Gear_Ratio;
+    float Number_of_Reverse_Gear_Ratios;
+    float Number_of_Forward_Gear_Ratios;
+    double Transmission_Gear_Ratio;
 } getTCFG_t ;
 typedef struct getSHUTDN {
     struct SHUTDN_byte1 {
@@ -5576,68 +5576,68 @@ typedef struct getSHUTDN {
     struct SHUTDN_byte8 bt8 ;
 } getSHUTDN_t ;
 typedef struct getHOURS {
-    uint32_t Engine_Total_Hours_of_Operation;
-    uint32_t Engine_Total_Revolutions;
+    long float Engine_Total_Hours_of_Operation;
+    long float Engine_Total_Revolutions;
 } getHOURS_t ;
 typedef struct getTD {
-    uint8_t Seconds;
-    uint8_t Minutes;
-    uint8_t Hours;
-    uint8_t Month;
-    uint8_t Day;
-    uint8_t Year;
-    uint8_t Local_minute_offset;
-    uint8_t Local_hour_offset;
+    float Seconds;
+    float Minutes;
+    float Hours;
+    float Month;
+    float Day;
+    float Year;
+    float Local_minute_offset;
+    float Local_hour_offset;
 } getTD_t ;
 typedef struct getVH {
-    uint32_t Total_Vehicle_Hours;
-    uint32_t Total_Power_Takeoff_Hours;
+    long float Total_Vehicle_Hours;
+    long float Total_Power_Takeoff_Hours;
 } getVH_t ;
 typedef struct getVDS {
-    uint16_t Compass_Bearing;
-    uint16_t Navigation_Based_Vehicle_Speed;
-    uint16_t Pitch;
-    uint16_t Altitude;
+    double Compass_Bearing;
+    double Navigation_Based_Vehicle_Speed;
+    double Pitch;
+    double Altitude;
 } getVDS_t ;
 typedef struct getLFC {
-    uint32_t Engine_Trip_Fuel;
-    uint32_t Engine_Total_Fuel_Used;
+    long float Engine_Trip_Fuel;
+    long float Engine_Total_Fuel_Used;
 } getLFC_t ;
 typedef struct getVW {
     struct VW_byte1 {
         uint8_t Axle_Location:8;
     }VW_byte1;
     struct VW_byte1 bt1 ;
-    uint16_t Axle_Weight;
-    uint16_t Trailer_Weight;
-    uint16_t Cargo_Weight;
+    double Axle_Weight;
+    double Trailer_Weight;
+    double Cargo_Weight;
 } getVW_t ;
 typedef struct getCCSS {
-    uint8_t Maximum_Vehicle_Speed_Limit;
-    uint8_t Cruise_Control_High_Set_Limit_Speed;
-    uint8_t Cruise_Control_Low_Set_Limit_Speed;
+    float Maximum_Vehicle_Speed_Limit;
+    float Cruise_Control_High_Set_Limit_Speed;
+    float Cruise_Control_Low_Set_Limit_Speed;
 } getCCSS_t ;
 typedef struct getET1 {
-    uint8_t Engine_Coolant_Temperature;
-    uint8_t Engine_Fuel_Temperature_1;
-    uint16_t Engine_Oil_Temperature_1;
-    uint16_t Engine_Turbocharger_Oil_Temperature;
-    uint8_t Engine_Intercooler_Temperature;
-    uint8_t Engine_Intercooler_Thermostat_Opening;
+    float Engine_Coolant_Temperature;
+    float Engine_Fuel_Temperature_1;
+    double Engine_Oil_Temperature_1;
+    double Engine_Turbocharger_Oil_Temperature;
+    float Engine_Intercooler_Temperature;
+    float Engine_Intercooler_Thermostat_Opening;
 } getET1_t ;
 typedef struct getEFL_P1 {
-    uint8_t Engine_Fuel_Delivery_Pressure;
-    uint8_t Engine_Extended_Crankcase_Blow_by_Pressure;
-    uint8_t Engine_Oil_Level;
-    uint8_t Engine_Oil_Pressure;
-    uint16_t Engine_Crankcase_Pressure;
-    uint8_t Engine_Coolant_Pressure;
-    uint8_t Engine_Coolant_Level;
+    float Engine_Fuel_Delivery_Pressure;
+    float Engine_Extended_Crankcase_Blow_by_Pressure;
+    float Engine_Oil_Level;
+    float Engine_Oil_Pressure;
+    double Engine_Crankcase_Pressure;
+    float Engine_Coolant_Pressure;
+    float Engine_Coolant_Level;
 } getEFL_P1_t ;
 typedef struct getPTO {
-    uint8_t Power_Takeoff_Oil_Temperature;
-    uint16_t Power_Takeoff_Speed;
-    uint16_t Power_Takeoff_Set_Speed;
+    float Power_Takeoff_Oil_Temperature;
+    double Power_Takeoff_Speed;
+    double Power_Takeoff_Set_Speed;
     struct PTO_byte6 {
         uint8_t Engine_PTO_Governor_Enable_Switch:2;
         uint8_t Engine_Remote_PTO_Governor_Preprogrammed_Speed_Control_Switch:2;
@@ -5666,7 +5666,7 @@ typedef struct getCCVS1 {
         uint8_t Park_Brake_Release_Inhibit_Request:2;
     }CCVS1_byte1;
     struct CCVS1_byte1 bt1 ;
-    uint16_t Wheel_Based_Vehicle_Speed;
+    double Wheel_Based_Vehicle_Speed;
     struct CCVS1_byte4 {
         uint8_t Cruise_Control_Active:2;
         uint8_t Cruise_Control_Enable_Switch:2;
@@ -5681,7 +5681,7 @@ typedef struct getCCVS1 {
         uint8_t Cruise_Control_Accelerate_Switch:2;
     }CCVS1_byte5;
     struct CCVS1_byte5 bt5 ;
-    uint8_t Cruise_Control_Set_Speed;
+    float Cruise_Control_Set_Speed;
     struct CCVS1_byte7 {
         uint8_t PTO_Governor_State:5;
         uint8_t Cruise_Control_States:3;
@@ -5696,65 +5696,65 @@ typedef struct getCCVS1 {
     struct CCVS1_byte8 bt8 ;
 } getCCVS1_t ;
 typedef struct getLFE1 {
-    uint16_t Engine_Fuel_Rate;
-    uint16_t Engine_Instantaneous_Fuel_Economy;
-    uint16_t Engine_Average_Fuel_Economy;
-    uint8_t Engine_Throttle_Valve_1_Position;
-    uint8_t Engine_Throttle_Valve_2_Position;
+    double Engine_Fuel_Rate;
+    double Engine_Instantaneous_Fuel_Economy;
+    double Engine_Average_Fuel_Economy;
+    float Engine_Throttle_Valve_1_Position;
+    float Engine_Throttle_Valve_2_Position;
 } getLFE1_t ;
 typedef struct getVP {
-    uint32_t Latitude;
-    uint32_t Longitude;
+    long float Latitude;
+    long float Longitude;
 } getVP_t ;
 typedef struct getTIRE {
     struct TIRE_byte1 {
         uint8_t Tire_Location:8;
     }TIRE_byte1;
     struct TIRE_byte1 bt1 ;
-    uint8_t Tire_Pressure;
-    uint16_t Tire_Temperature;
+    float Tire_Pressure;
+    double Tire_Temperature;
     struct TIRE_byte5 {
         uint8_t CTI_Wheel_Sensor_Status:2;
         uint8_t CTI_Tire_Status:2;
         uint8_t CTI_Wheel_End_Electrical_Fault:2;
     }TIRE_byte5;
     struct TIRE_byte5 bt5 ;
-    uint16_t Tire_Air_Leakage_Rate;
+    double Tire_Air_Leakage_Rate;
     struct TIRE_byte8 {
         uint8_t Tire_Pressure_Threshold_Detection:3;
     }TIRE_byte8;
     struct TIRE_byte8 bt8 ;
 } getTIRE_t ;
 typedef struct getAMB {
-    uint8_t Barometric_Pressure;
-    uint16_t Cab_Interior_Temperature;
-    uint16_t Ambient_Air_Temperature;
-    uint8_t Engine_Air_Intake_Temperature;
-    uint16_t Road_Surface_Temperature;
+    float Barometric_Pressure;
+    double Cab_Interior_Temperature;
+    double Ambient_Air_Temperature;
+    float Engine_Air_Intake_Temperature;
+    double Road_Surface_Temperature;
 } getAMB_t ;
 typedef struct getIC1 {
-    uint8_t Engine_Diesel_Particulate_Filter_Intake_Pressure;
-    uint8_t Engine_Intake_Manifold_1_Pressure;
-    uint8_t Engine_Intake_Manifold_1_Temperature;
-    uint8_t Engine_Air_Intake_Pressure;
-    uint8_t Engine_Air_Filter_1_Differential_Pressure;
-    uint16_t Engine_Exhaust_Gas_Temperature;
-    uint8_t Engine_Coolant_Filter_Differential_Pressure;
+    float Engine_Diesel_Particulate_Filter_Intake_Pressure;
+    float Engine_Intake_Manifold_1_Pressure;
+    float Engine_Intake_Manifold_1_Temperature;
+    float Engine_Air_Intake_Pressure;
+    float Engine_Air_Filter_1_Differential_Pressure;
+    double Engine_Exhaust_Gas_Temperature;
+    float Engine_Coolant_Filter_Differential_Pressure;
 } getIC1_t ;
 typedef struct getVEP1 {
-    uint8_t Net_Battery_Current;
-    uint8_t Alternator_Current;
-    uint16_t Charging_System_Potential__Voltage_;
-    uint16_t Battery_Potential___Power_Input_1;
-    uint16_t Keyswitch_Battery_Potential;
+    float Net_Battery_Current;
+    float Alternator_Current;
+    double Charging_System_Potential__Voltage_;
+    double Battery_Potential___Power_Input_1;
+    double Keyswitch_Battery_Potential;
 } getVEP1_t ;
 typedef struct getTRF1 {
-    uint8_t Clutch_Pressure;
-    uint8_t Transmission_Oil_Level_1;
-    uint8_t Transmission_Filter_Differential_Pressure;
-    uint8_t Transmission_Oil_Pressure;
-    uint16_t Transmission_Oil_Temperature_1;
-    uint8_t Transmission_Oil_Level_1_High___Low;
+    float Clutch_Pressure;
+    float Transmission_Oil_Level_1;
+    float Transmission_Filter_Differential_Pressure;
+    float Transmission_Oil_Pressure;
+    double Transmission_Oil_Temperature_1;
+    float Transmission_Oil_Level_1_High___Low;
     struct TRF1_byte8 {
         uint8_t Transmission_Oil_Level_1_Countdown_Timer:4;
         uint8_t Transmission_Oil_Level_1_Measurement_Status:4;
@@ -5762,20 +5762,20 @@ typedef struct getTRF1 {
     struct TRF1_byte8 bt8 ;
 } getTRF1_t ;
 typedef struct getAI {
-    uint8_t Steering_Axle_Temperature;
+    float Steering_Axle_Temperature;
     struct AI_byte2 {
         uint8_t Drive_Axle_Location:8;
     }AI_byte2;
     struct AI_byte2 bt2 ;
-    uint8_t Drive_Axle_Lift_Air_Pressure;
-    uint8_t Drive_Axle_Temperature;
-    uint8_t Drive_Axle_Lube_Pressure;
-    uint8_t Steering_Axle_Lube_Pressure;
+    float Drive_Axle_Lift_Air_Pressure;
+    float Drive_Axle_Temperature;
+    float Drive_Axle_Lube_Pressure;
+    float Steering_Axle_Lube_Pressure;
 } getAI_t ;
 typedef struct getB {
-    uint8_t Brake_Application_Pressure;
-    uint8_t Brake_Primary_Pressure;
-    uint8_t Brake_Secondary_Pressure;
+    float Brake_Application_Pressure;
+    float Brake_Primary_Pressure;
+    float Brake_Secondary_Pressure;
     struct B_byte4 {
         uint8_t Parking_Brake_Actuator:2;
         uint8_t Parking_Brake_Red_Warning_Signal:2;
@@ -5784,27 +5784,27 @@ typedef struct getB {
     struct B_byte4 bt4 ;
 } getB_t ;
 typedef struct getRF {
-    uint8_t Hydraulic_Retarder_Pressure;
-    uint8_t Hydraulic_Retarder_Oil_Temperature;
+    float Hydraulic_Retarder_Pressure;
+    float Hydraulic_Retarder_Oil_Temperature;
     struct RF_byte3 {
         uint8_t Driveline_Retarder_Overheat_Indicator:2;
     }RF_byte3;
     struct RF_byte3 bt3 ;
 } getRF_t ;
 typedef struct getDD {
-    uint8_t Washer_Fluid_Level;
-    uint8_t Fuel_Level_1;
-    uint8_t Engine_Fuel_Filter_Differential_Pressure;
-    uint8_t Engine_Oil_Filter_Differential_Pressure;
-    uint16_t Cargo_Ambient_Temperature;
-    uint8_t Fuel_Level_2;
+    float Washer_Fluid_Level;
+    float Fuel_Level_1;
+    float Engine_Fuel_Filter_Differential_Pressure;
+    float Engine_Oil_Filter_Differential_Pressure;
+    double Cargo_Ambient_Temperature;
+    float Fuel_Level_2;
 } getDD_t ;
 typedef struct getA1 {
-    uint8_t Engine_Blower_Bypass_Valve_Position;
-    uint16_t Engine_Gas_Supply_Pressure;
+    float Engine_Blower_Bypass_Valve_Position;
+    double Engine_Gas_Supply_Pressure;
 } getA1_t ;
 typedef struct getAWPP {
-    uint8_t Auxiliary_Pump_Pressure;
+    float Auxiliary_Pump_Pressure;
 } getAWPP_t ;
 typedef struct getOI {
     struct OI_byte1 {
@@ -5818,462 +5818,463 @@ typedef struct getOI {
     struct OI_byte2 bt2 ;
 } getOI_t ;
 
-void config_TSC1 (getTSC1_t *TSC1);
-void config_TC1 (getTC1_t *TC1);
-void config_XBR (getXBR_t *XBR);
-void config_GPV4 (getGPV4_t *GPV4);
-void config_AUXIO5 (getAUXIO5_t *AUXIO5);
-void config_SRASI (getSRASI_t *SRASI);
-void config_CCVS2 (getCCVS2_t *CCVS2);
-void config_AEBS2 (getAEBS2_t *AEBS2);
-void config_ESR (getESR_t *ESR);
-void config_RBR (getRBR_t *RBR);
-void config_ECC (getECC_t *ECC);
-void config_SFC (getSFC_t *SFC);
-void config_VLS1 (getVLS1_t *VLS1);
-void config_HCDI1 (getHCDI1_t *HCDI1);
-void config_AT1DPFSSC (getAT1DPFSSC_t *AT1DPFSSC);
-void config_AT2DPFSSC (getAT2DPFSSC_t *AT2DPFSSC);
-void config_LVDSOM (getLVDSOM_t *LVDSOM);
-void config_NCS (getNCS_t *NCS);
-void config_NC1 (getNC1_t *NC1);
-void config_JLCM (getJLCM_t *JLCM);
-void config_AUXIO7 (getAUXIO7_t *AUXIO7);
-void config_AUXIO6 (getAUXIO6_t *AUXIO6);
-void config_AUXIO4 (getAUXIO4_t *AUXIO4);
-void config_AUXIO3 (getAUXIO3_t *AUXIO3);
-void config_AUXIO2 (getAUXIO2_t *AUXIO2);
-void config_DISP1 (getDISP1_t *DISP1);
-void config_FLIC (getFLIC_t *FLIC);
-void config_TPRS (getTPRS_t *TPRS);
-void config_CTL (getCTL_t *CTL);
-void config_CL (getCL_t *CL);
-void config_ASC6 (getASC6_t *ASC6);
-void config_ASC2 (getASC2_t *ASC2);
-void config_TDA (getTDA_t *TDA);
-void config_ATS (getATS_t *ATS);
-void config_ATR (getATR_t *ATR);
-void config_CM1 (getCM1_t *CM1);
-void config_ERC1 (getERC1_t *ERC1);
-void config_EBC1 (getEBC1_t *EBC1);
-void config_ETC1 (getETC1_t *ETC1);
-void config_EEC2 (getEEC2_t *EEC2);
-void config_EEC1 (getEEC1_t *EEC1);
-void config_ETC2 (getETC2_t *ETC2);
-void config_EAC1 (getEAC1_t *EAC1);
-void config_FLI1 (getFLI1_t *FLI1);
-void config_HPG (getHPG_t *HPG);
-void config_VDC2 (getVDC2_t *VDC2);
-void config_EGF1 (getEGF1_t *EGF1);
-void config_ESC1 (getESC1_t *ESC1);
-void config_ETC8 (getETC8_t *ETC8);
-void config_LOI (getLOI_t *LOI);
-void config_AT1IG1 (getAT1IG1_t *AT1IG1);
-void config_AT1OG1 (getAT1OG1_t *AT1OG1);
-void config_AT2IG1 (getAT2IG1_t *AT2IG1);
-void config_AT2OG1 (getAT2OG1_t *AT2OG1);
-void config_FWSS1 (getFWSS1_t *FWSS1);
-void config_SSI (getSSI_t *SSI);
-void config_BI (getBI_t *BI);
-void config_CCS (getCCS_t *CCS);
-void config_KL1 (getKL1_t *KL1);
-void config_KL2 (getKL2_t *KL2);
-void config_KL3 (getKL3_t *KL3);
-void config_TFAC (getTFAC_t *TFAC);
-void config_SAS (getSAS_t *SAS);
-void config_ESSI (getESSI_t *ESSI);
-void config_A1SCRDSI1 (getA1SCRDSI1_t *A1SCRDSI1);
-void config_A1SCRDSR1 (getA1SCRDSR1_t *A1SCRDSR1);
-void config_A1SCRAI (getA1SCRAI_t *A1SCRAI);
-void config_A2SCRDSI1 (getA2SCRDSI1_t *A2SCRDSI1);
-void config_A2SCRDSR1 (getA2SCRDSR1_t *A2SCRDSR1);
-void config_A2SCRAI (getA2SCRAI_t *A2SCRAI);
-void config_SSI2 (getSSI2_t *SSI2);
-void config_ARI (getARI_t *ARI);
-void config_CN (getCN_t *CN);
-void config_MSI2 (getMSI2_t *MSI2);
-void config_ACCS (getACCS_t *ACCS);
-void config_Command (getCommand_t *Command);
-void config_AEBS1 (getAEBS1_t *AEBS1);
-void config_WS (getWS_t *WS);
-void config_WAND (getWAND_t *WAND);
-void config_LDISP (getLDISP_t *LDISP);
-void config_A1SCRAI2 (getA1SCRAI2_t *A1SCRAI2);
-void config_A2SCRAI2 (getA2SCRAI2_t *A2SCRAI2);
-void config_HSS (getHSS_t *HSS);
-void config_GFI4 (getGFI4_t *GFI4);
-void config_A2SCREGT2 (getA2SCREGT2_t *A2SCREGT2);
-void config_A1SCREGT2 (getA1SCREGT2_t *A1SCREGT2);
-void config_EEC13 (getEEC13_t *EEC13);
-void config_EF_TVI2 (getEF_TVI2_t *EF_TVI2);
-void config_EEGR1A (getEEGR1A_t *EEGR1A);
-void config_EEGR1B (getEEGR1B_t *EEGR1B);
-void config_EEC12 (getEEC12_t *EEC12);
-void config_NSSR (getNSSR_t *NSSR);
-void config_EPSI (getEPSI_t *EPSI);
-void config_AT1P1I (getAT1P1I_t *AT1P1I);
-void config_AT1DPF2S5 (getAT1DPF2S5_t *AT1DPF2S5);
-void config_AT1DPF2S4 (getAT1DPF2S4_t *AT1DPF2S4);
-void config_AT1DPF2S3 (getAT1DPF2S3_t *AT1DPF2S3);
-void config_AT1DPF1S5 (getAT1DPF1S5_t *AT1DPF1S5);
-void config_AT1DPF1S4 (getAT1DPF1S4_t *AT1DPF1S4);
-void config_AT1DPF1S3 (getAT1DPF1S3_t *AT1DPF1S3);
-void config_CCVS3 (getCCVS3_t *CCVS3);
-void config_AT2AC3 (getAT2AC3_t *AT2AC3);
-void config_AT1AC3 (getAT1AC3_t *AT1AC3);
-void config_EFL_P12 (getEFL_P12_t *EFL_P12);
-void config_DPFC2 (getDPFC2_t *DPFC2);
-void config_LFE2 (getLFE2_t *LFE2);
-void config_SFS (getSFS_t *SFS);
-void config_EBCC (getEBCC_t *EBCC);
-void config_EFP (getEFP_t *EFP);
-void config_HOP (getHOP_t *HOP);
-void config_VLS2 (getVLS2_t *VLS2);
-void config_EC3 (getEC3_t *EC3);
-void config_IVAC (getIVAC_t *IVAC);
-void config_ARMSWIMC (getARMSWIMC_t *ARMSWIMC);
-void config_VEP4 (getVEP4_t *VEP4);
-void config_AFT2NAI (getAFT2NAI_t *AFT2NAI);
-void config_AFT1NAI (getAFT1NAI_t *AFT1NAI);
-void config_AT2WUDOC (getAT2WUDOC_t *AT2WUDOC);
-void config_LLRE (getLLRE_t *LLRE);
-void config_EFL_P11 (getEFL_P11_t *EFL_P11);
-void config_EFS2 (getEFS2_t *EFS2);
-void config_Information (getInformation_t *Information);
-void config_EFTVI1 (getEFTVI1_t *EFTVI1);
-void config_ETCBI (getETCBI_t *ETCBI);
-void config_CAC2 (getCAC2_t *CAC2);
-void config_CAC2P (getCAC2P_t *CAC2P);
-void config_CAC1 (getCAC1_t *CAC1);
-void config_CAC1P (getCAC1P_t *CAC1P);
-void config_DPF2S2 (getDPF2S2_t *DPF2S2);
-void config_DPF1S2 (getDPF1S2_t *DPF1S2);
-void config_EEC11 (getEEC11_t *EEC11);
-void config_EMAP (getEMAP_t *EMAP);
-void config_EMAC (getEMAC_t *EMAC);
-void config_EEC9 (getEEC9_t *EEC9);
-void config_EEC10 (getEEC10_t *EEC10);
-void config_ET5 (getET5_t *ET5);
-void config_EFL_P10 (getEFL_P10_t *EFL_P10);
-void config_LVDS (getLVDS_t *LVDS);
-void config_DLCD2 (getDLCD2_t *DLCD2);
-void config_DLCD1 (getDLCD1_t *DLCD1);
-void config_DLCC2 (getDLCC2_t *DLCC2);
-void config_DLCC1 (getDLCC1_t *DLCC1);
-void config_EOM (getEOM_t *EOM);
-void config_AT2OGC2 (getAT2OGC2_t *AT2OGC2);
-void config_AT2OGC1 (getAT2OGC1_t *AT2OGC1);
-void config_AT2IGC2 (getAT2IGC2_t *AT2IGC2);
-void config_AT2IGC1 (getAT2IGC1_t *AT2IGC1);
-void config_AT1OGC2 (getAT1OGC2_t *AT1OGC2);
-void config_AT1OGC1 (getAT1OGC1_t *AT1OGC1);
-void config_AT1IGC2 (getAT1IGC2_t *AT1IGC2);
-void config_AT1IGC1 (getAT1IGC1_t *AT1IGC1);
-void config_MSI1 (getMSI1_t *MSI1);
-void config_MSCI (getMSCI_t *MSCI);
-void config_BCH2 (getBCH2_t *BCH2);
-void config_BCH1 (getBCH1_t *BCH1);
-void config_OCSI (getOCSI_t *OCSI);
-void config_BDS (getBDS_t *BDS);
-void config_CSI (getCSI_t *CSI);
-void config_ILI (getILI_t *ILI);
-void config_AT1WUDOC (getAT1WUDOC_t *AT1WUDOC);
-void config_DPF2S (getDPF2S_t *DPF2S);
-void config_DPF1S (getDPF1S_t *DPF1S);
-void config_ATDT2 (getATDT2_t *ATDT2);
-void config_ATDT1 (getATDT1_t *ATDT1);
-void config_A2DOC (getA2DOC_t *A2DOC);
-void config_A1DOC (getA1DOC_t *A1DOC);
-void config_A2GOC (getA2GOC_t *A2GOC);
-void config_A1GOC (getA1GOC_t *A1GOC);
-void config_EJM10 (getEJM10_t *EJM10);
-void config_BJM10 (getBJM10_t *BJM10);
-void config_EJM9 (getEJM9_t *EJM9);
-void config_BJM9 (getBJM9_t *BJM9);
-void config_EJM8 (getEJM8_t *EJM8);
-void config_BJM8 (getBJM8_t *BJM8);
-void config_EJM7 (getEJM7_t *EJM7);
-void config_BJM7 (getBJM7_t *BJM7);
-void config_EJM6 (getEJM6_t *EJM6);
-void config_BJM6 (getBJM6_t *BJM6);
-void config_EJM5 (getEJM5_t *EJM5);
-void config_BJM5 (getBJM5_t *BJM5);
-void config_EJM4 (getEJM4_t *EJM4);
-void config_BJM4 (getBJM4_t *BJM4);
-void config_FD2 (getFD2_t *FD2);
-void config_A2DEFSI (getA2DEFSI_t *A2DEFSI);
-void config_A2SCRRT2I (getA2SCRRT2I_t *A2SCRRT2I);
-void config_A2SCRRT1I (getA2SCRRT1I_t *A2SCRRT1I);
-void config_A2DEFI (getA2DEFI_t *A2DEFI);
-void config_A2SCRSI (getA2SCRSI_t *A2SCRSI);
-void config_A2SCREGT1 (getA2SCREGT1_t *A2SCREGT1);
-void config_A2SCREGP (getA2SCREGP_t *A2SCREGP);
-void config_A2SCRDSR2 (getA2SCRDSR2_t *A2SCRDSR2);
-void config_A2SCRDSI2 (getA2SCRDSI2_t *A2SCRDSI2);
-void config_A1DEFSI (getA1DEFSI_t *A1DEFSI);
-void config_A1SCRRT2I (getA1SCRRT2I_t *A1SCRRT2I);
-void config_A1SCREGT1 (getA1SCREGT1_t *A1SCREGT1);
-void config_A1SCREGP (getA1SCREGP_t *A1SCREGP);
-void config_A1SCRDSR2 (getA1SCRDSR2_t *A1SCRDSR2);
-void config_A1SCRDSI2 (getA1SCRDSI2_t *A1SCRDSI2);
-void config_AT2FC2 (getAT2FC2_t *AT2FC2);
-void config_AT2TWCC (getAT2TWCC_t *AT2TWCC);
-void config_AT1TWCC (getAT1TWCC_t *AT1TWCC);
-void config_O2FT2 (getO2FT2_t *O2FT2);
-void config_O2FT1 (getO2FT1_t *O2FT1);
-void config_ACCVC (getACCVC_t *ACCVC);
-void config_ECCVC (getECCVC_t *ECCVC);
-void config_EAI (getEAI_t *EAI);
-void config_AT1FC2 (getAT1FC2_t *AT1FC2);
-void config_ET4 (getET4_t *ET4);
-void config_ZNVW (getZNVW_t *ZNVW);
-void config_GCVW (getGCVW_t *GCVW);
-void config_AGCW (getAGCW_t *AGCW);
-void config_AGW (getAGW_t *AGW);
-void config_AAGW (getAAGW_t *AAGW);
-void config_AT2AC2 (getAT2AC2_t *AT2AC2);
-void config_AT1AC2 (getAT1AC2_t *AT1AC2);
-void config_SCR1 (getSCR1_t *SCR1);
-void config_EEC8 (getEEC8_t *EEC8);
-void config_DRC (getDRC_t *DRC);
-void config_BSA (getBSA_t *BSA);
-void config_ESV6 (getESV6_t *ESV6);
-void config_ESV5 (getESV5_t *ESV5);
-void config_ESV4 (getESV4_t *ESV4);
-void config_ESV3 (getESV3_t *ESV3);
-void config_ESV2 (getESV2_t *ESV2);
-void config_ESV1 (getESV1_t *ESV1);
-void config_AT2TI (getAT2TI_t *AT2TI);
-void config_AT1TI (getAT1TI_t *AT1TI);
-void config_AT2S (getAT2S_t *AT2S);
-void config_AT1S (getAT1S_t *AT1S);
-void config_DPFC1 (getDPFC1_t *DPFC1);
-void config_AFSS (getAFSS_t *AFSS);
-void config_EC2 (getEC2_t *EC2);
-void config_EGRBV (getEGRBV_t *EGRBV);
-void config_TCI (getTCI_t *TCI);
-void config_EFL_P9 (getEFL_P9_t *EFL_P9);
-void config_EFL_P8 (getEFL_P8_t *EFL_P8);
-void config_EFL_P7 (getEFL_P7_t *EFL_P7);
-void config_EFL_P6 (getEFL_P6_t *EFL_P6);
-void config_EFL_P5 (getEFL_P5_t *EFL_P5);
-void config_VDS2 (getVDS2_t *VDS2);
-void config_J2012 (getJ2012_t *J2012);
-void config_AT2GP (getAT2GP_t *AT2GP);
-void config_AT1GP (getAT1GP_t *AT1GP);
-void config_AETC (getAETC_t *AETC);
-void config_EOI (getEOI_t *EOI);
-void config_EEC7 (getEEC7_t *EEC7);
-void config_TRF2 (getTRF2_t *TRF2);
-void config_AT1HI (getAT1HI_t *AT1HI);
-void config_AT2HI (getAT2HI_t *AT2HI);
-void config_A1DEFI (getA1DEFI_t *A1DEFI);
-void config_SEP2 (getSEP2_t *SEP2);
-void config_SEP1 (getSEP1_t *SEP1);
-void config_AT2AC1 (getAT2AC1_t *AT2AC1);
-void config_AT1AC1 (getAT1AC1_t *AT1AC1);
-void config_AT2FC1 (getAT2FC1_t *AT2FC1);
-void config_AT1FC1 (getAT1FC1_t *AT1FC1);
-void config_GFI (getGFI_t *GFI);
-void config_EEC6 (getEEC6_t *EEC6);
-void config_PTODE (getPTODE_t *PTODE);
-void config_DC2 (getDC2_t *DC2);
-void config_WCM2 (getWCM2_t *WCM2);
-void config_WCM1 (getWCM1_t *WCM1);
-void config_EFL_P4 (getEFL_P4_t *EFL_P4);
-void config_FWSS2 (getFWSS2_t *FWSS2);
-void config_AT2IMG (getAT2IMG_t *AT2IMG);
-void config_AT2OG2 (getAT2OG2_t *AT2OG2);
-void config_AT2IG2 (getAT2IG2_t *AT2IG2);
-void config_AT1IMG (getAT1IMG_t *AT1IMG);
-void config_AT1OG2 (getAT1OG2_t *AT1OG2);
-void config_AT1IG2 (getAT1IG2_t *AT1IG2);
-void config_TPRI (getTPRI_t *TPRI);
-void config_TR6 (getTR6_t *TR6);
-void config_TR5 (getTR5_t *TR5);
-void config_TR3 (getTR3_t *TR3);
-void config_TR1 (getTR1_t *TR1);
-void config_TR2 (getTR2_t *TR2);
-void config_TR7 (getTR7_t *TR7);
-void config_EFL_P3 (getEFL_P3_t *EFL_P3);
-void config_EEC14 (getEEC14_t *EEC14);
-void config_EEC15 (getEEC15_t *EEC15);
-void config_EBC5 (getEBC5_t *EBC5);
-void config_CSA (getCSA_t *CSA);
-void config_OHCSS (getOHCSS_t *OHCSS);
-void config_ISCS (getISCS_t *ISCS);
-void config_CMI (getCMI_t *CMI);
-void config_ISC (getISC_t *ISC);
-void config_OHECS (getOHECS_t *OHECS);
-void config_OEL (getOEL_t *OEL);
-void config_OWW (getOWW_t *OWW);
-void config_IC2 (getIC2_t *IC2);
-void config_FMS (getFMS_t *FMS);
-void config_EP (getEP_t *EP);
-void config_TCI6 (getTCI6_t *TCI6);
-void config_CM3 (getCM3_t *CM3);
-void config_EEC5 (getEEC5_t *EEC5);
-void config_BJM1 (getBJM1_t *BJM1);
-void config_EJM1 (getEJM1_t *EJM1);
-void config_BJM2 (getBJM2_t *BJM2);
-void config_EJM2 (getEJM2_t *EJM2);
-void config_BJM3 (getBJM3_t *BJM3);
-void config_EJM3 (getEJM3_t *EJM3);
-void config_MCI (getMCI_t *MCI);
-void config_FWD (getFWD_t *FWD);
-void config_AMB2 (getAMB2_t *AMB2);
-void config_CACI (getCACI_t *CACI);
-void config_SPR (getSPR_t *SPR);
-void config_EOAC (getEOAC_t *EOAC);
-void config_EPD (getEPD_t *EPD);
-void config_MVS (getMVS_t *MVS);
-void config_HBS (getHBS_t *HBS);
-void config_ET (getET_t *ET);
-void config_LD (getLD_t *LD);
-void config_LCMD (getLCMD_t *LCMD);
-void config_ETC7 (getETC7_t *ETC7);
-void config_TCFG2 (getTCFG2_t *TCFG2);
-void config_ML (getML_t *ML);
-void config_TAVG (getTAVG_t *TAVG);
-void config_DC1 (getDC1_t *DC1);
-void config_VDC1 (getVDC1_t *VDC1);
-void config_BT1 (getBT1_t *BT1);
-void config_ACC2 (getACC2_t *ACC2);
-void config_VEP3 (getVEP3_t *VEP3);
-void config_RTC1 (getRTC1_t *RTC1);
-void config_ECT1 (getECT1_t *ECT1);
-void config_GFD (getGFD_t *GFD);
-void config_AT1T1I (getAT1T1I_t *AT1T1I);
-void config_ASC5 (getASC5_t *ASC5);
-void config_ASC4 (getASC4_t *ASC4);
-void config_ASC1 (getASC1_t *ASC1);
-void config_FLI2 (getFLI2_t *FLI2);
-void config_BM (getBM_t *BM);
-void config_CCC (getCCC_t *CCC);
-void config_VF (getVF_t *VF);
-void config_ET3 (getET3_t *ET3);
-void config_EFS (getEFS_t *EFS);
-void config_TCO1 (getTCO1_t *TCO1);
-void config_HTR (getHTR_t *HTR);
-void config_HRW (getHRW_t *HRW);
-void config_ACC1 (getACC1_t *ACC1);
-void config_CVW (getCVW_t *CVW);
-void config_LTP (getLTP_t *LTP);
-void config_LBC (getLBC_t *LBC);
-void config_LMP (getLMP_t *LMP);
-void config_LSP (getLSP_t *LSP);
-void config_LVD (getLVD_t *LVD);
-void config_LVDD (getLVDD_t *LVDD);
-void config_AP (getAP_t *AP);
-void config_TP1 (getTP1_t *TP1);
-void config_TP2 (getTP2_t *TP2);
-void config_TP3 (getTP3_t *TP3);
-void config_CT1 (getCT1_t *CT1);
-void config_CT2 (getCT2_t *CT2);
-void config_CT3 (getCT3_t *CT3);
-void config_CT4 (getCT4_t *CT4);
-void config_CT5 (getCT5_t *CT5);
-void config_CT6 (getCT6_t *CT6);
-void config_GFI2 (getGFI2_t *GFI2);
-void config_IT1 (getIT1_t *IT1);
-void config_IT2 (getIT2_t *IT2);
-void config_IT3 (getIT3_t *IT3);
-void config_IT4 (getIT4_t *IT4);
-void config_IT5 (getIT5_t *IT5);
-void config_IT6 (getIT6_t *IT6);
-void config_ISO1 (getISO1_t *ISO1);
-void config_ISO2 (getISO2_t *ISO2);
-void config_ISO3 (getISO3_t *ISO3);
-void config_GFP (getGFP_t *GFP);
-void config_AAI (getAAI_t *AAI);
-void config_VEP2 (getVEP2_t *VEP2);
-void config_SP2 (getSP2_t *SP2);
-void config_FL (getFL_t *FL);
-void config_EI (getEI_t *EI);
-void config_EES (getEES_t *EES);
-void config_EAC (getEAC_t *EAC);
-void config_RBI (getRBI_t *RBI);
-void config_TCW (getTCW_t *TCW);
-void config_TCI5 (getTCI5_t *TCI5);
-void config_TCI4 (getTCI4_t *TCI4);
-void config_TCI3 (getTCI3_t *TCI3);
-void config_TCI2 (getTCI2_t *TCI2);
-void config_TCI1 (getTCI1_t *TCI1);
-void config_MBT3 (getMBT3_t *MBT3);
-void config_MBT2 (getMBT2_t *MBT2);
-void config_MBT1 (getMBT1_t *MBT1);
-void config_EPT5 (getEPT5_t *EPT5);
-void config_EPT4 (getEPT4_t *EPT4);
-void config_EPT3 (getEPT3_t *EPT3);
-void config_EPT2 (getEPT2_t *EPT2);
-void config_EPT1 (getEPT1_t *EPT1);
-void config_ET2 (getET2_t *ET2);
-void config_IMT2 (getIMT2_t *IMT2);
-void config_IMT1 (getIMT1_t *IMT1);
-void config_AT (getAT_t *AT);
-void config_ACTL (getACTL_t *ACTL);
-void config_EO1 (getEO1_t *EO1);
-void config_AF2 (getAF2_t *AF2);
-void config_ETC6 (getETC6_t *ETC6);
-void config_EBC4 (getEBC4_t *EBC4);
-void config_EBC3 (getEBC3_t *EBC3);
-void config_AIR1 (getAIR1_t *AIR1);
-void config_GFC (getGFC_t *GFC);
-void config_TTI2 (getTTI2_t *TTI2);
-void config_EH (getEH_t *EH);
-void config_GFI1 (getGFI1_t *GFI1);
-void config_LFI (getLFI_t *LFI);
-void config_TTI1 (getTTI1_t *TTI1);
-void config_TSI (getTSI_t *TSI);
-void config_TVI (getTVI_t *TVI);
-void config_LF (getLF_t *LF);
-void config_GTFI (getGTFI_t *GTFI);
-void config_LTFI (getLTFI_t *LTFI);
-void config_TDI (getTDI_t *TDI);
-void config_TFI (getTFI_t *TFI);
-void config_CBI (getCBI_t *CBI);
-void config_FD1 (getFD1_t *FD1);
-void config_EEC4 (getEEC4_t *EEC4);
-void config_EBC2 (getEBC2_t *EBC2);
-void config_VDHR (getVDHR_t *VDHR);
-void config_ERC2 (getERC2_t *ERC2);
-void config_ETC5 (getETC5_t *ETC5);
-void config_ETC4 (getETC4_t *ETC4);
-void config_ETC3 (getETC3_t *ETC3);
-void config_AS (getAS_t *AS);
-void config_AUXIO1 (getAUXIO1_t *AUXIO1);
-void config_SOFT (getSOFT_t *SOFT);
-void config_EFL_P2 (getEFL_P2_t *EFL_P2);
-void config_IO (getIO_t *IO);
-void config_TC (getTC_t *TC);
-void config_AIR2 (getAIR2_t *AIR2);
-void config_EEC3 (getEEC3_t *EEC3);
-void config_VD (getVD_t *VD);
-void config_TCFG (getTCFG_t *TCFG);
-void config_SHUTDN (getSHUTDN_t *SHUTDN);
-void config_HOURS (getHOURS_t *HOURS);
-void config_TD (getTD_t *TD);
-void config_VH (getVH_t *VH);
-void config_VDS (getVDS_t *VDS);
-void config_LFC (getLFC_t *LFC);
-void config_VW (getVW_t *VW);
-void config_CCSS (getCCSS_t *CCSS);
-void config_ET1 (getET1_t *ET1);
-void config_EFL_P1 (getEFL_P1_t *EFL_P1);
-void config_PTO (getPTO_t *PTO);
-void config_CCVS1 (getCCVS1_t *CCVS1);
-void config_LFE1 (getLFE1_t *LFE1);
-void config_VP (getVP_t *VP);
-void config_TIRE (getTIRE_t *TIRE);
-void config_AMB (getAMB_t *AMB);
-void config_IC1 (getIC1_t *IC1);
-void config_VEP1 (getVEP1_t *VEP1);
-void config_TRF1 (getTRF1_t *TRF1);
-void config_AI (getAI_t *AI);
-void config_B (getB_t *B);
-void config_RF (getRF_t *RF);
-void config_DD (getDD_t *DD);
-void config_A1 (getA1_t *A1);
-void config_AWPP (getAWPP_t *AWPP);
-void config_OI (getOI_t *OI);
+void CheckTSC1 ( J1939_MESSAGE *J1939_MESSAGE,getTSC1_t *TSC1);
+void CheckTC1 ( J1939_MESSAGE *J1939_MESSAGE,getTC1_t *TC1);
+void CheckXBR ( J1939_MESSAGE *J1939_MESSAGE,getXBR_t *XBR);
+void CheckGPV4 ( J1939_MESSAGE *J1939_MESSAGE,getGPV4_t *GPV4);
+void CheckAUXIO5 ( J1939_MESSAGE *J1939_MESSAGE,getAUXIO5_t *AUXIO5);
+void CheckSRASI ( J1939_MESSAGE *J1939_MESSAGE,getSRASI_t *SRASI);
+void CheckCCVS2 ( J1939_MESSAGE *J1939_MESSAGE,getCCVS2_t *CCVS2);
+void CheckAEBS2 ( J1939_MESSAGE *J1939_MESSAGE,getAEBS2_t *AEBS2);
+void CheckESR ( J1939_MESSAGE *J1939_MESSAGE,getESR_t *ESR);
+void CheckRBR ( J1939_MESSAGE *J1939_MESSAGE,getRBR_t *RBR);
+void CheckECC ( J1939_MESSAGE *J1939_MESSAGE,getECC_t *ECC);
+void CheckSFC ( J1939_MESSAGE *J1939_MESSAGE,getSFC_t *SFC);
+void CheckVLS1 ( J1939_MESSAGE *J1939_MESSAGE,getVLS1_t *VLS1);
+void CheckHCDI1 ( J1939_MESSAGE *J1939_MESSAGE,getHCDI1_t *HCDI1);
+void CheckAT1DPFSSC ( J1939_MESSAGE *J1939_MESSAGE,getAT1DPFSSC_t *AT1DPFSSC);
+void CheckAT2DPFSSC ( J1939_MESSAGE *J1939_MESSAGE,getAT2DPFSSC_t *AT2DPFSSC);
+void CheckLVDSOM ( J1939_MESSAGE *J1939_MESSAGE,getLVDSOM_t *LVDSOM);
+void CheckNCS ( J1939_MESSAGE *J1939_MESSAGE,getNCS_t *NCS);
+void CheckNC1 ( J1939_MESSAGE *J1939_MESSAGE,getNC1_t *NC1);
+void CheckJLCM ( J1939_MESSAGE *J1939_MESSAGE,getJLCM_t *JLCM);
+void CheckAUXIO7 ( J1939_MESSAGE *J1939_MESSAGE,getAUXIO7_t *AUXIO7);
+void CheckAUXIO6 ( J1939_MESSAGE *J1939_MESSAGE,getAUXIO6_t *AUXIO6);
+void CheckAUXIO4 ( J1939_MESSAGE *J1939_MESSAGE,getAUXIO4_t *AUXIO4);
+void CheckAUXIO3 ( J1939_MESSAGE *J1939_MESSAGE,getAUXIO3_t *AUXIO3);
+void CheckAUXIO2 ( J1939_MESSAGE *J1939_MESSAGE,getAUXIO2_t *AUXIO2);
+void CheckDISP1 ( J1939_MESSAGE *J1939_MESSAGE,getDISP1_t *DISP1);
+void CheckFLIC ( J1939_MESSAGE *J1939_MESSAGE,getFLIC_t *FLIC);
+void CheckTPRS ( J1939_MESSAGE *J1939_MESSAGE,getTPRS_t *TPRS);
+void CheckCTL ( J1939_MESSAGE *J1939_MESSAGE,getCTL_t *CTL);
+void CheckCL ( J1939_MESSAGE *J1939_MESSAGE,getCL_t *CL);
+void CheckASC6 ( J1939_MESSAGE *J1939_MESSAGE,getASC6_t *ASC6);
+void CheckASC2 ( J1939_MESSAGE *J1939_MESSAGE,getASC2_t *ASC2);
+void CheckTDA ( J1939_MESSAGE *J1939_MESSAGE,getTDA_t *TDA);
+void CheckATS ( J1939_MESSAGE *J1939_MESSAGE,getATS_t *ATS);
+void CheckATR ( J1939_MESSAGE *J1939_MESSAGE,getATR_t *ATR);
+void CheckCM1 ( J1939_MESSAGE *J1939_MESSAGE,getCM1_t *CM1);
+void CheckERC1 ( J1939_MESSAGE *J1939_MESSAGE,getERC1_t *ERC1);
+void CheckEBC1 ( J1939_MESSAGE *J1939_MESSAGE,getEBC1_t *EBC1);
+void CheckETC1 ( J1939_MESSAGE *J1939_MESSAGE,getETC1_t *ETC1);
+void CheckEEC2 ( J1939_MESSAGE *J1939_MESSAGE,getEEC2_t *EEC2);
+void CheckEEC1 ( J1939_MESSAGE *J1939_MESSAGE,getEEC1_t *EEC1);
+void CheckETC2 ( J1939_MESSAGE *J1939_MESSAGE,getETC2_t *ETC2);
+void CheckEAC1 ( J1939_MESSAGE *J1939_MESSAGE,getEAC1_t *EAC1);
+void CheckFLI1 ( J1939_MESSAGE *J1939_MESSAGE,getFLI1_t *FLI1);
+void CheckHPG ( J1939_MESSAGE *J1939_MESSAGE,getHPG_t *HPG);
+void CheckVDC2 ( J1939_MESSAGE *J1939_MESSAGE,getVDC2_t *VDC2);
+void CheckEGF1 ( J1939_MESSAGE *J1939_MESSAGE,getEGF1_t *EGF1);
+void CheckESC1 ( J1939_MESSAGE *J1939_MESSAGE,getESC1_t *ESC1);
+void CheckETC8 ( J1939_MESSAGE *J1939_MESSAGE,getETC8_t *ETC8);
+void CheckLOI ( J1939_MESSAGE *J1939_MESSAGE,getLOI_t *LOI);
+void CheckAT1IG1 ( J1939_MESSAGE *J1939_MESSAGE,getAT1IG1_t *AT1IG1);
+void CheckAT1OG1 ( J1939_MESSAGE *J1939_MESSAGE,getAT1OG1_t *AT1OG1);
+void CheckAT2IG1 ( J1939_MESSAGE *J1939_MESSAGE,getAT2IG1_t *AT2IG1);
+void CheckAT2OG1 ( J1939_MESSAGE *J1939_MESSAGE,getAT2OG1_t *AT2OG1);
+void CheckFWSS1 ( J1939_MESSAGE *J1939_MESSAGE,getFWSS1_t *FWSS1);
+void CheckSSI ( J1939_MESSAGE *J1939_MESSAGE,getSSI_t *SSI);
+void CheckBI ( J1939_MESSAGE *J1939_MESSAGE,getBI_t *BI);
+void CheckCCS ( J1939_MESSAGE *J1939_MESSAGE,getCCS_t *CCS);
+void CheckKL1 ( J1939_MESSAGE *J1939_MESSAGE,getKL1_t *KL1);
+void CheckKL2 ( J1939_MESSAGE *J1939_MESSAGE,getKL2_t *KL2);
+void CheckKL3 ( J1939_MESSAGE *J1939_MESSAGE,getKL3_t *KL3);
+void CheckTFAC ( J1939_MESSAGE *J1939_MESSAGE,getTFAC_t *TFAC);
+void CheckSAS ( J1939_MESSAGE *J1939_MESSAGE,getSAS_t *SAS);
+void CheckESSI ( J1939_MESSAGE *J1939_MESSAGE,getESSI_t *ESSI);
+void CheckA1SCRDSI1 ( J1939_MESSAGE *J1939_MESSAGE,getA1SCRDSI1_t *A1SCRDSI1);
+void CheckA1SCRDSR1 ( J1939_MESSAGE *J1939_MESSAGE,getA1SCRDSR1_t *A1SCRDSR1);
+void CheckA1SCRAI ( J1939_MESSAGE *J1939_MESSAGE,getA1SCRAI_t *A1SCRAI);
+void CheckA2SCRDSI1 ( J1939_MESSAGE *J1939_MESSAGE,getA2SCRDSI1_t *A2SCRDSI1);
+void CheckA2SCRDSR1 ( J1939_MESSAGE *J1939_MESSAGE,getA2SCRDSR1_t *A2SCRDSR1);
+void CheckA2SCRAI ( J1939_MESSAGE *J1939_MESSAGE,getA2SCRAI_t *A2SCRAI);
+void CheckSSI2 ( J1939_MESSAGE *J1939_MESSAGE,getSSI2_t *SSI2);
+void CheckARI ( J1939_MESSAGE *J1939_MESSAGE,getARI_t *ARI);
+void CheckCN ( J1939_MESSAGE *J1939_MESSAGE,getCN_t *CN);
+void CheckMSI2 ( J1939_MESSAGE *J1939_MESSAGE,getMSI2_t *MSI2);
+void CheckACCS ( J1939_MESSAGE *J1939_MESSAGE,getACCS_t *ACCS);
+void CheckCommand ( J1939_MESSAGE *J1939_MESSAGE,getCommand_t *Command);
+void CheckAEBS1 ( J1939_MESSAGE *J1939_MESSAGE,getAEBS1_t *AEBS1);
+void CheckWS ( J1939_MESSAGE *J1939_MESSAGE,getWS_t *WS);
+void CheckWAND ( J1939_MESSAGE *J1939_MESSAGE,getWAND_t *WAND);
+void CheckLDISP ( J1939_MESSAGE *J1939_MESSAGE,getLDISP_t *LDISP);
+void CheckA1SCRAI2 ( J1939_MESSAGE *J1939_MESSAGE,getA1SCRAI2_t *A1SCRAI2);
+void CheckA2SCRAI2 ( J1939_MESSAGE *J1939_MESSAGE,getA2SCRAI2_t *A2SCRAI2);
+void CheckHSS ( J1939_MESSAGE *J1939_MESSAGE,getHSS_t *HSS);
+void CheckGFI4 ( J1939_MESSAGE *J1939_MESSAGE,getGFI4_t *GFI4);
+void CheckA2SCREGT2 ( J1939_MESSAGE *J1939_MESSAGE,getA2SCREGT2_t *A2SCREGT2);
+void CheckA1SCREGT2 ( J1939_MESSAGE *J1939_MESSAGE,getA1SCREGT2_t *A1SCREGT2);
+void CheckEEC13 ( J1939_MESSAGE *J1939_MESSAGE,getEEC13_t *EEC13);
+void CheckEF_TVI2 ( J1939_MESSAGE *J1939_MESSAGE,getEF_TVI2_t *EF_TVI2);
+void CheckEEGR1A ( J1939_MESSAGE *J1939_MESSAGE,getEEGR1A_t *EEGR1A);
+void CheckEEGR1B ( J1939_MESSAGE *J1939_MESSAGE,getEEGR1B_t *EEGR1B);
+void CheckEEC12 ( J1939_MESSAGE *J1939_MESSAGE,getEEC12_t *EEC12);
+void CheckNSSR ( J1939_MESSAGE *J1939_MESSAGE,getNSSR_t *NSSR);
+void CheckEPSI ( J1939_MESSAGE *J1939_MESSAGE,getEPSI_t *EPSI);
+void CheckAT1P1I ( J1939_MESSAGE *J1939_MESSAGE,getAT1P1I_t *AT1P1I);
+void CheckAT1DPF2S5 ( J1939_MESSAGE *J1939_MESSAGE,getAT1DPF2S5_t *AT1DPF2S5);
+void CheckAT1DPF2S4 ( J1939_MESSAGE *J1939_MESSAGE,getAT1DPF2S4_t *AT1DPF2S4);
+void CheckAT1DPF2S3 ( J1939_MESSAGE *J1939_MESSAGE,getAT1DPF2S3_t *AT1DPF2S3);
+void CheckAT1DPF1S5 ( J1939_MESSAGE *J1939_MESSAGE,getAT1DPF1S5_t *AT1DPF1S5);
+void CheckAT1DPF1S4 ( J1939_MESSAGE *J1939_MESSAGE,getAT1DPF1S4_t *AT1DPF1S4);
+void CheckAT1DPF1S3 ( J1939_MESSAGE *J1939_MESSAGE,getAT1DPF1S3_t *AT1DPF1S3);
+void CheckCCVS3 ( J1939_MESSAGE *J1939_MESSAGE,getCCVS3_t *CCVS3);
+void CheckAT2AC3 ( J1939_MESSAGE *J1939_MESSAGE,getAT2AC3_t *AT2AC3);
+void CheckAT1AC3 ( J1939_MESSAGE *J1939_MESSAGE,getAT1AC3_t *AT1AC3);
+void CheckEFL_P12 ( J1939_MESSAGE *J1939_MESSAGE,getEFL_P12_t *EFL_P12);
+void CheckDPFC2 ( J1939_MESSAGE *J1939_MESSAGE,getDPFC2_t *DPFC2);
+void CheckLFE2 ( J1939_MESSAGE *J1939_MESSAGE,getLFE2_t *LFE2);
+void CheckSFS ( J1939_MESSAGE *J1939_MESSAGE,getSFS_t *SFS);
+void CheckEBCC ( J1939_MESSAGE *J1939_MESSAGE,getEBCC_t *EBCC);
+void CheckEFP ( J1939_MESSAGE *J1939_MESSAGE,getEFP_t *EFP);
+void CheckHOP ( J1939_MESSAGE *J1939_MESSAGE,getHOP_t *HOP);
+void CheckVLS2 ( J1939_MESSAGE *J1939_MESSAGE,getVLS2_t *VLS2);
+void CheckEC3 ( J1939_MESSAGE *J1939_MESSAGE,getEC3_t *EC3);
+void CheckIVAC ( J1939_MESSAGE *J1939_MESSAGE,getIVAC_t *IVAC);
+void CheckARMSWIMC ( J1939_MESSAGE *J1939_MESSAGE,getARMSWIMC_t *ARMSWIMC);
+void CheckVEP4 ( J1939_MESSAGE *J1939_MESSAGE,getVEP4_t *VEP4);
+void CheckAFT2NAI ( J1939_MESSAGE *J1939_MESSAGE,getAFT2NAI_t *AFT2NAI);
+void CheckAFT1NAI ( J1939_MESSAGE *J1939_MESSAGE,getAFT1NAI_t *AFT1NAI);
+void CheckAT2WUDOC ( J1939_MESSAGE *J1939_MESSAGE,getAT2WUDOC_t *AT2WUDOC);
+void CheckLLRE ( J1939_MESSAGE *J1939_MESSAGE1,getLLRE_t *LLRE);
+void CheckEFL_P11 ( J1939_MESSAGE *J1939_MESSAGE,getEFL_P11_t *EFL_P11);
+void CheckEFS2 ( J1939_MESSAGE *J1939_MESSAGE,getEFS2_t *EFS2);
+void CheckInformation ( J1939_MESSAGE *J1939_MESSAGE,getInformation_t *Information);
+void CheckEFTVI1 ( J1939_MESSAGE *J1939_MESSAGE,getEFTVI1_t *EFTVI1);
+void CheckETCBI ( J1939_MESSAGE *J1939_MESSAGE,getETCBI_t *ETCBI);
+void CheckCAC2 ( J1939_MESSAGE *J1939_MESSAGE,getCAC2_t *CAC2);
+void CheckCAC2P ( J1939_MESSAGE *J1939_MESSAGE,getCAC2P_t *CAC2P);
+void CheckCAC1 ( J1939_MESSAGE *J1939_MESSAGE,getCAC1_t *CAC1);
+void CheckCAC1P ( J1939_MESSAGE *J1939_MESSAGE,getCAC1P_t *CAC1P);
+void CheckDPF2S2 ( J1939_MESSAGE *J1939_MESSAGE,getDPF2S2_t *DPF2S2);
+void CheckDPF1S2 ( J1939_MESSAGE *J1939_MESSAGE,getDPF1S2_t *DPF1S2);
+void CheckEEC11 ( J1939_MESSAGE *J1939_MESSAGE,getEEC11_t *EEC11);
+void CheckEMAP ( J1939_MESSAGE *J1939_MESSAGE,getEMAP_t *EMAP);
+void CheckEMAC ( J1939_MESSAGE *J1939_MESSAGE,getEMAC_t *EMAC);
+void CheckEEC9 ( J1939_MESSAGE *J1939_MESSAGE,getEEC9_t *EEC9);
+void CheckEEC10 ( J1939_MESSAGE *J1939_MESSAGE,getEEC10_t *EEC10);
+void CheckET5 ( J1939_MESSAGE *J1939_MESSAGE,getET5_t *ET5);
+void CheckEFL_P10 ( J1939_MESSAGE *J1939_MESSAGE,getEFL_P10_t *EFL_P10);
+void CheckLVDS ( J1939_MESSAGE *J1939_MESSAGE,getLVDS_t *LVDS);
+void CheckDLCD2 ( J1939_MESSAGE *J1939_MESSAGE,getDLCD2_t *DLCD2);
+void CheckDLCD1 ( J1939_MESSAGE *J1939_MESSAGE,getDLCD1_t *DLCD1);
+void CheckDLCC2 ( J1939_MESSAGE *J1939_MESSAGE,getDLCC2_t *DLCC2);
+void CheckDLCC1 ( J1939_MESSAGE *J1939_MESSAGE,getDLCC1_t *DLCC1);
+void CheckEOM ( J1939_MESSAGE *J1939_MESSAGE,getEOM_t *EOM);
+void CheckAT2OGC2 ( J1939_MESSAGE *J1939_MESSAGE,getAT2OGC2_t *AT2OGC2);
+void CheckAT2OGC1 ( J1939_MESSAGE *J1939_MESSAGE,getAT2OGC1_t *AT2OGC1);
+void CheckAT2IGC2 ( J1939_MESSAGE *J1939_MESSAGE,getAT2IGC2_t *AT2IGC2);
+void CheckAT2IGC1 ( J1939_MESSAGE *J1939_MESSAGE,getAT2IGC1_t *AT2IGC1);
+void CheckAT1OGC2 ( J1939_MESSAGE *J1939_MESSAGE,getAT1OGC2_t *AT1OGC2);
+void CheckAT1OGC1 ( J1939_MESSAGE *J1939_MESSAGE,getAT1OGC1_t *AT1OGC1);
+void CheckAT1IGC2 ( J1939_MESSAGE *J1939_MESSAGE,getAT1IGC2_t *AT1IGC2);
+void CheckAT1IGC1 ( J1939_MESSAGE *J1939_MESSAGE,getAT1IGC1_t *AT1IGC1);
+void CheckMSI1 ( J1939_MESSAGE *J1939_MESSAGE,getMSI1_t *MSI1);
+void CheckMSCI ( J1939_MESSAGE *J1939_MESSAGE,getMSCI_t *MSCI);
+void CheckBCH2 ( J1939_MESSAGE *J1939_MESSAGE,getBCH2_t *BCH2);
+void CheckBCH1 ( J1939_MESSAGE *J1939_MESSAGE,getBCH1_t *BCH1);
+void CheckOCSI ( J1939_MESSAGE *J1939_MESSAGE,getOCSI_t *OCSI);
+void CheckBDS ( J1939_MESSAGE *J1939_MESSAGE,getBDS_t *BDS);
+void CheckCSI ( J1939_MESSAGE *J1939_MESSAGE,getCSI_t *CSI);
+void CheckILI ( J1939_MESSAGE *J1939_MESSAGE,getILI_t *ILI);
+void CheckAT1WUDOC ( J1939_MESSAGE *J1939_MESSAGE,getAT1WUDOC_t *AT1WUDOC);
+void CheckDPF2S ( J1939_MESSAGE *J1939_MESSAGE,getDPF2S_t *DPF2S);
+void CheckDPF1S ( J1939_MESSAGE *J1939_MESSAGE,getDPF1S_t *DPF1S);
+void CheckATDT2 ( J1939_MESSAGE *J1939_MESSAGE,getATDT2_t *ATDT2);
+void CheckATDT1 ( J1939_MESSAGE *J1939_MESSAGE,getATDT1_t *ATDT1);
+void CheckA2DOC ( J1939_MESSAGE *J1939_MESSAGE,getA2DOC_t *A2DOC);
+void CheckA1DOC ( J1939_MESSAGE *J1939_MESSAGE,getA1DOC_t *A1DOC);
+void CheckA2GOC ( J1939_MESSAGE *J1939_MESSAGE,getA2GOC_t *A2GOC);
+void CheckA1GOC ( J1939_MESSAGE *J1939_MESSAGE,getA1GOC_t *A1GOC);
+void CheckEJM10 ( J1939_MESSAGE *J1939_MESSAGE,getEJM10_t *EJM10);
+void CheckBJM10 ( J1939_MESSAGE *J1939_MESSAGE,getBJM10_t *BJM10);
+void CheckEJM9 ( J1939_MESSAGE *J1939_MESSAGE,getEJM9_t *EJM9);
+void CheckBJM9 ( J1939_MESSAGE *J1939_MESSAGE,getBJM9_t *BJM9);
+void CheckEJM8 ( J1939_MESSAGE *J1939_MESSAGE,getEJM8_t *EJM8);
+void CheckBJM8 ( J1939_MESSAGE *J1939_MESSAGE,getBJM8_t *BJM8);
+void CheckEJM7 ( J1939_MESSAGE *J1939_MESSAGE,getEJM7_t *EJM7);
+void CheckBJM7 ( J1939_MESSAGE *J1939_MESSAGE,getBJM7_t *BJM7);
+void CheckEJM6 ( J1939_MESSAGE *J1939_MESSAGE,getEJM6_t *EJM6);
+void CheckBJM6 ( J1939_MESSAGE *J1939_MESSAGE,getBJM6_t *BJM6);
+void CheckEJM5 ( J1939_MESSAGE *J1939_MESSAGE,getEJM5_t *EJM5);
+void CheckBJM5 ( J1939_MESSAGE *J1939_MESSAGE,getBJM5_t *BJM5);
+void CheckEJM4 ( J1939_MESSAGE *J1939_MESSAGE,getEJM4_t *EJM4);
+void CheckBJM4 ( J1939_MESSAGE *J1939_MESSAGE,getBJM4_t *BJM4);
+void CheckFD2 ( J1939_MESSAGE *J1939_MESSAGE,getFD2_t *FD2);
+void CheckA2DEFSI ( J1939_MESSAGE *J1939_MESSAGE,getA2DEFSI_t *A2DEFSI);
+void CheckA2SCRRT2I ( J1939_MESSAGE *J1939_MESSAGE,getA2SCRRT2I_t *A2SCRRT2I);
+void CheckA2SCRRT1I ( J1939_MESSAGE *J1939_MESSAGE,getA2SCRRT1I_t *A2SCRRT1I);
+void CheckA2DEFI ( J1939_MESSAGE *J1939_MESSAGE,getA2DEFI_t *A2DEFI);
+void CheckA2SCRSI ( J1939_MESSAGE *J1939_MESSAGE,getA2SCRSI_t *A2SCRSI);
+void CheckA2SCREGT1 ( J1939_MESSAGE *J1939_MESSAGE,getA2SCREGT1_t *A2SCREGT1);
+void CheckA2SCREGP ( J1939_MESSAGE *J1939_MESSAGE,getA2SCREGP_t *A2SCREGP);
+void CheckA2SCRDSR2 ( J1939_MESSAGE *J1939_MESSAGE,getA2SCRDSR2_t *A2SCRDSR2);
+void CheckA2SCRDSI2 ( J1939_MESSAGE *J1939_MESSAGE,getA2SCRDSI2_t *A2SCRDSI2);
+void CheckA1DEFSI ( J1939_MESSAGE *J1939_MESSAGE,getA1DEFSI_t *A1DEFSI);
+void CheckA1SCRRT2I ( J1939_MESSAGE *J1939_MESSAGE,getA1SCRRT2I_t *A1SCRRT2I);
+void CheckA1SCREGT1 ( J1939_MESSAGE *J1939_MESSAGE,getA1SCREGT1_t *A1SCREGT1);
+void CheckA1SCREGP ( J1939_MESSAGE *J1939_MESSAGE,getA1SCREGP_t *A1SCREGP);
+void CheckA1SCRDSR2 ( J1939_MESSAGE *J1939_MESSAGE,getA1SCRDSR2_t *A1SCRDSR2);
+void CheckA1SCRDSI2 ( J1939_MESSAGE *J1939_MESSAGE,getA1SCRDSI2_t *A1SCRDSI2);
+void CheckAT2FC2 ( J1939_MESSAGE *J1939_MESSAGE,getAT2FC2_t *AT2FC2);
+void CheckAT2TWCC ( J1939_MESSAGE *J1939_MESSAGE,getAT2TWCC_t *AT2TWCC);
+void CheckAT1TWCC ( J1939_MESSAGE *J1939_MESSAGE,getAT1TWCC_t *AT1TWCC);
+void CheckO2FT2 ( J1939_MESSAGE *J1939_MESSAGE,getO2FT2_t *O2FT2);
+void CheckO2FT1 ( J1939_MESSAGE *J1939_MESSAGE,getO2FT1_t *O2FT1);
+void CheckACCVC ( J1939_MESSAGE *J1939_MESSAGE,getACCVC_t *ACCVC);
+void CheckECCVC ( J1939_MESSAGE *J1939_MESSAGE,getECCVC_t *ECCVC);
+void CheckEAI ( J1939_MESSAGE *J1939_MESSAGE,getEAI_t *EAI);
+void CheckAT1FC2 ( J1939_MESSAGE *J1939_MESSAGE,getAT1FC2_t *AT1FC2);
+void CheckET4 ( J1939_MESSAGE *J1939_MESSAGE,getET4_t *ET4);
+void CheckZNVW ( J1939_MESSAGE *J1939_MESSAGE,getZNVW_t *ZNVW);
+void CheckGCVW ( J1939_MESSAGE *J1939_MESSAGE,getGCVW_t *GCVW);
+void CheckAGCW ( J1939_MESSAGE *J1939_MESSAGE,getAGCW_t *AGCW);
+void CheckAGW ( J1939_MESSAGE *J1939_MESSAGE,getAGW_t *AGW);
+void CheckAAGW ( J1939_MESSAGE *J1939_MESSAGE,getAAGW_t *AAGW);
+void CheckAT2AC2 ( J1939_MESSAGE *J1939_MESSAGE,getAT2AC2_t *AT2AC2);
+void CheckAT1AC2 ( J1939_MESSAGE *J1939_MESSAGE,getAT1AC2_t *AT1AC2);
+void CheckSCR1 ( J1939_MESSAGE *J1939_MESSAGE,getSCR1_t *SCR1);
+void CheckEEC8 ( J1939_MESSAGE *J1939_MESSAGE,getEEC8_t *EEC8);
+void CheckDRC ( J1939_MESSAGE *J1939_MESSAGE,getDRC_t *DRC);
+void CheckBSA ( J1939_MESSAGE *J1939_MESSAGE,getBSA_t *BSA);
+void CheckESV6 ( J1939_MESSAGE *J1939_MESSAGE,getESV6_t *ESV6);
+void CheckESV5 ( J1939_MESSAGE *J1939_MESSAGE,getESV5_t *ESV5);
+void CheckESV4 ( J1939_MESSAGE *J1939_MESSAGE,getESV4_t *ESV4);
+void CheckESV3 ( J1939_MESSAGE *J1939_MESSAGE,getESV3_t *ESV3);
+void CheckESV2 ( J1939_MESSAGE *J1939_MESSAGE,getESV2_t *ESV2);
+void CheckESV1 ( J1939_MESSAGE *J1939_MESSAGE,getESV1_t *ESV1);
+void CheckAT2TI ( J1939_MESSAGE *J1939_MESSAGE,getAT2TI_t *AT2TI);
+void CheckAT1TI ( J1939_MESSAGE *J1939_MESSAGE,getAT1TI_t *AT1TI);
+void CheckAT2S ( J1939_MESSAGE *J1939_MESSAGE,getAT2S_t *AT2S);
+void CheckAT1S ( J1939_MESSAGE *J1939_MESSAGE,getAT1S_t *AT1S);
+void CheckDPFC1 ( J1939_MESSAGE *J1939_MESSAGE,getDPFC1_t *DPFC1);
+void CheckAFSS ( J1939_MESSAGE *J1939_MESSAGE,getAFSS_t *AFSS);
+void CheckEC2 ( J1939_MESSAGE *J1939_MESSAGE,getEC2_t *EC2);
+void CheckEGRBV ( J1939_MESSAGE *J1939_MESSAGE,getEGRBV_t *EGRBV);
+void CheckTCI ( J1939_MESSAGE *J1939_MESSAGE,getTCI_t *TCI);
+void CheckEFL_P9 ( J1939_MESSAGE *J1939_MESSAGE,getEFL_P9_t *EFL_P9);
+void CheckEFL_P8 ( J1939_MESSAGE *J1939_MESSAGE,getEFL_P8_t *EFL_P8);
+void CheckEFL_P7 ( J1939_MESSAGE *J1939_MESSAGE,getEFL_P7_t *EFL_P7);
+void CheckEFL_P6 ( J1939_MESSAGE *J1939_MESSAGE,getEFL_P6_t *EFL_P6);
+void CheckEFL_P5 ( J1939_MESSAGE *J1939_MESSAGE,getEFL_P5_t *EFL_P5);
+void CheckVDS2 ( J1939_MESSAGE *J1939_MESSAGE,getVDS2_t *VDS2);
+void CheckJ2012 ( J1939_MESSAGE *J1939_MESSAGE,getJ2012_t *J2012);
+void CheckAT2GP ( J1939_MESSAGE *J1939_MESSAGE,getAT2GP_t *AT2GP);
+void CheckAT1GP ( J1939_MESSAGE *J1939_MESSAGE,getAT1GP_t *AT1GP);
+void CheckAETC ( J1939_MESSAGE *J1939_MESSAGE,getAETC_t *AETC);
+void CheckEOI ( J1939_MESSAGE *J1939_MESSAGE,getEOI_t *EOI);
+void CheckEEC7 ( J1939_MESSAGE *J1939_MESSAGE,getEEC7_t *EEC7);
+void CheckTRF2 ( J1939_MESSAGE *J1939_MESSAGE,getTRF2_t *TRF2);
+void CheckAT1HI ( J1939_MESSAGE *J1939_MESSAGE,getAT1HI_t *AT1HI);
+void CheckAT2HI ( J1939_MESSAGE *J1939_MESSAGE,getAT2HI_t *AT2HI);
+void CheckA1DEFI ( J1939_MESSAGE *J1939_MESSAGE,getA1DEFI_t *A1DEFI);
+void CheckSEP2 ( J1939_MESSAGE *J1939_MESSAGE,getSEP2_t *SEP2);
+void CheckSEP1 ( J1939_MESSAGE *J1939_MESSAGE,getSEP1_t *SEP1);
+void CheckAT2AC1 ( J1939_MESSAGE *J1939_MESSAGE,getAT2AC1_t *AT2AC1);
+void CheckAT1AC1 ( J1939_MESSAGE *J1939_MESSAGE,getAT1AC1_t *AT1AC1);
+void CheckAT2FC1 ( J1939_MESSAGE *J1939_MESSAGE,getAT2FC1_t *AT2FC1);
+void CheckAT1FC1 ( J1939_MESSAGE *J1939_MESSAGE,getAT1FC1_t *AT1FC1);
+void CheckGFI ( J1939_MESSAGE *J1939_MESSAGE,getGFI_t *GFI);
+void CheckEEC6 ( J1939_MESSAGE *J1939_MESSAGE,getEEC6_t *EEC6);
+void CheckPTODE ( J1939_MESSAGE *J1939_MESSAGE,getPTODE_t *PTODE);
+void CheckDC2 ( J1939_MESSAGE *J1939_MESSAGE,getDC2_t *DC2);
+void CheckWCM2 ( J1939_MESSAGE *J1939_MESSAGE,getWCM2_t *WCM2);
+void CheckWCM1 ( J1939_MESSAGE *J1939_MESSAGE,getWCM1_t *WCM1);
+void CheckEFL_P4 ( J1939_MESSAGE *J1939_MESSAGE,getEFL_P4_t *EFL_P4);
+void CheckFWSS2 ( J1939_MESSAGE *J1939_MESSAGE,getFWSS2_t *FWSS2);
+void CheckAT2IMG ( J1939_MESSAGE *J1939_MESSAGE,getAT2IMG_t *AT2IMG);
+void CheckAT2OG2 ( J1939_MESSAGE *J1939_MESSAGE,getAT2OG2_t *AT2OG2);
+void CheckAT2IG2 ( J1939_MESSAGE *J1939_MESSAGE,getAT2IG2_t *AT2IG2);
+void CheckAT1IMG ( J1939_MESSAGE *J1939_MESSAGE,getAT1IMG_t *AT1IMG);
+void CheckAT1OG2 ( J1939_MESSAGE *J1939_MESSAGE,getAT1OG2_t *AT1OG2);
+void CheckAT1IG2 ( J1939_MESSAGE *J1939_MESSAGE,getAT1IG2_t *AT1IG2);
+void CheckTPRI ( J1939_MESSAGE *J1939_MESSAGE,getTPRI_t *TPRI);
+void CheckTR6 ( J1939_MESSAGE *J1939_MESSAGE,getTR6_t *TR6);
+void CheckTR5 ( J1939_MESSAGE *J1939_MESSAGE,getTR5_t *TR5);
+void CheckTR3 ( J1939_MESSAGE *J1939_MESSAGE,getTR3_t *TR3);
+void CheckTR1 ( J1939_MESSAGE *J1939_MESSAGE,getTR1_t *TR1);
+void CheckTR2 ( J1939_MESSAGE *J1939_MESSAGE,getTR2_t *TR2);
+void CheckTR7 ( J1939_MESSAGE *J1939_MESSAGE,getTR7_t *TR7);
+void CheckEFL_P3 ( J1939_MESSAGE *J1939_MESSAGE,getEFL_P3_t *EFL_P3);
+void CheckEEC14 ( J1939_MESSAGE *J1939_MESSAGE,getEEC14_t *EEC14);
+void CheckEEC15 ( J1939_MESSAGE *J1939_MESSAGE,getEEC15_t *EEC15);
+void CheckEBC5 ( J1939_MESSAGE *J1939_MESSAGE,getEBC5_t *EBC5);
+void CheckCSA ( J1939_MESSAGE *J1939_MESSAGE,getCSA_t *CSA);
+void CheckOHCSS ( J1939_MESSAGE *J1939_MESSAGE,getOHCSS_t *OHCSS);
+void CheckISCS ( J1939_MESSAGE *J1939_MESSAGE,getISCS_t *ISCS);
+void CheckCMI ( J1939_MESSAGE *J1939_MESSAGE,getCMI_t *CMI);
+void CheckISC ( J1939_MESSAGE *J1939_MESSAGE,getISC_t *ISC);
+void CheckOHECS ( J1939_MESSAGE *J1939_MESSAGE,getOHECS_t *OHECS);
+void CheckOEL ( J1939_MESSAGE *J1939_MESSAGE,getOEL_t *OEL);
+void CheckOWW ( J1939_MESSAGE *J1939_MESSAGE,getOWW_t *OWW);
+void CheckIC2 ( J1939_MESSAGE *J1939_MESSAGE,getIC2_t *IC2);
+void CheckFMS ( J1939_MESSAGE *J1939_MESSAGE,getFMS_t *FMS);
+void CheckEP ( J1939_MESSAGE *J1939_MESSAGE,getEP_t *EP);
+void CheckTCI6 ( J1939_MESSAGE *J1939_MESSAGE,getTCI6_t *TCI6);
+void CheckCM3 ( J1939_MESSAGE *J1939_MESSAGE,getCM3_t *CM3);
+void CheckEEC5 ( J1939_MESSAGE *J1939_MESSAGE,getEEC5_t *EEC5);
+void CheckBJM1 ( J1939_MESSAGE *J1939_MESSAGE,getBJM1_t *BJM1);
+void CheckEJM1 ( J1939_MESSAGE *J1939_MESSAGE,getEJM1_t *EJM1);
+void CheckBJM2 ( J1939_MESSAGE *J1939_MESSAGE,getBJM2_t *BJM2);
+void CheckEJM2 ( J1939_MESSAGE *J1939_MESSAGE,getEJM2_t *EJM2);
+void CheckBJM3 ( J1939_MESSAGE *J1939_MESSAGE,getBJM3_t *BJM3);
+void CheckEJM3 ( J1939_MESSAGE *J1939_MESSAGE,getEJM3_t *EJM3);
+void CheckMCI ( J1939_MESSAGE *J1939_MESSAGE,getMCI_t *MCI);
+void CheckFWD ( J1939_MESSAGE *J1939_MESSAGE,getFWD_t *FWD);
+void CheckAMB2 ( J1939_MESSAGE *J1939_MESSAGE,getAMB2_t *AMB2);
+void CheckCACI ( J1939_MESSAGE *J1939_MESSAGE,getCACI_t *CACI);
+void CheckSPR ( J1939_MESSAGE *J1939_MESSAGE,getSPR_t *SPR);
+void CheckEOAC ( J1939_MESSAGE *J1939_MESSAGE,getEOAC_t *EOAC);
+void CheckEPD ( J1939_MESSAGE *J1939_MESSAGE,getEPD_t *EPD);
+void CheckMVS ( J1939_MESSAGE *J1939_MESSAGE,getMVS_t *MVS);
+void CheckHBS ( J1939_MESSAGE *J1939_MESSAGE,getHBS_t *HBS);
+void CheckET ( J1939_MESSAGE *J1939_MESSAGE,getET_t *ET);
+void CheckLD ( J1939_MESSAGE *J1939_MESSAGE,getLD_t *LD);
+void CheckLCMD ( J1939_MESSAGE *J1939_MESSAGE,getLCMD_t *LCMD);
+void CheckETC7 ( J1939_MESSAGE *J1939_MESSAGE,getETC7_t *ETC7);
+void CheckTCFG2 ( J1939_MESSAGE *J1939_MESSAGE,getTCFG2_t *TCFG2);
+void CheckML ( J1939_MESSAGE *J1939_MESSAGE,getML_t *ML);
+void CheckTAVG ( J1939_MESSAGE *J1939_MESSAGE,getTAVG_t *TAVG);
+void CheckDC1 ( J1939_MESSAGE *J1939_MESSAGE,getDC1_t *DC1);
+void CheckVDC1 ( J1939_MESSAGE *J1939_MESSAGE,getVDC1_t *VDC1);
+void CheckBT1 ( J1939_MESSAGE *J1939_MESSAGE,getBT1_t *BT1);
+void CheckACC2 ( J1939_MESSAGE *J1939_MESSAGE,getACC2_t *ACC2);
+void CheckVEP3 ( J1939_MESSAGE *J1939_MESSAGE,getVEP3_t *VEP3);
+void CheckRTC1 ( J1939_MESSAGE *J1939_MESSAGE,getRTC1_t *RTC1);
+void CheckECT1 ( J1939_MESSAGE *J1939_MESSAGE,getECT1_t *ECT1);
+void CheckGFD ( J1939_MESSAGE *J1939_MESSAGE,getGFD_t *GFD);
+void CheckAT1T1I ( J1939_MESSAGE *J1939_MESSAGE,getAT1T1I_t *AT1T1I);
+void CheckASC5 ( J1939_MESSAGE *J1939_MESSAGE,getASC5_t *ASC5);
+void CheckASC4 ( J1939_MESSAGE *J1939_MESSAGE,getASC4_t *ASC4);
+void CheckASC1 ( J1939_MESSAGE *J1939_MESSAGE,getASC1_t *ASC1);
+void CheckFLI2 ( J1939_MESSAGE *J1939_MESSAGE,getFLI2_t *FLI2);
+void CheckBM ( J1939_MESSAGE *J1939_MESSAGE,getBM_t *BM);
+void CheckCCC ( J1939_MESSAGE *J1939_MESSAGE,getCCC_t *CCC);
+void CheckVF ( J1939_MESSAGE *J1939_MESSAGE,getVF_t *VF);
+void CheckET3 ( J1939_MESSAGE *J1939_MESSAGE,getET3_t *ET3);
+void CheckEFS ( J1939_MESSAGE *J1939_MESSAGE,getEFS_t *EFS);
+void CheckTCO1 ( J1939_MESSAGE *J1939_MESSAGE,getTCO1_t *TCO1);
+void CheckHTR ( J1939_MESSAGE *J1939_MESSAGE,getHTR_t *HTR);
+void CheckHRW ( J1939_MESSAGE *J1939_MESSAGE,getHRW_t *HRW);
+void CheckACC1 ( J1939_MESSAGE *J1939_MESSAGE,getACC1_t *ACC1);
+void CheckCVW ( J1939_MESSAGE *J1939_MESSAGE,getCVW_t *CVW);
+void CheckLTP ( J1939_MESSAGE *J1939_MESSAGE,getLTP_t *LTP);
+void CheckLBC ( J1939_MESSAGE *J1939_MESSAGE,getLBC_t *LBC);
+void CheckLMP ( J1939_MESSAGE *J1939_MESSAGE,getLMP_t *LMP);
+void CheckLSP ( J1939_MESSAGE *J1939_MESSAGE,getLSP_t *LSP);
+void CheckLVD ( J1939_MESSAGE *J1939_MESSAGE,getLVD_t *LVD);
+void CheckLVDD ( J1939_MESSAGE *J1939_MESSAGE,getLVDD_t *LVDD);
+void CheckAP ( J1939_MESSAGE *J1939_MESSAGE,getAP_t *AP);
+void CheckTP1 ( J1939_MESSAGE *J1939_MESSAGE,getTP1_t *TP1);
+void CheckTP2 ( J1939_MESSAGE *J1939_MESSAGE,getTP2_t *TP2);
+void CheckTP3 ( J1939_MESSAGE *J1939_MESSAGE,getTP3_t *TP3);
+void CheckCT1 ( J1939_MESSAGE *J1939_MESSAGE,getCT1_t *CT1);
+void CheckCT2 ( J1939_MESSAGE *J1939_MESSAGE,getCT2_t *CT2);
+void CheckCT3 ( J1939_MESSAGE *J1939_MESSAGE,getCT3_t *CT3);
+void CheckCT4 ( J1939_MESSAGE *J1939_MESSAGE,getCT4_t *CT4);
+void CheckCT5 ( J1939_MESSAGE *J1939_MESSAGE,getCT5_t *CT5);
+void CheckCT6 ( J1939_MESSAGE *J1939_MESSAGE,getCT6_t *CT6);
+void CheckGFI2 ( J1939_MESSAGE *J1939_MESSAGE,getGFI2_t *GFI2);
+void CheckIT1 ( J1939_MESSAGE *J1939_MESSAGE,getIT1_t *IT1);
+void CheckIT2 ( J1939_MESSAGE *J1939_MESSAGE,getIT2_t *IT2);
+void CheckIT3 ( J1939_MESSAGE *J1939_MESSAGE,getIT3_t *IT3);
+void CheckIT4 ( J1939_MESSAGE *J1939_MESSAGE,getIT4_t *IT4);
+void CheckIT5 ( J1939_MESSAGE *J1939_MESSAGE,getIT5_t *IT5);
+void CheckIT6 ( J1939_MESSAGE *J1939_MESSAGE,getIT6_t *IT6);
+void CheckISO1 ( J1939_MESSAGE *J1939_MESSAGE,getISO1_t *ISO1);
+void CheckISO2 ( J1939_MESSAGE *J1939_MESSAGE,getISO2_t *ISO2);
+void CheckISO3 ( J1939_MESSAGE *J1939_MESSAGE,getISO3_t *ISO3);
+void CheckGFP ( J1939_MESSAGE *J1939_MESSAGE,getGFP_t *GFP);
+void CheckAAI ( J1939_MESSAGE *J1939_MESSAGE,getAAI_t *AAI);
+void CheckVEP2 ( J1939_MESSAGE *J1939_MESSAGE,getVEP2_t *VEP2);
+void CheckSP2 ( J1939_MESSAGE *J1939_MESSAGE,getSP2_t *SP2);
+void CheckFL ( J1939_MESSAGE *J1939_MESSAGE,getFL_t *FL);
+void CheckEI ( J1939_MESSAGE *J1939_MESSAGE,getEI_t *EI);
+void CheckEES ( J1939_MESSAGE *J1939_MESSAGE,getEES_t *EES);
+void CheckEAC ( J1939_MESSAGE *J1939_MESSAGE,getEAC_t *EAC);
+void CheckRBI ( J1939_MESSAGE *J1939_MESSAGE,getRBI_t *RBI);
+void CheckTCW ( J1939_MESSAGE *J1939_MESSAGE,getTCW_t *TCW);
+void CheckTCI5 ( J1939_MESSAGE *J1939_MESSAGE,getTCI5_t *TCI5);
+void CheckTCI4 ( J1939_MESSAGE *J1939_MESSAGE,getTCI4_t *TCI4);
+void CheckTCI3 ( J1939_MESSAGE *J1939_MESSAGE,getTCI3_t *TCI3);
+void CheckTCI2 ( J1939_MESSAGE *J1939_MESSAGE,getTCI2_t *TCI2);
+void CheckTCI1 ( J1939_MESSAGE *J1939_MESSAGE,getTCI1_t *TCI1);
+void CheckMBT3 ( J1939_MESSAGE *J1939_MESSAGE,getMBT3_t *MBT3);
+void CheckMBT2 ( J1939_MESSAGE *J1939_MESSAGE,getMBT2_t *MBT2);
+void CheckMBT1 ( J1939_MESSAGE *J1939_MESSAGE,getMBT1_t *MBT1);
+void CheckEPT5 ( J1939_MESSAGE *J1939_MESSAGE,getEPT5_t *EPT5);
+void CheckEPT4 ( J1939_MESSAGE *J1939_MESSAGE,getEPT4_t *EPT4);
+void CheckEPT3 ( J1939_MESSAGE *J1939_MESSAGE,getEPT3_t *EPT3);
+void CheckEPT2 ( J1939_MESSAGE *J1939_MESSAGE,getEPT2_t *EPT2);
+void CheckEPT1 ( J1939_MESSAGE *J1939_MESSAGE,getEPT1_t *EPT1);
+void CheckET2 ( J1939_MESSAGE *J1939_MESSAGE,getET2_t *ET2);
+void CheckIMT2 ( J1939_MESSAGE *J1939_MESSAGE,getIMT2_t *IMT2);
+void CheckIMT1 ( J1939_MESSAGE *J1939_MESSAGE,getIMT1_t *IMT1);
+void CheckAT ( J1939_MESSAGE *J1939_MESSAGE,getAT_t *AT);
+void CheckACTL ( J1939_MESSAGE *J1939_MESSAGE,getACTL_t *ACTL);
+void CheckEO1 ( J1939_MESSAGE *J1939_MESSAGE,getEO1_t *EO1);
+void CheckAF2 ( J1939_MESSAGE *J1939_MESSAGE,getAF2_t *AF2);
+void CheckETC6 ( J1939_MESSAGE *J1939_MESSAGE,getETC6_t *ETC6);
+void CheckEBC4 ( J1939_MESSAGE *J1939_MESSAGE,getEBC4_t *EBC4);
+void CheckEBC3 ( J1939_MESSAGE *J1939_MESSAGE,getEBC3_t *EBC3);
+void CheckAIR1 ( J1939_MESSAGE *J1939_MESSAGE,getAIR1_t *AIR1);
+void CheckGFC ( J1939_MESSAGE *J1939_MESSAGE,getGFC_t *GFC);
+void CheckTTI2 ( J1939_MESSAGE *J1939_MESSAGE,getTTI2_t *TTI2);
+void CheckEH ( J1939_MESSAGE *J1939_MESSAGE,getEH_t *EH);
+void CheckGFI1 ( J1939_MESSAGE *J1939_MESSAGE,getGFI1_t *GFI1);
+void CheckLFI ( J1939_MESSAGE *J1939_MESSAGE,getLFI_t *LFI);
+void CheckTTI1 ( J1939_MESSAGE *J1939_MESSAGE,getTTI1_t *TTI1);
+void CheckTSI ( J1939_MESSAGE *J1939_MESSAGE,getTSI_t *TSI);
+void CheckTVI ( J1939_MESSAGE *J1939_MESSAGE,getTVI_t *TVI);
+void CheckLF ( J1939_MESSAGE *J1939_MESSAGE,getLF_t *LF);
+void CheckGTFI ( J1939_MESSAGE *J1939_MESSAGE,getGTFI_t *GTFI);
+void CheckLTFI ( J1939_MESSAGE *J1939_MESSAGE,getLTFI_t *LTFI);
+void CheckTDI ( J1939_MESSAGE *J1939_MESSAGE,getTDI_t *TDI);
+void CheckTFI ( J1939_MESSAGE *J1939_MESSAGE,getTFI_t *TFI);
+void CheckCBI ( J1939_MESSAGE *J1939_MESSAGE,getCBI_t *CBI);
+void CheckFD1 ( J1939_MESSAGE *J1939_MESSAGE,getFD1_t *FD1);
+void CheckEEC4 ( J1939_MESSAGE *J1939_MESSAGE,getEEC4_t *EEC4);
+void CheckEBC2 ( J1939_MESSAGE *J1939_MESSAGE,getEBC2_t *EBC2);
+void CheckVDHR ( J1939_MESSAGE *J1939_MESSAGE,getVDHR_t *VDHR);
+void CheckERC2 ( J1939_MESSAGE *J1939_MESSAGE,getERC2_t *ERC2);
+void CheckETC5 ( J1939_MESSAGE *J1939_MESSAGE,getETC5_t *ETC5);
+void CheckETC4 ( J1939_MESSAGE *J1939_MESSAGE,getETC4_t *ETC4);
+void CheckETC3 ( J1939_MESSAGE *J1939_MESSAGE,getETC3_t *ETC3);
+void CheckAS ( J1939_MESSAGE *J1939_MESSAGE,getAS_t *AS);
+void CheckAUXIO1 ( J1939_MESSAGE *J1939_MESSAGE,getAUXIO1_t *AUXIO1);
+void CheckSOFT ( J1939_MESSAGE *J1939_MESSAGE,getSOFT_t *SOFT);
+void CheckEFL_P2 ( J1939_MESSAGE *J1939_MESSAGE,getEFL_P2_t *EFL_P2);
+void CheckIO ( J1939_MESSAGE *J1939_MESSAGE,getIO_t *IO);
+void CheckTC ( J1939_MESSAGE *J1939_MESSAGE,getTC_t *TC);
+void CheckAIR2 ( J1939_MESSAGE *J1939_MESSAGE,getAIR2_t *AIR2);
+void CheckEEC3 ( J1939_MESSAGE *J1939_MESSAGE,getEEC3_t *EEC3);
+void CheckVD ( J1939_MESSAGE *J1939_MESSAGE,getVD_t *VD);
+void CheckTCFG ( J1939_MESSAGE *J1939_MESSAGE,getTCFG_t *TCFG);
+void CheckSHUTDN ( J1939_MESSAGE *J1939_MESSAGE,getSHUTDN_t *SHUTDN);
+void CheckHOURS ( J1939_MESSAGE *J1939_MESSAGE,getHOURS_t *HOURS);
+void CheckTD ( J1939_MESSAGE *J1939_MESSAGE,getTD_t *TD);
+void CheckVH ( J1939_MESSAGE *J1939_MESSAGE,getVH_t *VH);
+void CheckVDS ( J1939_MESSAGE *J1939_MESSAGE,getVDS_t *VDS);
+void CheckLFC ( J1939_MESSAGE *J1939_MESSAGE,getLFC_t *LFC);
+void CheckVW ( J1939_MESSAGE *J1939_MESSAGE,getVW_t *VW);
+void CheckCCSS ( J1939_MESSAGE *J1939_MESSAGE,getCCSS_t *CCSS);
+void CheckET1 ( J1939_MESSAGE *J1939_MESSAGE,getET1_t *ET1);
+void CheckEFL_P1 ( J1939_MESSAGE *J1939_MESSAGE,getEFL_P1_t *EFL_P1);
+void CheckPTO ( J1939_MESSAGE *J1939_MESSAGE,getPTO_t *PTO);
+void CheckCCVS1 ( J1939_MESSAGE *J1939_MESSAGE,getCCVS1_t *CCVS1);
+void CheckLFE1 ( J1939_MESSAGE *J1939_MESSAGE,getLFE1_t *LFE1);
+void CheckVP ( J1939_MESSAGE *J1939_MESSAGE,getVP_t *VP);
+void CheckTIRE ( J1939_MESSAGE *J1939_MESSAGE,getTIRE_t *TIRE);
+void CheckAMB ( J1939_MESSAGE *J1939_MESSAGE,getAMB_t *AMB);
+void CheckIC1 ( J1939_MESSAGE *J1939_MESSAGE,getIC1_t *IC1);
+void CheckVEP1 ( J1939_MESSAGE *J1939_MESSAGE,getVEP1_t *VEP1);
+void CheckTRF1 ( J1939_MESSAGE *J1939_MESSAGE,getTRF1_t *TRF1);
+void CheckAI ( J1939_MESSAGE *J1939_MESSAGE,getAI_t *AI);
+void CheckB ( J1939_MESSAGE *J1939_MESSAGE,getB_t *B);
+void CheckRF ( J1939_MESSAGE *J1939_MESSAGE,getRF_t *RF);
+void CheckDD ( J1939_MESSAGE *J1939_MESSAGE,getDD_t *DD);
+void CheckA1 ( J1939_MESSAGE *J1939_MESSAGE,getA1_t *A1);
+void CheckAWPP ( J1939_MESSAGE *J1939_MESSAGE,getAWPP_t *AWPP);
+void CheckOI ( J1939_MESSAGE *J1939_MESSAGE,getOI_t *OI);
+
 #endif

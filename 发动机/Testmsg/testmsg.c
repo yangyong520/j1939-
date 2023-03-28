@@ -3,8 +3,7 @@
 void testallmsg_group1()
 {
 	J1939_MESSAGE_T msg;
-
-  getTSC1_t tsc1;
+       getTSC1_t tsc1;
 
        config_TSC1(&tsc1);
        TSC1(&msg,&tsc1);
@@ -304,7 +303,8 @@ void testallmsg_group1()
        EAC1(&msg,&eac1);
        send_massage(&msg);
        Delay(500000);
-			 getFLI1_t fli1;
+
+       getFLI1_t fli1;
 
        config_FLI1(&fli1);
        FLI1(&msg,&fli1);
@@ -513,7 +513,8 @@ void testallmsg_group1()
        CN(&msg,&cn);
        send_massage(&msg);
        Delay(500000);
-			 getMSI2_t msi2;
+
+       getMSI2_t msi2;
 
        config_MSI2(&msi2);
        MSI2(&msg,&msi2);
@@ -603,7 +604,15 @@ void testallmsg_group1()
        A1SCREGT2(&msg,&a1scregt2);
        send_massage(&msg);
        Delay(500000);
-			 getEF_TVI2_t ef_tvi2;
+
+       getEEC13_t eec13;
+
+       config_EEC13(&eec13);
+       EEC13(&msg,&eec13);
+       send_massage(&msg);
+       Delay(500000);
+
+       getEF_TVI2_t ef_tvi2;
 
        config_EF_TVI2(&ef_tvi2);
        EF_TVI2(&msg,&ef_tvi2);
@@ -861,13 +870,18 @@ void testallmsg_group1()
        ETCBI(&msg,&etcbi);
        send_massage(&msg);
        Delay(500000);
-			 
+
        getCAC2_t cac2;
 
        config_CAC2(&cac2);
        CAC2(&msg,&cac2);
        send_massage(&msg);
        Delay(500000);
+}
+/*
+void testallmsg_group2()
+{
+	J1939_MESSAGE_T msg;
 
        getCAC2P_t cac2p;
 
@@ -882,18 +896,16 @@ void testallmsg_group1()
        CAC1(&msg,&cac1);
        send_massage(&msg);
        Delay(500000);
-			 getCAC1P_t cac1p;
+
+       getCAC1P_t cac1p;
 
        config_CAC1P(&cac1p);
        CAC1P(&msg,&cac1p);
        send_massage(&msg);
        Delay(500000);
-			 
-}
-void testallmsg_group2()
-{
-	J1939_MESSAGE_T msg;
-	getDPF2S2_t dpf2s2;
+
+
+       getDPF2S2_t dpf2s2;
 
        config_DPF2S2(&dpf2s2);
        DPF2S2(&msg,&dpf2s2);
@@ -906,7 +918,8 @@ void testallmsg_group2()
        DPF1S2(&msg,&dpf1s2);
        send_massage(&msg);
        Delay(500000);
-	getEEC11_t eec11;
+
+       getEEC11_t eec11;
 
        config_EEC11(&eec11);
        EEC11(&msg,&eec11);
@@ -1514,6 +1527,11 @@ void testallmsg_group2()
        EEC8(&msg,&eec8);
        send_massage(&msg);
        Delay(500000);
+}
+
+void testallmsg_group3()
+{
+	J1939_MESSAGE_T msg;
 
        getDRC_t drc;
 
@@ -1521,7 +1539,8 @@ void testallmsg_group2()
        DRC(&msg,&drc);
        send_massage(&msg);
        Delay(500000);
-			  getBSA_t bsa;
+
+       getBSA_t bsa;
 
        config_BSA(&bsa);
        BSA(&msg,&bsa);
@@ -1689,6 +1708,7 @@ void testallmsg_group2()
        send_massage(&msg);
        Delay(500000);
 
+
        getAT1GP_t at1gp;
 
        config_AT1GP(&at1gp);
@@ -1702,11 +1722,8 @@ void testallmsg_group2()
        AETC(&msg,&aetc);
        send_massage(&msg);
        Delay(500000);
-}
-void testallmsg_group3()
-{
-	J1939_MESSAGE_T msg;
-	getEOI_t eoi;
+
+       getEOI_t eoi;
 
        config_EOI(&eoi);
        EOI(&msg,&eoi);
@@ -2497,4 +2514,705 @@ void testallmsg_group3()
        send_massage(&msg);
        Delay(500000);
 
+       getIT1_t it1;
+
+       config_IT1(&it1);
+       IT1(&msg,&it1);
+       send_massage(&msg);
+       Delay(500000);
+
+       getIT2_t it2;
+
+       config_IT2(&it2);
+       IT2(&msg,&it2);
+       send_massage(&msg);
+       Delay(500000);
+
+       getIT3_t it3;
+
+       config_IT3(&it3);
+       IT3(&msg,&it3);
+       send_massage(&msg);
+       Delay(500000);
+
+       getIT4_t it4;
+
+       config_IT4(&it4);
+       IT4(&msg,&it4);
+       send_massage(&msg);
+       Delay(500000);
+
+       getIT5_t it5;
+
+       config_IT5(&it5);
+       IT5(&msg,&it5);
+       send_massage(&msg);
+       Delay(500000);
+
+       getIT6_t it6;
+
+       config_IT6(&it6);
+       IT6(&msg,&it6);
+       send_massage(&msg);
+       Delay(500000);
+
+       getISO1_t iso1;
+
+       config_ISO1(&iso1);
+       ISO1(&msg,&iso1);
+       send_massage(&msg);
+       Delay(500000);
+
+       getISO2_t iso2;
+
+       config_ISO2(&iso2);
+       ISO2(&msg,&iso2);
+       send_massage(&msg);
+       Delay(500000);
+
+       getISO3_t iso3;
+
+       config_ISO3(&iso3);
+       ISO3(&msg,&iso3);
+       send_massage(&msg);
+       Delay(500000);
+
+       getGFP_t gfp;
+
+       config_GFP(&gfp);
+       GFP(&msg,&gfp);
+       send_massage(&msg);
+       Delay(500000);
+
+       getAAI_t aai;
+
+       config_AAI(&aai);
+       AAI(&msg,&aai);
+       send_massage(&msg);
+       Delay(500000);
+
+       getVEP2_t vep2;
+
+       config_VEP2(&vep2);
+       VEP2(&msg,&vep2);
+       send_massage(&msg);
+       Delay(500000);
+
+       getSP2_t sp2;
+
+       config_SP2(&sp2);
+       SP2(&msg,&sp2);
+       send_massage(&msg);
+       Delay(500000);
+
+       getFL_t fl;
+
+       config_FL(&fl);
+       FL(&msg,&fl);
+       send_massage(&msg);
+       Delay(500000);
+
+       getEI_t ei;
+
+       config_EI(&ei);
+       EI(&msg,&ei);
+       send_massage(&msg);
+       Delay(500000);
+
+       getEES_t ees;
+
+       config_EES(&ees);
+       EES(&msg,&ees);
+       send_massage(&msg);
+       Delay(500000);
+
+       getEAC_t eac;
+
+       config_EAC(&eac);
+       EAC(&msg,&eac);
+       send_massage(&msg);
+       Delay(500000);
+
+       getRBI_t rbi;
+
+       config_RBI(&rbi);
+       RBI(&msg,&rbi);
+       send_massage(&msg);
+       Delay(500000);
+
+       getTCW_t tcw;
+
+       config_TCW(&tcw);
+       TCW(&msg,&tcw);
+       send_massage(&msg);
+       Delay(500000);
+
+       getTCI5_t tci5;
+
+       config_TCI5(&tci5);
+       TCI5(&msg,&tci5);
+       send_massage(&msg);
+       Delay(500000);
+
+       getTCI4_t tci4;
+
+       config_TCI4(&tci4);
+       TCI4(&msg,&tci4);
+       send_massage(&msg);
+       Delay(500000);
+
+       getTCI3_t tci3;
+
+       config_TCI3(&tci3);
+       TCI3(&msg,&tci3);
+       send_massage(&msg);
+       Delay(500000);
+
+       getTCI2_t tci2;
+
+       config_TCI2(&tci2);
+       TCI2(&msg,&tci2);
+       send_massage(&msg);
+       Delay(500000);
+
+       getTCI1_t tci1;
+
+       config_TCI1(&tci1);
+       TCI1(&msg,&tci1);
+       send_massage(&msg);
+       Delay(500000);
+
+       getMBT3_t mbt3;
+
+       config_MBT3(&mbt3);
+       MBT3(&msg,&mbt3);
+       send_massage(&msg);
+       Delay(500000);
+
+       getMBT2_t mbt2;
+
+       config_MBT2(&mbt2);
+       MBT2(&msg,&mbt2);
+       send_massage(&msg);
+       Delay(500000);
+
+       getMBT1_t mbt1;
+
+       config_MBT1(&mbt1);
+       MBT1(&msg,&mbt1);
+       send_massage(&msg);
+       Delay(500000);
+
+       getEPT5_t ept5;
+
+       config_EPT5(&ept5);
+       EPT5(&msg,&ept5);
+       send_massage(&msg);
+       Delay(500000);
+
+       getEPT4_t ept4;
+
+       config_EPT4(&ept4);
+       EPT4(&msg,&ept4);
+       send_massage(&msg);
+       Delay(500000);
+
+       getEPT3_t ept3;
+
+       config_EPT3(&ept3);
+       EPT3(&msg,&ept3);
+       send_massage(&msg);
+       Delay(500000);
+
+       getEPT2_t ept2;
+
+       config_EPT2(&ept2);
+       EPT2(&msg,&ept2);
+       send_massage(&msg);
+       Delay(500000);
+
+       getEPT1_t ept1;
+
+       config_EPT1(&ept1);
+       EPT1(&msg,&ept1);
+       send_massage(&msg);
+       Delay(500000);
+
+       getET2_t et2;
+
+       config_ET2(&et2);
+       ET2(&msg,&et2);
+       send_massage(&msg);
+       Delay(500000);
+
+       getIMT2_t imt2;
+
+       config_IMT2(&imt2);
+       IMT2(&msg,&imt2);
+       send_massage(&msg);
+       Delay(500000);
+
+       getIMT1_t imt1;
+
+       config_IMT1(&imt1);
+       IMT1(&msg,&imt1);
+       send_massage(&msg);
+       Delay(500000);
+
+       getAT_t at;
+
+       config_AT(&at);
+       AT(&msg,&at);
+       send_massage(&msg);
+       Delay(500000);
+
+       getACTL_t actl;
+
+       config_ACTL(&actl);
+       ACTL(&msg,&actl);
+       send_massage(&msg);
+       Delay(500000);
+
+       getEO1_t eo1;
+
+       config_EO1(&eo1);
+       EO1(&msg,&eo1);
+       send_massage(&msg);
+       Delay(500000);
+
+       getAF2_t af2;
+
+       config_AF2(&af2);
+       AF2(&msg,&af2);
+       send_massage(&msg);
+       Delay(500000);
+
+       getETC6_t etc6;
+
+       config_ETC6(&etc6);
+       ETC6(&msg,&etc6);
+       send_massage(&msg);
+       Delay(500000);
+
+       getEBC4_t ebc4;
+
+       config_EBC4(&ebc4);
+       EBC4(&msg,&ebc4);
+       send_massage(&msg);
+       Delay(500000);
+
+       getEBC3_t ebc3;
+
+       config_EBC3(&ebc3);
+       EBC3(&msg,&ebc3);
+       send_massage(&msg);
+       Delay(500000);
+
+       getAIR1_t air1;
+
+       config_AIR1(&air1);
+       AIR1(&msg,&air1);
+       send_massage(&msg);
+       Delay(500000);
+
+       getGFC_t gfc;
+
+       config_GFC(&gfc);
+       GFC(&msg,&gfc);
+       send_massage(&msg);
+       Delay(500000);
+
+       getTTI2_t tti2;
+
+       config_TTI2(&tti2);
+       TTI2(&msg,&tti2);
+       send_massage(&msg);
+       Delay(500000);
+
+       getEH_t eh;
+
+       config_EH(&eh);
+       EH(&msg,&eh);
+       send_massage(&msg);
+       Delay(500000);
+
+       getGFI1_t gfi1;
+
+       config_GFI1(&gfi1);
+       GFI1(&msg,&gfi1);
+       send_massage(&msg);
+       Delay(500000);
+
+       getLFI_t lfi;
+
+       config_LFI(&lfi);
+       LFI(&msg,&lfi);
+       send_massage(&msg);
+       Delay(500000);
+
+       getTTI1_t tti1;
+
+       config_TTI1(&tti1);
+       TTI1(&msg,&tti1);
+       send_massage(&msg);
+       Delay(500000);
+
+       getTSI_t tsi;
+
+       config_TSI(&tsi);
+       TSI(&msg,&tsi);
+       send_massage(&msg);
+       Delay(500000);
+
+       getTVI_t tvi;
+
+       config_TVI(&tvi);
+       TVI(&msg,&tvi);
+       send_massage(&msg);
+       Delay(500000);
+
+       getLF_t lf;
+
+       config_LF(&lf);
+       LF(&msg,&lf);
+       send_massage(&msg);
+       Delay(500000);
+
+       getGTFI_t gtfi;
+
+       config_GTFI(&gtfi);
+       GTFI(&msg,&gtfi);
+       send_massage(&msg);
+       Delay(500000);
+
+       getLTFI_t ltfi;
+
+       config_LTFI(&ltfi);
+       LTFI(&msg,&ltfi);
+       send_massage(&msg);
+       Delay(500000);
+
+       getTDI_t tdi;
+
+       config_TDI(&tdi);
+       TDI(&msg,&tdi);
+       send_massage(&msg);
+       Delay(500000);
+
+       getTFI_t tfi;
+
+       config_TFI(&tfi);
+       TFI(&msg,&tfi);
+       send_massage(&msg);
+       Delay(500000);
+
+       getCBI_t cbi;
+
+       config_CBI(&cbi);
+       CBI(&msg,&cbi);
+       send_massage(&msg);
+       Delay(500000);
+
+       getFD1_t fd1;
+
+       config_FD1(&fd1);
+       FD1(&msg,&fd1);
+       send_massage(&msg);
+       Delay(500000);
+
+       getEEC4_t eec4;
+
+       config_EEC4(&eec4);
+       EEC4(&msg,&eec4);
+       send_massage(&msg);
+       Delay(500000);
+
+       getEBC2_t ebc2;
+
+       config_EBC2(&ebc2);
+       EBC2(&msg,&ebc2);
+       send_massage(&msg);
+       Delay(500000);
+
+       getVDHR_t vdhr;
+
+       config_VDHR(&vdhr);
+       VDHR(&msg,&vdhr);
+       send_massage(&msg);
+       Delay(500000);
+
+       getERC2_t erc2;
+
+       config_ERC2(&erc2);
+       ERC2(&msg,&erc2);
+       send_massage(&msg);
+       Delay(500000);
+
+       getETC5_t etc5;
+
+       config_ETC5(&etc5);
+       ETC5(&msg,&etc5);
+       send_massage(&msg);
+       Delay(500000);
+
+       getETC4_t etc4;
+
+       config_ETC4(&etc4);
+       ETC4(&msg,&etc4);
+       send_massage(&msg);
+       Delay(500000);
+
+       getETC3_t etc3;
+
+       config_ETC3(&etc3);
+       ETC3(&msg,&etc3);
+       send_massage(&msg);
+       Delay(500000);
+
+       getAS_t as;
+
+       config_AS(&as);
+       AS(&msg,&as);
+       send_massage(&msg);
+       Delay(500000);
+
+       getAUXIO1_t auxio1;
+
+       config_AUXIO1(&auxio1);
+       AUXIO1(&msg,&auxio1);
+       send_massage(&msg);
+       Delay(500000);
+
+       getSOFT_t soft;
+
+       config_SOFT(&soft);
+       SOFT(&msg,&soft);
+       send_massage(&msg);
+       Delay(500000);
+
+       getEFL_P2_t efl_p2;
+
+       config_EFL_P2(&efl_p2);
+       EFL_P2(&msg,&efl_p2);
+       send_massage(&msg);
+       Delay(500000);
+
+       getIO_t io;
+
+       config_IO(&io);
+       IO(&msg,&io);
+       send_massage(&msg);
+       Delay(500000);
+
+       getTC_t tc;
+
+       config_TC(&tc);
+       TC(&msg,&tc);
+       send_massage(&msg);
+       Delay(500000);
+
+       getAIR2_t air2;
+
+       config_AIR2(&air2);
+       AIR2(&msg,&air2);
+       send_massage(&msg);
+       Delay(500000);
+
+       getEEC3_t eec3;
+
+       config_EEC3(&eec3);
+       EEC3(&msg,&eec3);
+       send_massage(&msg);
+       Delay(500000);
+
+       getVD_t vd;
+
+       config_VD(&vd);
+       VD(&msg,&vd);
+       send_massage(&msg);
+       Delay(500000);
+
+       getTCFG_t tcfg;
+
+       config_TCFG(&tcfg);
+       TCFG(&msg,&tcfg);
+       send_massage(&msg);
+       Delay(500000);
+
+       getSHUTDN_t shutdn;
+
+       config_SHUTDN(&shutdn);
+       SHUTDN(&msg,&shutdn);
+       send_massage(&msg);
+       Delay(500000);
+
+       getHOURS_t hours;
+
+       config_HOURS(&hours);
+       HOURS(&msg,&hours);
+       send_massage(&msg);
+       Delay(500000);
+
+       getTD_t td;
+
+       config_TD(&td);
+       TD(&msg,&td);
+       send_massage(&msg);
+       Delay(500000);
+
+       getVH_t vh;
+
+       config_VH(&vh);
+       VH(&msg,&vh);
+       send_massage(&msg);
+       Delay(500000);
+
+       getVDS_t vds;
+
+       config_VDS(&vds);
+       VDS(&msg,&vds);
+       send_massage(&msg);
+       Delay(500000);
+
+       getLFC_t lfc;
+
+       config_LFC(&lfc);
+       LFC(&msg,&lfc);
+       send_massage(&msg);
+       Delay(500000);
+
+       getVW_t vw;
+
+       config_VW(&vw);
+       VW(&msg,&vw);
+       send_massage(&msg);
+       Delay(500000);
+
+       getCCSS_t ccss;
+
+       config_CCSS(&ccss);
+       CCSS(&msg,&ccss);
+       send_massage(&msg);
+       Delay(500000);
+
+       getET1_t et1;
+
+       config_ET1(&et1);
+       ET1(&msg,&et1);
+       send_massage(&msg);
+       Delay(500000);
+
+       getEFL_P1_t efl_p1;
+
+       config_EFL_P1(&efl_p1);
+       EFL_P1(&msg,&efl_p1);
+       send_massage(&msg);
+       Delay(500000);
+
+       getPTO_t pto;
+
+       config_PTO(&pto);
+       PTO(&msg,&pto);
+       send_massage(&msg);
+       Delay(500000);
+
+       getCCVS1_t ccvs1;
+
+       config_CCVS1(&ccvs1);
+       CCVS1(&msg,&ccvs1);
+       send_massage(&msg);
+       Delay(500000);
+
+       getLFE1_t lfe1;
+
+       config_LFE1(&lfe1);
+       LFE1(&msg,&lfe1);
+       send_massage(&msg);
+       Delay(500000);
+
+       getVP_t vp;
+
+       config_VP(&vp);
+       VP(&msg,&vp);
+       send_massage(&msg);
+       Delay(500000);
+
+       getTIRE_t tire;
+
+       config_TIRE(&tire);
+       TIRE(&msg,&tire);
+       send_massage(&msg);
+       Delay(500000);
+
+       getAMB_t amb;
+
+       config_AMB(&amb);
+       AMB(&msg,&amb);
+       send_massage(&msg);
+       Delay(500000);
+
+       getIC1_t ic1;
+
+       config_IC1(&ic1);
+       IC1(&msg,&ic1);
+       send_massage(&msg);
+       Delay(500000);
+
+       getVEP1_t vep1;
+
+       config_VEP1(&vep1);
+       VEP1(&msg,&vep1);
+       send_massage(&msg);
+       Delay(500000);
+
+       getTRF1_t trf1;
+
+       config_TRF1(&trf1);
+       TRF1(&msg,&trf1);
+       send_massage(&msg);
+       Delay(500000);
+
+       getAI_t ai;
+
+       config_AI(&ai);
+       AI(&msg,&ai);
+       send_massage(&msg);
+       Delay(500000);
+
+       getB_t b;
+
+       config_B(&b);
+       B(&msg,&b);
+       send_massage(&msg);
+       Delay(500000);
+
+       getRF_t rf;
+
+       config_RF(&rf);
+       RF(&msg,&rf);
+       send_massage(&msg);
+       Delay(500000);
+
+       getDD_t dd;
+
+       config_DD(&dd);
+       DD(&msg,&dd);
+       send_massage(&msg);
+       Delay(500000);
+
+       getA1_t a1;
+
+       config_A1(&a1);
+       A1(&msg,&a1);
+       send_massage(&msg);
+       Delay(500000);
+
+       getAWPP_t awpp;
+
+       config_AWPP(&awpp);
+       AWPP(&msg,&awpp);
+       send_massage(&msg);
+       Delay(500000);
+
 }
+*/

@@ -11,3 +11,4 @@
 .\obj\j1939.o: .\user\stm32f10x.h
 .\obj\j1939.o: .\FWlib\inc\stm32f10x_rcc.h
 .\obj\j1939.o: .\FWlib\inc\stm32f10x_can.h
+.\obj\j1939.o: .\msg\msg.h

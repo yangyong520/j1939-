@@ -1,0 +1,11 @@
+.\obj\msg.o: msg\msg.c
+.\obj\msg.o: msg\msg.h
+.\obj\msg.o: .\user\stm32f10x.h
+.\obj\msg.o: .\user\core_cm3.h
+.\obj\msg.o: C:\Keil_v5\ARM\ARMCC\bin\..\include\stdint.h
+.\obj\msg.o: .\user\system_stm32f10x.h
+.\obj\msg.o: .\user\stm32f10x_conf.h
+.\obj\msg.o: .\FWlib\inc\stm32f10x_gpio.h
+.\obj\msg.o: .\user\stm32f10x.h
+.\obj\msg.o: .\FWlib\inc\stm32f10x_rcc.h
+.\obj\msg.o: .\j1939\J1939.H

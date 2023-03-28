@@ -70,7 +70,7 @@ int main(void)
 		//J1939_CAN_Transmit(&Msg);
 		//J1939_EnqueueMessage(&Msg,Select_CAN_NODE_1);
 	 //CAN_SendData(CAN1,&TxMsg1);
-		send_massage();
+		//send_massage();
 
 	  Delay(5000);
 	  Delay(5000);	  
@@ -87,7 +87,7 @@ int main(void)
 	  Delay(5000);
 	  Delay(5000);											
 	
-	  CAN_SendData(CAN2,&TxMsg2);									   							   
+	  //CAN_SendData(CAN2,&TxMsg2);									   							   
   }
 }
 

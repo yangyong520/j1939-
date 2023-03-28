@@ -42,6 +42,7 @@
 
 #include "J1939.H"
 #include "J1939_config.H"
+#include "msg.h"
 
 #define J1939_TRUE         1	/**< 代表函数正确返回*/
 #define J1939_FALSE        0	/**< 代表函数错误返回*/
@@ -926,7 +927,20 @@ PutInReceiveQueue:
                 }
             }
         }
+				//char data[128];
+				transmit_USART_STR(&OneMessage);
+				//sprintf(data,"\nPGN : %d Array:%X %X %X %X %X %X %X %X\n",OneMessage.Mxe.PGN,OneMessage.Mxe.Data[0],OneMessage.Mxe.Data[1],OneMessage.Mxe.Data[2],OneMessage.Mxe.Data[3],OneMessage.Mxe.Data[4],OneMessage.Mxe.Data[5],OneMessage.Mxe.Data[6],OneMessage.Mxe.Data[7]);
+				//USART_STR(USART2,data);
 				/*
+				char data[128];
+				getTSC1_t TSC1;
+				
+				CheckTSC1( &OneMessage,&TSC1);
+				//char data[128];
+				sprintf(data,"PGN : %d  OneMessage.Array test:%X \n",OneMessage.Mxe.PGN,OneMessage.Array[7]);
+				USART_STR(USART2,data);
+				/*
+				void CheckTSC1 ( J1939_MESSAGE *J1939_MESSAGE,getTSC1_t *TSC1)
 				char buff[512];
 				char data[128];
 				char data1[128];
