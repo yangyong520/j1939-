@@ -364,7 +364,7 @@
               <MiscControls>--gnu</MiscControls>
               <Define>STM32F10X_CL, USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>.\FWlib\inc;.\user;.\user\usart;.\user\CAN;.\j1939</IncludePath>
+              <IncludePath>.\FWlib\inc;.\user;.\user\usart;.\user\CAN;.\j1939;.\msg</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -506,6 +506,21 @@
               <FileName>system_stm32f10x.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\user\system_stm32f10x.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Msg</GroupName>
+          <Files>
+            <File>
+              <FileName>msg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\msg\msg.c</FilePath>
+            </File>
+            <File>
+              <FileName>msg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\msg\msg.h</FilePath>
             </File>
           </Files>
         </Group>

@@ -3,10 +3,598 @@
 <pre>
 <h1>礦ision Build Log</h1>
 <h2>Project:</h2>
-C:\Users\杨勇\Desktop\毕业设计\j1939工程\发动机\USER\STM32-DEMO.uvproj
-Project File Date:  03/27/2023
+C:\Users\杨勇\Desktop\毕业设计\git工程\j1939-\发动机\USER\STM32-DEMO.uvproj
+Project File Date:  03/29/2023
 
 <h2>Output:</h2>
+Rebuild target 'CAN-Loopback-DEMO'
+assembling startup_stm32f10x_hd.s...
+compiling main.c...
+..\J1939\j1939.h(298): warning:  #1295-D: Deprecated declaration J1939_Initialization - give arg types
+  extern void                   J1939_Initialization( );
+..\J1939\j1939.h(300): warning:  #1295-D: Deprecated declaration J1939_ISR - give arg types
+  extern void                       J1939_ISR( );
+..\J1939\j1939.h(302): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
+  extern void                   J1939_Poll( );
+..\Msg\msg.h(6279): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\Testmsg\testmsg.h(4): warning:  #1295-D: Deprecated declaration testallmsg_group1 - give arg types
+  void testallmsg_group1();
+..\Testmsg\testmsg.h(5): warning:  #1295-D: Deprecated declaration testallmsg_group2 - give arg types
+  void testallmsg_group2();
+..\Testmsg\testmsg.h(6): warning:  #1295-D: Deprecated declaration testallmsg_group3 - give arg types
+  void testallmsg_group3();
+..\Testmsg\testmsg.h(7): warning:  #1-D: last line of file ends without a newline
+  #endif
+main.c(64): warning:  #177-D: variable "msg" was declared but never referenced
+        J1939_MESSAGE_T msg;
+main.c(115): warning:  #223-D: function "J1939_EnqueueMessage" declared implicitly
+          while (J1939_EnqueueMessage(&Msg,Select_CAN_NODE_1) != RC_SUCCESS){ 
+main.c: 10 warnings, 0 errors
+compiling stm32f10x_it.c...
+compiling usart1.c...
+compiling can.c...
+can.c(67): warning:  #177-D: variable "TxMessage" was declared but never referenced
+    CanTxMsg TxMessage;  
+can.c(124): warning:  #223-D: function "J1939_ISR" declared implicitly
+    J1939_ISR( );
+can.c: 2 warnings, 0 errors
+compiling led.c...
+compiling stm32f10x_gpio.c...
+compiling stm32f10x_rcc.c...
+compiling stm32f10x_usart.c...
+compiling stm32f10x_can.c...
+compiling misc.c...
+compiling core_cm3.c...
+compiling system_stm32f10x.c...
+compiling J1939.c...
+..\J1939\J1939.H(298): warning:  #1295-D: Deprecated declaration J1939_Initialization - give arg types
+  extern void                   J1939_Initialization( );
+..\J1939\J1939.H(300): warning:  #1295-D: Deprecated declaration J1939_ISR - give arg types
+  extern void                       J1939_ISR( );
+..\J1939\J1939.H(302): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
+  extern void                   J1939_Poll( );
+..\J1939\J1939_config.H(222): warning:  #111-D: statement is unreachable
+                        break;
+..\J1939\J1939_config.H(231): warning:  #111-D: statement is unreachable
+                        return 0;
+..\J1939\J1939_config.H(232): warning:  #111-D: statement is unreachable
+                        break;
+..\J1939\J1939_config.H(242): warning:  #111-D: statement is unreachable
+                        return 0;
+..\J1939\J1939_config.H(243): warning:  #111-D: statement is unreachable
+                        break;
+..\J1939\J1939_config.H(253): warning:  #111-D: statement is unreachable
+                        return 0;
+..\J1939\J1939_config.H(254): warning:  #111-D: statement is unreachable
+                        break;
+..\J1939\J1939_config.H(259): warning:  #111-D: statement is unreachable
+                        break;
+..\J1939\J1939.c(457): warning:  #223-D: function "J1939_TP_Poll" declared implicitly
+          J1939_TP_Poll();
+..\J1939\J1939.c(635): warning:  #111-D: statement is unreachable
+                      break;
+..\J1939\J1939.c(690): warning:  #111-D: statement is unreachable
+                                break;
+..\J1939\J1939.c(1005): warning:  #111-D: statement is unreachable
+                        break;
+..\J1939\J1939.c(1307): warning:  #159-D: declaration is incompatible with previous "J1939_TP_Poll" (declared at line 457)
+  void J1939_TP_Poll(void)
+..\J1939\J1939.c(1546): warning:  #223-D: function "malloc" declared implicitly
+        _requestList->next = (struct Request_List *)malloc(sizeof(struct Request_List));
+..\J1939\J1939.c: 17 warnings, 0 errors
+compiling msg.c...
+..\J1939\J1939.H(298): warning:  #1295-D: Deprecated declaration J1939_Initialization - give arg types
+  extern void                   J1939_Initialization( );
+..\J1939\J1939.H(300): warning:  #1295-D: Deprecated declaration J1939_ISR - give arg types
+  extern void                       J1939_ISR( );
+..\J1939\J1939.H(302): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
+  extern void                   J1939_Poll( );
+..\Msg\msg.h(6279): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\Msg\msg.c(4): warning:  #223-D: function "abs" declared implicitly
+        return (uint16_t)((measured+abs((int)offset))/resolutionratio);
+..\Msg\msg.c(694): warning:  #62-D: shift count is negative
+      J1939_MESSAGE->data[2] |= (uint8_t)(ESC1->bt3.Axle_Location)<<-1;
+..\Msg\msg.c(2653): warning:  #62-D: shift count is negative
+      J1939_MESSAGE->data[6] |= (uint8_t)(A2SCRRT2I->bt7.Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Heater)<<-1;
+..\Msg\msg.c(9028): warning:  #173-D: floating-point value does not fit in required integral type
+      TR5 -> bt6.Route_Number= 4095.0*RATE;
+..\Msg\msg.c: 8 warnings, 0 errors
+compiling testmsg.c...
+..\J1939\J1939.H(298): warning:  #1295-D: Deprecated declaration J1939_Initialization - give arg types
+  extern void                   J1939_Initialization( );
+..\J1939\J1939.H(300): warning:  #1295-D: Deprecated declaration J1939_ISR - give arg types
+  extern void                       J1939_ISR( );
+..\J1939\J1939.H(302): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
+  extern void                   J1939_Poll( );
+..\Msg\msg.h(6279): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\Testmsg\testmsg.h(4): warning:  #1295-D: Deprecated declaration testallmsg_group1 - give arg types
+  void testallmsg_group1();
+..\Testmsg\testmsg.h(5): warning:  #1295-D: Deprecated declaration testallmsg_group2 - give arg types
+  void testallmsg_group2();
+..\Testmsg\testmsg.h(6): warning:  #1295-D: Deprecated declaration testallmsg_group3 - give arg types
+  void testallmsg_group3();
+..\Testmsg\testmsg.h(7): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\Testmsg\testmsg.c(10): warning:  #223-D: function "LLRE" declared implicitly
+         LLRE(&msg,&llre);
+..\Testmsg\testmsg.c(11): warning:  #223-D: function "send_massage" declared implicitly
+         send_massage(&msg);
+..\Testmsg\testmsg.c(12): warning:  #223-D: function "Delay" declared implicitly
+         Delay(500000);
+..\Testmsg\testmsg.c(17): warning:  #223-D: function "CCVS1" declared implicitly
+         CCVS1(&msg,&ccvs1);
+..\Testmsg\testmsg.c(24): warning:  #223-D: function "ET1" declared implicitly
+         ET1(&msg,&et1);
+..\Testmsg\testmsg.c(31): warning:  #223-D: function "LD" declared implicitly
+         LD(&msg,&ld);
+..\Testmsg\testmsg.c(40): warning:  #223-D: function "LCMD" declared implicitly
+         LCMD(&msg,&lcmd);
+..\Testmsg\testmsg.c(47): warning:  #223-D: function "TSC1" declared implicitly
+         TSC1(&msg,&tsc1);
+..\Testmsg\testmsg.c(831): warning:  #9-D: nested comment is not allowed
+  /*
+..\Testmsg\testmsg.c(3258): warning:  #1-D: last line of file ends without a newline
+  */
+..\Testmsg\testmsg.c: 18 warnings, 0 errors
+linking...
+Program Size: Code=93340 RO-data=336 RW-data=72 ZI-data=1568  
+FromELF: creating hex file...
+"..\Output\STM32-DEMO.axf" - 0 Error(s), 55 Warning(s).
+Load "..\\Output\\STM32-DEMO.axf" 
+Full Chip Erase Done.
+Programming Done.
+Verify OK.
+Application running ...
 </pre>
 </body>
 </html>
+): error:  #136: struct "<unnamed>" has no field "Data"
+      buff |= (uint64_t)(J1939_MESSAGE->Data[11])<<16;
+..\Msg\msg.c(2038): error:  #136: struct "<unnamed>" has no field "Data"
+      buff |= (uint64_t)(J1939_MESSAGE->Data[12])<<8;
+..\Msg\msg.c(2039): error:  #136: struct "<unnamed>" has no field "Data"
+      buff |= (uint64_t)(J1939_MESSAGE->Data[13]);
+..\Msg\msg.c(2041): error:  #136: struct "<unnamed>" has no field "Data"
+      buff=(uint64_t)(J1939_MESSAGE->Data[12])<<24;
+..\Msg\msg.c(2042): error:  #136: struct "<unnamed>" has no field "Data"
+      buff |= (uint64_t)(J1939_MESSAGE->Data[13])<<16;
+..\Msg\msg.c(2043): error:  #136: struct "<unnamed>" has no field "Data"
+      buff |= (uint64_t)(J1939_MESSAGE->Data[14])<<8;
+..\Msg\msg.c(2044): error:  #136: struct "<unnamed>" has no field "Data"
+      buff |= (uint64_t)(J1939_MESSAGE->Data[15]);
+..\Msg\msg.c(2046): error:  #136: struct "<unnamed>" has no field "Data"
+      buff=(uint64_t)(J1939_MESSAGE->Data[14])<<24;
+..\Msg\msg.c: 6 warnings, 30 errors
+compiling testmsg.c...
+..\J1939\J1939.H(298): warning:  #1295-D: Deprecated declaration J1939_Initialization - give arg types
+  extern void                   J1939_Initialization( );
+..\J1939\J1939.H(300): warning:  #1295-D: Deprecated declaration J1939_ISR - give arg types
+  extern void                       J1939_ISR( );
+..\J1939\J1939.H(302): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
+  extern void                   J1939_Poll( );
+..\Msg\msg.h(6279): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\Testmsg\testmsg.h(4): warning:  #1295-D: Deprecated declaration testallmsg_group1 - give arg types
+  void testallmsg_group1();
+..\Testmsg\testmsg.h(5): warning:  #1295-D: Deprecated declaration testallmsg_group2 - give arg types
+  void testallmsg_group2();
+..\Testmsg\testmsg.h(6): warning:  #1295-D: Deprecated declaration testallmsg_group3 - give arg types
+  void testallmsg_group3();
+..\Testmsg\testmsg.h(7): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\Testmsg\testmsg.c(10): warning:  #223-D: function "LLRE" declared implicitly
+         LLRE(&msg,&llre);
+..\Testmsg\testmsg.c(11): warning:  #223-D: function "send_massage" declared implicitly
+         send_massage(&msg);
+..\Testmsg\testmsg.c(12): warning:  #223-D: function "Delay" declared implicitly
+         Delay(500000);
+..\Testmsg\testmsg.c(17): warning:  #223-D: function "CCVS1" declared implicitly
+         CCVS1(&msg,&ccvs1);
+..\Testmsg\testmsg.c(24): warning:  #223-D: function "ET1" declared implicitly
+         ET1(&msg,&et1);
+..\Testmsg\testmsg.c(31): warning:  #223-D: function "LD" declared implicitly
+         LD(&msg,&ld);
+..\Testmsg\testmsg.c(40): warning:  #223-D: function "LCMD" declared implicitly
+         LCMD(&msg,&lcmd);
+..\Testmsg\testmsg.c(47): warning:  #223-D: function "TSC1" declared implicitly
+         TSC1(&msg,&tsc1);
+..\Testmsg\testmsg.c(831): warning:  #9-D: nested comment is not allowed
+  /*
+..\Testmsg\testmsg.c(3258): warning:  #1-D: last line of file ends without a newline
+  */
+..\Testmsg\testmsg.c: 18 warnings, 0 errors
+"..\Output\STM32-DEMO.axf" - 30 Error(s), 53 Warning(s).
+Target not created
+75-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(ILI->Special_Ignitor_Loop_30___Resistance>>8);
+..\Msg\msg.c(2091): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(ILI->Special_Ignitor_Loop_31___Resistance>>8);
+..\Msg\msg.c(2093): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(ILI->Special_Ignitor_Loop_32___Resistance>>8);
+..\Msg\msg.c(2095): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(ILI->Special_Ignitor_Loop_33___Resistance>>8);
+..\Msg\msg.c(2097): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(ILI->Special_Ignitor_Loop_34___Resistance>>8);
+..\Msg\msg.c(2099): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(ILI->Special_Ignitor_Loop_35___Resistance>>8);
+..\Msg\msg.c(2101): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(ILI->Special_Ignitor_Loop_36___Resistance>>8);
+..\Msg\msg.c(2103): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(ILI->Special_Ignitor_Loop_37___Resistance>>8);
+..\Msg\msg.c(2105): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(ILI->Special_Ignitor_Loop_38___Resistance>>8);
+..\Msg\msg.c(2107): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(ILI->Special_Ignitor_Loop_39___Resistance>>8);
+..\Msg\msg.c(2109): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(ILI->Special_Ignitor_Loop_40___Resistance>>8);
+..\Msg\msg.c(2653): warning:  #62-D: shift count is negative
+      J1939_MESSAGE->data[6] |= (uint8_t)(A2SCRRT2I->bt7.Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Heater)<<-1;
+..\Msg\msg.c(3166): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(AT2TI->Aftertreatment_2_Diesel_Particulate_Filter_Trip_Fuel_Used>>24);
+..\Msg\msg.c(3170): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(AT2TI->Aftertreatment_2_Diesel_Particulate_Filter_Trip_Active_Regeneration_Time>>24);
+..\Msg\msg.c(3174): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(AT2TI->Aftertreatment_2_Diesel_Particulate_Filter_Trip_Disabled_Time>>24);
+..\Msg\msg.c(3203): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(AT1TI->Aftertreatment_1_Diesel_Particulate_Filter_Trip_Fuel_Used>>24);
+..\Msg\msg.c(3207): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(AT1TI->Aftertreatment_1_Diesel_Particulate_Filter_Trip_Active_Regeneration_Time>>24);
+..\Msg\msg.c(3211): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(AT1TI->Aftertreatment_1_Diesel_Particulate_Filter_Trip_Disabled_Time>>24);
+..\Msg\msg.c(3481): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(AT1HI->Aftertreatment_1_Total_Fuel_Used>>24);
+..\Msg\msg.c(3485): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(AT1HI->Aftertreatment_1_Total_Regeneration_Time>>24);
+..\Msg\msg.c(3489): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(AT1HI->Aftertreatment_1_Total_Disabled_Time>>24);
+..\Msg\msg.c(3525): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(AT2HI->Aftertreatment_2_Total_Fuel_Used>>24);
+..\Msg\msg.c(3529): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(AT2HI->Aftertreatment_2_Total_Regeneration_Time>>24);
+..\Msg\msg.c(3533): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(AT2HI->Aftertreatment_2_Total_Disabled_Time>>24);
+..\Msg\msg.c(5489): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(TTI2->Trip_Cruise_Time>>24);
+..\Msg\msg.c(5493): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(TTI2->Trip_PTO_Governor_Time>>24);
+..\Msg\msg.c(5497): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(TTI2->Trip_Engine_Running_Time>>24);
+..\Msg\msg.c(5553): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(TTI1->Trip_Time_in_VSL>>24);
+..\Msg\msg.c(5557): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(TTI1->Trip_Time_in_Top_Gear>>24);
+..\Msg\msg.c(5561): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(TTI1->Trip_Time_in_Gear_Down>>24);
+..\Msg\msg.c(5613): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(GTFI->Trip_Drive_Fuel_Used__Gaseous_>>24);
+..\Msg\msg.c(5617): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(GTFI->Trip_PTO_Governor_Moving_Fuel_Used__Gaseous_>>24);
+..\Msg\msg.c(5621): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(GTFI->Trip_PTO_Governor_Non_moving_Fuel_Used__Gaseous_>>24);
+..\Msg\msg.c(5640): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(LTFI->Trip_Drive_Fuel_Used>>24);
+..\Msg\msg.c(5644): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(LTFI->Trip_PTO_Governor_Moving_Fuel_Used>>24);
+..\Msg\msg.c(5648): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(LTFI->Trip_PTO_Governor_Non_moving_Fuel_Used>>24);
+..\Msg\msg.c(5684): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(TFI->Trip_Fan_On_Time>>24);
+..\Msg\msg.c(5688): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(TFI->Trip_Fan_On_Time_Due_to_the_Engine_System>>24);
+..\Msg\msg.c(5692): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(TFI->Trip_Fan_On_Time_Due_to_a_Manual_Switch>>24);
+..\Msg\msg.c(5705): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(CBI->Total_Compression_Brake_Distance>>24);
+..\Msg\msg.c(5709): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(CBI->Trip_Compression_Brake_Distance>>24);
+..\Msg\msg.c(5713): warning:  #175-D: subscript out of range
+      J1939_MESSAGE->data[-1] = (uint8_t)(CBI->Trip_Service_Brake_Distance>>24);
+..\Msg\msg.c(9037): warning:  #173-D: floating-point value does not fit in required integral type
+      TR5 -> bt6.Route_Number= 4095.0*RATE;
+..\Msg\msg.c: 88 warnings, 0 errors
+compiling testmsg.c...
+..\J1939\J1939.H(298): warning:  #1295-D: Deprecated declaration J1939_Initialization - give arg types
+  extern void                   J1939_Initialization( );
+..\J1939\J1939.H(300): warning:  #1295-D: Deprecated declaration J1939_ISR - give arg types
+  extern void                       J1939_ISR( );
+..\J1939\J1939.H(302): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
+  extern void                   J1939_Poll( );
+..\Msg\msg.h(6279): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\Testmsg\testmsg.h(4): warning:  #1295-D: Deprecated declaration testallmsg_group1 - give arg types
+  void testallmsg_group1();
+..\Testmsg\testmsg.h(5): warning:  #1295-D: Deprecated declaration testallmsg_group2 - give arg types
+  void testallmsg_group2();
+..\Testmsg\testmsg.h(6): warning:  #1295-D: Deprecated declaration testallmsg_group3 - give arg types
+  void testallmsg_group3();
+..\Testmsg\testmsg.h(7): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\Testmsg\testmsg.c(10): warning:  #223-D: function "LLRE" declared implicitly
+         LLRE(&msg,&llre);
+..\Testmsg\testmsg.c(11): warning:  #223-D: function "send_massage" declared implicitly
+         send_massage(&msg);
+..\Testmsg\testmsg.c(12): warning:  #223-D: function "Delay" declared implicitly
+         Delay(500000);
+..\Testmsg\testmsg.c(17): warning:  #223-D: function "CCVS1" declared implicitly
+         CCVS1(&msg,&ccvs1);
+..\Testmsg\testmsg.c(24): warning:  #223-D: function "ET1" declared implicitly
+         ET1(&msg,&et1);
+..\Testmsg\testmsg.c(31): warning:  #223-D: function "LD" declared implicitly
+         LD(&msg,&ld);
+..\Testmsg\testmsg.c(40): warning:  #223-D: function "LCMD" declared implicitly
+         LCMD(&msg,&lcmd);
+..\Testmsg\testmsg.c(47): warning:  #223-D: function "TSC1" declared implicitly
+         TSC1(&msg,&tsc1);
+..\Testmsg\testmsg.c(831): warning:  #9-D: nested comment is not allowed
+  /*
+..\Testmsg\testmsg.c(3258): warning:  #1-D: last line of file ends without a newline
+  */
+..\Testmsg\testmsg.c: 18 warnings, 0 errors
+linking...
+Program Size: Code=92976 RO-data=336 RW-data=72 ZI-data=1568  
+FromELF: creating hex file...
+"..\Output\STM32-DEMO.axf" - 0 Error(s), 135 Warning(s).
+Load "..\\Output\\STM32-DEMO.axf" 
+Full Chip Erase Done.
+Programming Done.
+Verify OK.
+Application running ...
+2" declared implicitly
+         CCVS2(&msg,&ccvs2);
+..\Testmsg\testmsg.c(89): warning:  #223-D: function "AEBS2" declared implicitly
+         AEBS2(&msg,&aebs2);
+..\Testmsg\testmsg.c(96): warning:  #223-D: function "ESR" declared implicitly
+         ESR(&msg,&esr);
+..\Testmsg\testmsg.c(103): warning:  #223-D: function "RBR" declared implicitly
+         RBR(&msg,&rbr);
+..\Testmsg\testmsg.c(110): warning:  #223-D: function "ECC" declared implicitly
+         ECC(&msg,&ecc);
+..\Testmsg\testmsg.c(117): warning:  #223-D: function "SFC" declared implicitly
+         SFC(&msg,&sfc);
+..\Testmsg\testmsg.c(124): warning:  #223-D: function "VLS1" declared implicitly
+         VLS1(&msg,&vls1);
+..\Testmsg\testmsg.c(131): warning:  #223-D: function "HCDI1" declared implicitly
+         HCDI1(&msg,&hcdi1);
+..\Testmsg\testmsg.c(138): warning:  #223-D: function "AT1DPFSSC" declared implicitly
+         AT1DPFSSC(&msg,&at1dpfssc);
+..\Testmsg\testmsg.c(145): warning:  #223-D: function "AT2DPFSSC" declared implicitly
+         AT2DPFSSC(&msg,&at2dpfssc);
+..\Testmsg\testmsg.c(152): warning:  #223-D: function "LVDSOM" declared implicitly
+         LVDSOM(&msg,&lvdsom);
+..\Testmsg\testmsg.c(159): warning:  #223-D: function "NCS" declared implicitly
+         NCS(&msg,&ncs);
+..\Testmsg\testmsg.c(166): warning:  #223-D: function "NC1" declared implicitly
+         NC1(&msg,&nc1);
+..\Testmsg\testmsg.c(173): warning:  #223-D: function "JLCM" declared implicitly
+         JLCM(&msg,&jlcm);
+..\Testmsg\testmsg.c(180): warning:  #223-D: function "AUXIO7" declared implicitly
+         AUXIO7(&msg,&auxio7);
+..\Testmsg\testmsg.c(187): warning:  #223-D: function "AUXIO6" declared implicitly
+         AUXIO6(&msg,&auxio6);
+..\Testmsg\testmsg.c(194): warning:  #223-D: function "AUXIO4" declared implicitly
+         AUXIO4(&msg,&auxio4);
+..\Testmsg\testmsg.c(201): warning:  #223-D: function "AUXIO3" declared implicitly
+         AUXIO3(&msg,&auxio3);
+..\Testmsg\testmsg.c(208): warning:  #223-D: function "AUXIO2" declared implicitly
+         AUXIO2(&msg,&auxio2);
+..\Testmsg\testmsg.c(215): warning:  #223-D: function "DISP1" declared implicitly
+         DISP1(&msg,&disp1);
+..\Testmsg\testmsg.c(222): warning:  #223-D: function "FLIC" declared implicitly
+         FLIC(&msg,&flic);
+..\Testmsg\testmsg.c(229): warning:  #223-D: function "TPRS" declared implicitly
+         TPRS(&msg,&tprs);
+..\Testmsg\testmsg.c(236): warning:  #223-D: function "CTL" declared implicitly
+         CTL(&msg,&ctl);
+..\Testmsg\testmsg.c(243): warning:  #223-D: function "CL" declared implicitly
+         CL(&msg,&cl);
+..\Testmsg\testmsg.c(250): warning:  #223-D: function "ASC6" declared implicitly
+         ASC6(&msg,&asc6);
+..\Testmsg\testmsg.c(257): warning:  #223-D: function "ASC2" declared implicitly
+         ASC2(&msg,&asc2);
+..\Testmsg\testmsg.c(264): warning:  #223-D: function "TDA" declared implicitly
+         TDA(&msg,&tda);
+..\Testmsg\testmsg.c(271): warning:  #223-D: function "ATS" declared implicitly
+         ATS(&msg,&ats);
+..\Testmsg\testmsg.c(278): warning:  #223-D: function "ATR" declared implicitly
+         ATR(&msg,&atr);
+..\Testmsg\testmsg.c(285): warning:  #223-D: function "CM1" declared implicitly
+         CM1(&msg,&cm1);
+..\Testmsg\testmsg.c(292): warning:  #223-D: function "ERC1" declared implicitly
+         ERC1(&msg,&erc1);
+..\Testmsg\testmsg.c(299): warning:  #223-D: function "EBC1" declared implicitly
+         EBC1(&msg,&ebc1);
+..\Testmsg\testmsg.c(306): warning:  #223-D: function "ETC1" declared implicitly
+         ETC1(&msg,&etc1);
+..\Testmsg\testmsg.c(313): warning:  #223-D: function "EEC2" declared implicitly
+         EEC2(&msg,&eec2);
+..\Testmsg\testmsg.c(320): warning:  #223-D: function "EEC1" declared implicitly
+         EEC1(&msg,&eec1);
+..\Testmsg\testmsg.c(327): warning:  #223-D: function "ETC2" declared implicitly
+         ETC2(&msg,&etc2);
+..\Testmsg\testmsg.c(334): warning:  #223-D: function "EAC1" declared implicitly
+         EAC1(&msg,&eac1);
+..\Testmsg\testmsg.c(341): warning:  #223-D: function "FLI1" declared implicitly
+         FLI1(&msg,&fli1);
+..\Testmsg\testmsg.c(348): warning:  #223-D: function "HPG" declared implicitly
+         HPG(&msg,&hpg);
+..\Testmsg\testmsg.c(355): warning:  #223-D: function "VDC2" declared implicitly
+         VDC2(&msg,&vdc2);
+..\Testmsg\testmsg.c(362): warning:  #223-D: function "EGF1" declared implicitly
+         EGF1(&msg,&egf1);
+..\Testmsg\testmsg.c(369): warning:  #223-D: function "ESC1" declared implicitly
+         ESC1(&msg,&esc1);
+..\Testmsg\testmsg.c(376): warning:  #223-D: function "ETC8" declared implicitly
+         ETC8(&msg,&etc8);
+..\Testmsg\testmsg.c(383): warning:  #223-D: function "LOI" declared implicitly
+         LOI(&msg,&loi);
+..\Testmsg\testmsg.c(390): warning:  #223-D: function "AT1IG1" declared implicitly
+         AT1IG1(&msg,&at1ig1);
+..\Testmsg\testmsg.c(397): warning:  #223-D: function "AT1OG1" declared implicitly
+         AT1OG1(&msg,&at1og1);
+..\Testmsg\testmsg.c(404): warning:  #223-D: function "AT2IG1" declared implicitly
+         AT2IG1(&msg,&at2ig1);
+..\Testmsg\testmsg.c(411): warning:  #223-D: function "AT2OG1" declared implicitly
+         AT2OG1(&msg,&at2og1);
+..\Testmsg\testmsg.c(418): warning:  #223-D: function "FWSS1" declared implicitly
+         FWSS1(&msg,&fwss1);
+..\Testmsg\testmsg.c(425): warning:  #223-D: function "SSI" declared implicitly
+         SSI(&msg,&ssi);
+..\Testmsg\testmsg.c(432): warning:  #223-D: function "BI" declared implicitly
+         BI(&msg,&bi);
+..\Testmsg\testmsg.c(439): warning:  #223-D: function "CCS" declared implicitly
+         CCS(&msg,&ccs);
+..\Testmsg\testmsg.c(446): warning:  #223-D: function "KL1" declared implicitly
+         KL1(&msg,&kl1);
+..\Testmsg\testmsg.c(453): warning:  #223-D: function "KL2" declared implicitly
+         KL2(&msg,&kl2);
+..\Testmsg\testmsg.c(460): warning:  #223-D: function "KL3" declared implicitly
+         KL3(&msg,&kl3);
+..\Testmsg\testmsg.c(467): warning:  #223-D: function "TFAC" declared implicitly
+         TFAC(&msg,&tfac);
+..\Testmsg\testmsg.c(474): warning:  #223-D: function "SAS" declared implicitly
+         SAS(&msg,&sas);
+..\Testmsg\testmsg.c(481): warning:  #223-D: function "ESSI" declared implicitly
+         ESSI(&msg,&essi);
+..\Testmsg\testmsg.c(488): warning:  #223-D: function "A1SCRDSI1" declared implicitly
+         A1SCRDSI1(&msg,&a1scrdsi1);
+..\Testmsg\testmsg.c(495): warning:  #223-D: function "A1SCRDSR1" declared implicitly
+         A1SCRDSR1(&msg,&a1scrdsr1);
+..\Testmsg\testmsg.c(502): warning:  #223-D: function "A1SCRAI" declared implicitly
+         A1SCRAI(&msg,&a1scrai);
+..\Testmsg\testmsg.c(509): warning:  #223-D: function "A2SCRDSI1" declared implicitly
+         A2SCRDSI1(&msg,&a2scrdsi1);
+..\Testmsg\testmsg.c(516): warning:  #223-D: function "A2SCRDSR1" declared implicitly
+         A2SCRDSR1(&msg,&a2scrdsr1);
+..\Testmsg\testmsg.c(523): warning:  #223-D: function "A2SCRAI" declared implicitly
+         A2SCRAI(&msg,&a2scrai);
+..\Testmsg\testmsg.c(530): warning:  #223-D: function "SSI2" declared implicitly
+         SSI2(&msg,&ssi2);
+..\Testmsg\testmsg.c(537): warning:  #223-D: function "ARI" declared implicitly
+         ARI(&msg,&ari);
+..\Testmsg\testmsg.c(544): warning:  #223-D: function "CN" declared implicitly
+         CN(&msg,&cn);
+..\Testmsg\testmsg.c(551): warning:  #223-D: function "MSI2" declared implicitly
+         MSI2(&msg,&msi2);
+..\Testmsg\testmsg.c(558): warning:  #223-D: function "ACCS" declared implicitly
+         ACCS(&msg,&accs);
+..\Testmsg\testmsg.c(565): warning:  #223-D: function "Command" declared implicitly
+         Command(&msg,&command);
+..\Testmsg\testmsg.c(572): warning:  #223-D: function "AEBS1" declared implicitly
+         AEBS1(&msg,&aebs1);
+..\Testmsg\testmsg.c(579): warning:  #223-D: function "WS" declared implicitly
+         WS(&msg,&ws);
+..\Testmsg\testmsg.c(586): warning:  #223-D: function "WAND" declared implicitly
+         WAND(&msg,&wand);
+..\Testmsg\testmsg.c(593): warning:  #223-D: function "LDISP" declared implicitly
+         LDISP(&msg,&ldisp);
+..\Testmsg\testmsg.c(600): warning:  #223-D: function "A1SCRAI2" declared implicitly
+         A1SCRAI2(&msg,&a1scrai2);
+..\Testmsg\testmsg.c(607): warning:  #223-D: function "A2SCRAI2" declared implicitly
+         A2SCRAI2(&msg,&a2scrai2);
+..\Testmsg\testmsg.c(614): warning:  #223-D: function "HSS" declared implicitly
+         HSS(&msg,&hss);
+..\Testmsg\testmsg.c(621): warning:  #223-D: function "GFI4" declared implicitly
+         GFI4(&msg,&gfi4);
+..\Testmsg\testmsg.c(628): warning:  #223-D: function "A2SCREGT2" declared implicitly
+         A2SCREGT2(&msg,&a2scregt2);
+..\Testmsg\testmsg.c(635): warning:  #223-D: function "A1SCREGT2" declared implicitly
+         A1SCREGT2(&msg,&a1scregt2);
+..\Testmsg\testmsg.c(642): warning:  #223-D: function "EEC13" declared implicitly
+         EEC13(&msg,&eec13);
+..\Testmsg\testmsg.c(649): warning:  #223-D: function "EF_TVI2" declared implicitly
+         EF_TVI2(&msg,&ef_tvi2);
+..\Testmsg\testmsg.c(656): warning:  #223-D: function "EEGR1A" declared implicitly
+         EEGR1A(&msg,&eegr1a);
+..\Testmsg\testmsg.c(663): warning:  #223-D: function "EEGR1B" declared implicitly
+         EEGR1B(&msg,&eegr1b);
+..\Testmsg\testmsg.c(670): warning:  #223-D: function "EEC12" declared implicitly
+         EEC12(&msg,&eec12);
+..\Testmsg\testmsg.c(677): warning:  #223-D: function "NSSR" declared implicitly
+         NSSR(&msg,&nssr);
+..\Testmsg\testmsg.c(684): warning:  #223-D: function "EPSI" declared implicitly
+         EPSI(&msg,&epsi);
+..\Testmsg\testmsg.c(691): warning:  #223-D: function "AT1P1I" declared implicitly
+         AT1P1I(&msg,&at1p1i);
+..\Testmsg\testmsg.c(698): warning:  #223-D: function "AT1DPF2S5" declared implicitly
+         AT1DPF2S5(&msg,&at1dpf2s5);
+..\Testmsg\testmsg.c(705): warning:  #223-D: function "AT1DPF2S4" declared implicitly
+         AT1DPF2S4(&msg,&at1dpf2s4);
+..\Testmsg\testmsg.c(712): warning:  #223-D: function "AT1DPF2S3" declared implicitly
+         AT1DPF2S3(&msg,&at1dpf2s3);
+..\Testmsg\testmsg.c(719): warning:  #223-D: function "AT1DPF1S5" declared implicitly
+         AT1DPF1S5(&msg,&at1dpf1s5);
+..\Testmsg\testmsg.c(726): warning:  #223-D: function "AT1DPF1S4" declared implicitly
+         AT1DPF1S4(&msg,&at1dpf1s4);
+..\Testmsg\testmsg.c(733): warning:  #223-D: function "AT1DPF1S3" declared implicitly
+         AT1DPF1S3(&msg,&at1dpf1s3);
+..\Testmsg\testmsg.c(740): warning:  #223-D: function "CCVS3" declared implicitly
+         CCVS3(&msg,&ccvs3);
+..\Testmsg\testmsg.c(747): warning:  #223-D: function "AT2AC3" declared implicitly
+         AT2AC3(&msg,&at2ac3);
+..\Testmsg\testmsg.c(754): warning:  #223-D: function "AT1AC3" declared implicitly
+         AT1AC3(&msg,&at1ac3);
+..\Testmsg\testmsg.c(761): warning:  #223-D: function "EFL_P12" declared implicitly
+         EFL_P12(&msg,&efl_p12);
+..\Testmsg\testmsg.c(768): warning:  #223-D: function "DPFC2" declared implicitly
+         DPFC2(&msg,&dpfc2);
+..\Testmsg\testmsg.c(775): warning:  #223-D: function "LFE2" declared implicitly
+         LFE2(&msg,&lfe2);
+..\Testmsg\testmsg.c(782): warning:  #223-D: function "SFS" declared implicitly
+         SFS(&msg,&sfs);
+..\Testmsg\testmsg.c(789): warning:  #223-D: function "EBCC" declared implicitly
+         EBCC(&msg,&ebcc);
+..\Testmsg\testmsg.c(796): warning:  #223-D: function "EFP" declared implicitly
+         EFP(&msg,&efp);
+..\Testmsg\testmsg.c(803): warning:  #223-D: function "HOP" declared implicitly
+         HOP(&msg,&hop);
+..\Testmsg\testmsg.c(810): warning:  #223-D: function "VLS2" declared implicitly
+         VLS2(&msg,&vls2);
+..\Testmsg\testmsg.c(817): warning:  #223-D: function "EC3" declared implicitly
+         EC3(&msg,&ec3);
+..\Testmsg\testmsg.c(3250): warning:  #1-D: last line of file ends without a newline
+  */
+..\Testmsg\testmsg.c: 127 warnings, 0 errors
+linking...
+Program Size: Code=95856 RO-data=336 RW-data=72 ZI-data=1568  
+FromELF: creating hex file...
+"..\Output\STM32-DEMO.axf" - 0 Error(s), 244 Warning(s).
+Load "..\\Output\\STM32-DEMO.axf" 
+Full Chip Erase Done.
+Programming Done.
+Verify OK.
+Application running ...
+licitly
+         AFT2NAI(&msg,&aft2nai);
+..\Testmsg\testmsg.c(852): warning:  #223-D: function "AFT1NAI" declared implicitly
+         AFT1NAI(&msg,&aft1nai);
+..\Testmsg\testmsg.c(859): warning:  #223-D: function "AT2WUDOC" declared implicitly
+         AT2WUDOC(&msg,&at2wudoc);
+..\Testmsg\testmsg.c(866): warning:  #223-D: function "LLRE" declared implicitly
+         LLRE(&msg,&llre);
+..\Testmsg\testmsg.c(873): warning:  #223-D: function "EFL_P11" declared implicitly
+         EFL_P11(&msg,&efl_p11);
+..\Testmsg\testmsg.c(880): warning:  #223-D: function "EFS2" declared implicitly
+         EFS2(&msg,&efs2);
+..\Testmsg\testmsg.c(887): warning:  #223-D: function "Information" declared implicitly
+         Information(&msg,&information);
+..\Testmsg\testmsg.c(894): warning:  #223-D: function "EFTVI1" declared implicitly
+         EFTVI1(&msg,&eftvi1);
+..\Testmsg\testmsg.c(901): warning:  #223-D: function "ETCBI" declared implicitly
+         ETCBI(&msg,&etcbi);
+..\Testmsg\testmsg.c(908): warning:  #223-D: function "CAC2" declared implicitly
+         CAC2(&msg,&cac2);
+..\Testmsg\testmsg.c(3249): warning:  #1-D: last line of file ends without a newline
+  */
+..\Testmsg\testmsg.c: 140 warnings, 0 errors
+linking...
+Program Size: Code=96732 RO-data=336 RW-data=72 ZI-data=1568  
+FromELF: creating hex file...
+"..\Output\STM32-DEMO.axf" - 0 Error(s), 257 Warning(s).
+Load "..\\Output\\STM32-DEMO.axf" 
+Full Chip Erase Done.
+Programming Done.
+Verify OK.
+Application running ...

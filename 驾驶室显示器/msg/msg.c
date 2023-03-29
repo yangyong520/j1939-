@@ -12,8 +12,8 @@ void CheckTSC1 ( J1939_MESSAGE *J1939_MESSAGE,getTSC1_t *TSC1)
     TSC1->bt1.Override_Control_Mode_Priority = J1939_MESSAGE->Mxe.Data[0]>>4;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    TSC1->Engine_Requested_Speed_Speed_Limit = Parameter_Translate(buff ,4,0) ;
-    TSC1->Engine_Requested_Torque_Torque_Limit = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],4,0) ;
+    TSC1->Engine_Requested_Speed_Speed_Limit = Parameter_Translate(buff ,0.125,0) ;
+    TSC1->Engine_Requested_Torque_Torque_Limit = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],1,-125) ;
     TSC1->bt5.TSC1_Transmission_Rate = J1939_MESSAGE->Mxe.Data[4]>>0;
     TSC1->bt5.TSC1_Control_Purpose = J1939_MESSAGE->Mxe.Data[4]>>3;
     TSC1->bt6.Engine_Requested_Torque__High_Resolution = J1939_MESSAGE->Mxe.Data[5]>>0;
@@ -26,8 +26,8 @@ void CheckTC1 ( J1939_MESSAGE *J1939_MESSAGE,getTC1_t *TC1)
     TC1->bt1.Transmission_Gear_Shift_Inhibit_Request = J1939_MESSAGE->Mxe.Data[0]>>0;
     TC1->bt1.Transmission_Torque_Converter_Lockup_Disable_Request = J1939_MESSAGE->Mxe.Data[0]>>2;
     TC1->bt1.Disengage_Driveline_Request = J1939_MESSAGE->Mxe.Data[0]>>4;
-    TC1->Requested_Percent_Clutch_Slip = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],4,0) ;
-    TC1->Transmission_Requested_Gear = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],4,0) ;
+    TC1->Requested_Percent_Clutch_Slip = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.4,0) ;
+    TC1->Transmission_Requested_Gear = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,-125) ;
     TC1->bt4.Disengage_Differential_Lock_Request___Front_Axle_1 = J1939_MESSAGE->Mxe.Data[3]>>0;
     TC1->bt4.Disengage_Differential_Lock_Request___Front_Axle_2 = J1939_MESSAGE->Mxe.Data[3]>>2;
     TC1->bt4.Disengage_Differential_Lock_Request___Rear_Axle_1 = J1939_MESSAGE->Mxe.Data[3]>>4;
@@ -56,7 +56,7 @@ void CheckXBR ( J1939_MESSAGE *J1939_MESSAGE,getXBR_t *XBR)
     XBR->bt3.XBR_EBI_Mode = J1939_MESSAGE->Mxe.Data[2]>>0;
     XBR->bt3.XBR_Priority = J1939_MESSAGE->Mxe.Data[2]>>2;
     XBR->bt3.XBR_Control_Mode = J1939_MESSAGE->Mxe.Data[2]>>4;
-    XBR->XBR_urgency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],1,-15.687) ;
+    XBR->XBR_urgency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.4,0) ;
     XBR->bt8.XBR_Message_Counter = J1939_MESSAGE->Mxe.Data[7]>>0;
     XBR->bt8.XBR_Message_Checksum = J1939_MESSAGE->Mxe.Data[7]>>4;
 }
@@ -66,7 +66,7 @@ void CheckGPV4 ( J1939_MESSAGE *J1939_MESSAGE,getGPV4_t *GPV4)
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
     GPV4->Valve_Load_Sense_Pressure = Parameter_Translate(buff ,5,0) ;
-    GPV4->Valve_Pilot_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],5,0) ;
+    GPV4->Valve_Pilot_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],16,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
     GPV4->Valve_Assembly_Load_sense_Pressure = Parameter_Translate(buff ,5,0) ;
@@ -126,7 +126,7 @@ void CheckRBR ( J1939_MESSAGE *J1939_MESSAGE,getRBR_t *RBR)
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
     RBR->Transmitter_ID_2 = Parameter_Translate(buff ,1,0) ;
-    RBR->Wireless_Signal_Strength_2 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],1,0) ;
+    RBR->Wireless_Signal_Strength_2 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.5,0) ;
 }
 void CheckECC ( J1939_MESSAGE *J1939_MESSAGE,getECC_t *ECC)
 {
@@ -140,7 +140,7 @@ void CheckSFC ( J1939_MESSAGE *J1939_MESSAGE,getSFC_t *SFC)
     SFC->bt1.Supplemental_Fan_Direction_Command = J1939_MESSAGE->Mxe.Data[0]>>2;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    SFC->Supplemental_Fan_Speed_Command = Parameter_Translate(buff ,4,0) ;
+    SFC->Supplemental_Fan_Speed_Command = Parameter_Translate(buff ,0.5,0) ;
     SFC->bt4.Supplemental_Fan_Power_Hold = J1939_MESSAGE->Mxe.Data[3]>>0;
 }
 void CheckVLS1 ( J1939_MESSAGE *J1939_MESSAGE,getVLS1_t *VLS1)
@@ -370,7 +370,7 @@ void CheckDISP1 ( J1939_MESSAGE *J1939_MESSAGE,getDISP1_t *DISP1)
 {
        uint64_t buff;
     DISP1->bt1.Text_Display_Instructions = J1939_MESSAGE->Mxe.Data[0]>>0;
-    DISP1->Text_Display_Index = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],16,0) ;
+    DISP1->Text_Display_Index = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,0) ;
 }
 void CheckFLIC ( J1939_MESSAGE *J1939_MESSAGE,getFLIC_t *FLIC)
 {
@@ -381,19 +381,19 @@ void CheckTPRS ( J1939_MESSAGE *J1939_MESSAGE,getTPRS_t *TPRS)
 {
        uint64_t buff;
     TPRS->bt1.Tire_Location = J1939_MESSAGE->Mxe.Data[0]>>0;
-    TPRS->Reference_Tire_Pressure_Setting = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],256,0) ;
+    TPRS->Reference_Tire_Pressure_Setting = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],8,0) ;
 }
 void CheckCTL ( J1939_MESSAGE *J1939_MESSAGE,getCTL_t *CTL)
 {
        uint64_t buff;
     CTL->Engine_Speed_Limit_Request___Minimum_Continuous = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],32,0) ;
     CTL->Engine_Speed_Limit_Request___Maximum_Continuous = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],32,0) ;
-    CTL->Engine_Torque_Limit_Request___Minimum_Continuous = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],32,0) ;
-    CTL->Engine_Torque_Limit_Request___Maximum_Continuous = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],32,0) ;
+    CTL->Engine_Torque_Limit_Request___Minimum_Continuous = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,-125) ;
+    CTL->Engine_Torque_Limit_Request___Maximum_Continuous = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],1,-125) ;
     CTL->Minimum_Continuous_Retarder_Speed_Limit_Request = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],32,0) ;
     CTL->Maximum_Continuous_Retarder_Speed_Limit_Request = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],32,0) ;
-    CTL->Minimum_Continuous_Retarder_Torque_Limit_Request = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],32,0) ;
-    CTL->Maximum_Continuous_Retarder_Torque_Limit_Request = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],32,0) ;
+    CTL->Minimum_Continuous_Retarder_Torque_Limit_Request = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],1,-125) ;
+    CTL->Maximum_Continuous_Retarder_Torque_Limit_Request = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],1,-125) ;
 }
 void CheckCL ( J1939_MESSAGE *J1939_MESSAGE,getCL_t *CL)
 {
@@ -429,9 +429,9 @@ void CheckASC2 ( J1939_MESSAGE *J1939_MESSAGE,getASC2_t *ASC2)
     ASC2->bt3.Level_Control_Mode_Request = J1939_MESSAGE->Mxe.Data[2]>>0;
     ASC2->bt3.Lift_Axle_1_Position_Command = J1939_MESSAGE->Mxe.Data[2]>>4;
     ASC2->bt3.Lift_Axle_2_Position_Command = J1939_MESSAGE->Mxe.Data[2]>>6;
-    ASC2->Damper_Stiffness_Request_Front_Axle = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],4,0) ;
-    ASC2->Damper_Stiffness_Request_Rear_Axle = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],4,0) ;
-    ASC2->Damper_Stiffness_Request_Lift___Tag_Axle = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],4,0) ;
+    ASC2->Damper_Stiffness_Request_Front_Axle = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.4,0) ;
+    ASC2->Damper_Stiffness_Request_Rear_Axle = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.4,0) ;
+    ASC2->Damper_Stiffness_Request_Lift___Tag_Axle = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],0.4,0) ;
     ASC2->bt7.Kneeling_Command___Front_Axle = J1939_MESSAGE->Mxe.Data[6]>>0;
     ASC2->bt7.Kneeling_Command___Rear_Axle = J1939_MESSAGE->Mxe.Data[6]>>2;
     ASC2->bt7.Prohibit_air_suspension_control = J1939_MESSAGE->Mxe.Data[6]>>4;
@@ -444,13 +444,13 @@ void CheckTDA ( J1939_MESSAGE *J1939_MESSAGE,getTDA_t *TDA)
 {
        uint64_t buff;
     TDA->Adjust_seconds = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],0.25,0) ;
-    TDA->Adjust_minutes = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.25,0) ;
-    TDA->Adjust_hours = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.25,0) ;
-    TDA->Adjust_month = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.25,0) ;
+    TDA->Adjust_minutes = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,0) ;
+    TDA->Adjust_hours = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,0) ;
+    TDA->Adjust_month = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],1,0) ;
     TDA->Adjust_day = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.25,0) ;
-    TDA->Adjust_year = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],0.25,0) ;
-    TDA->Adjust_local_minute_offset = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.25,0) ;
-    TDA->Adjust_local_hour_offset = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.25,0) ;
+    TDA->Adjust_year = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],1,1985) ;
+    TDA->Adjust_local_minute_offset = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],1,-125) ;
+    TDA->Adjust_local_hour_offset = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],1,-125) ;
 }
 void CheckATS ( J1939_MESSAGE *J1939_MESSAGE,getATS_t *ATS)
 {
@@ -481,7 +481,7 @@ void CheckATR ( J1939_MESSAGE *J1939_MESSAGE,getATR_t *ATR)
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<16;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    ATR->Anti_theft_Password_Representation = Parameter_Translate(buff,4,0) ;
+    ATR->Anti_theft_Password_Representation = Parameter_Translate(buff,8,0) ;
 }
 void CheckCM1 ( J1939_MESSAGE *J1939_MESSAGE,getCM1_t *CM1)
 {
@@ -489,7 +489,7 @@ void CheckCM1 ( J1939_MESSAGE *J1939_MESSAGE,getCM1_t *CM1)
     CM1->Requested_Percent_Fan_Speed = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],0.4,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    CM1->Cab_Interior_Temperature_Command = Parameter_Translate(buff ,0.4,0) ;
+    CM1->Cab_Interior_Temperature_Command = Parameter_Translate(buff ,0.03125,-273) ;
     CM1->bt4.Auxiliary_Heater_Coolant_Pump_Request = J1939_MESSAGE->Mxe.Data[3]>>0;
     CM1->bt4.Battery_Main_Switch_Hold_Request = J1939_MESSAGE->Mxe.Data[3]>>2;
     CM1->bt4.Operator_Seat_Direction_Switch = J1939_MESSAGE->Mxe.Data[3]>>4;
@@ -504,7 +504,7 @@ void CheckCM1 ( J1939_MESSAGE *J1939_MESSAGE,getCM1_t *CM1)
     CM1->bt7.Auxiliary_Heater_Mode_Request = J1939_MESSAGE->Mxe.Data[6]>>0;
     CM1->bt7.Request_Engine_Zone_Heating = J1939_MESSAGE->Mxe.Data[6]>>4;
     CM1->bt7.Request_Cab_Zone_Heating = J1939_MESSAGE->Mxe.Data[6]>>6;
-    CM1->Selected_Maximum_Vehicle_Speed_Limit = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.4,0) ;
+    CM1->Selected_Maximum_Vehicle_Speed_Limit = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],1,0) ;
 }
 void CheckERC1 ( J1939_MESSAGE *J1939_MESSAGE,getERC1_t *ERC1)
 {
@@ -512,16 +512,16 @@ void CheckERC1 ( J1939_MESSAGE *J1939_MESSAGE,getERC1_t *ERC1)
     ERC1->bt1.Retarder_Torque_Mode = J1939_MESSAGE->Mxe.Data[0]>>0;
     ERC1->bt1.Retarder_Enable___Brake_Assist_Switch = J1939_MESSAGE->Mxe.Data[0]>>4;
     ERC1->bt1.Retarder_Enable___Shift_Assist_Switch = J1939_MESSAGE->Mxe.Data[0]>>6;
-    ERC1->Actual_Retarder___Percent_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],16,0) ;
-    ERC1->Intended_Retarder_Percent_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],16,0) ;
+    ERC1->Actual_Retarder___Percent_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,-125) ;
+    ERC1->Intended_Retarder_Percent_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,-125) ;
     ERC1->bt4.Engine_Coolant_Load_Increase = J1939_MESSAGE->Mxe.Data[3]>>0;
     ERC1->bt4.Retarder_Requesting_Brake_Light = J1939_MESSAGE->Mxe.Data[3]>>2;
     ERC1->bt4.Retarder_Road_Speed_Limit_Switch = J1939_MESSAGE->Mxe.Data[3]>>4;
     ERC1->bt4.Retarder_Road_Speed_Exceeded_Status = J1939_MESSAGE->Mxe.Data[3]>>6;
-    ERC1->Source_Address_of_Controlling_Device_for_Retarder_Control = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],16,0) ;
-    ERC1->Drivers_Demand_Retarder__ = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],16,0) ;
-    ERC1->Retarder_Selection_non_engine = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],16,0) ;
-    ERC1->Actual_Maximum_Available_Retarder___Percent_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],16,0) ;
+    ERC1->Source_Address_of_Controlling_Device_for_Retarder_Control = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],1,0) ;
+    ERC1->Drivers_Demand_Retarder__ = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],1,-125) ;
+    ERC1->Retarder_Selection_non_engine = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.4,0) ;
+    ERC1->Actual_Maximum_Available_Retarder___Percent_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],1,-125) ;
 }
 void CheckEBC1 ( J1939_MESSAGE *J1939_MESSAGE,getEBC1_t *EBC1)
 {
@@ -530,7 +530,7 @@ void CheckEBC1 ( J1939_MESSAGE *J1939_MESSAGE,getEBC1_t *EBC1)
     EBC1->bt1.ASR_Brake_Control_Active = J1939_MESSAGE->Mxe.Data[0]>>2;
     EBC1->bt1.Anti_Lock_Braking__ABS__Active = J1939_MESSAGE->Mxe.Data[0]>>4;
     EBC1->bt1.EBS_Brake_Switch = J1939_MESSAGE->Mxe.Data[0]>>6;
-    EBC1->Brake_Pedal_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],4,0) ;
+    EBC1->Brake_Pedal_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.4,0) ;
     EBC1->bt3.ABS_Off_road_Switch = J1939_MESSAGE->Mxe.Data[2]>>0;
     EBC1->bt3.ASR_Off_road_Switch = J1939_MESSAGE->Mxe.Data[2]>>2;
     EBC1->bt3.ASR__Hill_Holder__Switch = J1939_MESSAGE->Mxe.Data[2]>>4;
@@ -539,12 +539,12 @@ void CheckEBC1 ( J1939_MESSAGE *J1939_MESSAGE,getEBC1_t *EBC1)
     EBC1->bt4.Engine_Derate_Switch = J1939_MESSAGE->Mxe.Data[3]>>2;
     EBC1->bt4.Engine_Auxiliary_Shutdown_Switch = J1939_MESSAGE->Mxe.Data[3]>>4;
     EBC1->bt4.Remote_Accelerator_Enable_Switch = J1939_MESSAGE->Mxe.Data[3]>>6;
-    EBC1->Engine_Retarder_Selection = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],4,0) ;
+    EBC1->Engine_Retarder_Selection = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.4,0) ;
     EBC1->bt6.ABS_Fully_Operational = J1939_MESSAGE->Mxe.Data[5]>>0;
     EBC1->bt6.EBS_Red_Warning_Signal = J1939_MESSAGE->Mxe.Data[5]>>2;
     EBC1->bt6.ABS_EBS_Amber_Warning_Signal__Powered_Vehicle_ = J1939_MESSAGE->Mxe.Data[5]>>4;
     EBC1->bt6.ATC_ASR_Information_Signal = J1939_MESSAGE->Mxe.Data[5]>>6;
-    EBC1->Source_Address_of_Controlling_Device_for_Brake_Control = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],4,0) ;
+    EBC1->Source_Address_of_Controlling_Device_for_Brake_Control = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],1,0) ;
     EBC1->bt8.Halt_brake_switch = J1939_MESSAGE->Mxe.Data[7]>>2;
     EBC1->bt8.Trailer_ABS_Status = J1939_MESSAGE->Mxe.Data[7]>>4;
     EBC1->bt8.Tractor_Mounted_Trailer_ABS_Warning_Signal = J1939_MESSAGE->Mxe.Data[7]>>6;
@@ -558,15 +558,15 @@ void CheckETC1 ( J1939_MESSAGE *J1939_MESSAGE,getETC1_t *ETC1)
     ETC1->bt1.Transmission_Torque_Converter_Lockup_Transition_in_Process = J1939_MESSAGE->Mxe.Data[0]>>6;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    ETC1->Transmission_Output_Shaft_Speed = Parameter_Translate(buff ,4,0) ;
-    ETC1->Percent_Clutch_Slip = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],4,0) ;
+    ETC1->Transmission_Output_Shaft_Speed = Parameter_Translate(buff ,0.125,0) ;
+    ETC1->Percent_Clutch_Slip = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.4,0) ;
     ETC1->bt5.Engine_Momentary_Overspeed_Enable = J1939_MESSAGE->Mxe.Data[4]>>0;
     ETC1->bt5.Progressive_Shift_Disable = J1939_MESSAGE->Mxe.Data[4]>>2;
     ETC1->bt5.Momentary_Engine_Maximum_Power_Enable = J1939_MESSAGE->Mxe.Data[4]>>4;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6]);
-    ETC1->Transmission_Input_Shaft_Speed = Parameter_Translate(buff ,4,0) ;
-    ETC1->Source_Address_of_Controlling_Device_for_Transmission_Control = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],4,0) ;
+    ETC1->Transmission_Input_Shaft_Speed = Parameter_Translate(buff ,0.125,0) ;
+    ETC1->Source_Address_of_Controlling_Device_for_Transmission_Control = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],1,0) ;
 }
 void CheckEEC2 ( J1939_MESSAGE *J1939_MESSAGE,getEEC2_t *EEC2)
 {
@@ -575,30 +575,30 @@ void CheckEEC2 ( J1939_MESSAGE *J1939_MESSAGE,getEEC2_t *EEC2)
     EEC2->bt1.Accelerator_Pedal_Kickdown_Switch = J1939_MESSAGE->Mxe.Data[0]>>2;
     EEC2->bt1.Road_Speed_Limit_Status = J1939_MESSAGE->Mxe.Data[0]>>4;
     EEC2->bt1.Accelerator_Pedal_2_Low_Idle_Switch = J1939_MESSAGE->Mxe.Data[0]>>6;
-    EEC2->Accelerator_Pedal_Position_1 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],4,0) ;
-    EEC2->Engine_Percent_Load_At_Current_Speed = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],4,0) ;
-    EEC2->Remote_Accelerator_Pedal_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],4,0) ;
-    EEC2->Accelerator_Pedal_Position_2 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],4,0) ;
+    EEC2->Accelerator_Pedal_Position_1 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.4,0) ;
+    EEC2->Engine_Percent_Load_At_Current_Speed = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,0) ;
+    EEC2->Remote_Accelerator_Pedal_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.4,0) ;
+    EEC2->Accelerator_Pedal_Position_2 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.4,0) ;
     EEC2->bt6.Vehicle_Acceleration_Rate_Limit_Status = J1939_MESSAGE->Mxe.Data[5]>>0;
     EEC2->bt6.Momentary_Engine_Maximum_Power_Enable_Feedback = J1939_MESSAGE->Mxe.Data[5]>>2;
     EEC2->bt6.DPF_Thermal_Management_Active = J1939_MESSAGE->Mxe.Data[5]>>4;
     EEC2->bt6.SCR_Thermal_Management_Active = J1939_MESSAGE->Mxe.Data[5]>>6;
-    EEC2->Actual_Maximum_Available_Engine___Percent_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],4,0) ;
-    EEC2->Estimated_Pumping___Percent_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],4,0) ;
+    EEC2->Actual_Maximum_Available_Engine___Percent_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.4,0) ;
+    EEC2->Estimated_Pumping___Percent_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],1,-125) ;
 }
 void CheckEEC1 ( J1939_MESSAGE *J1939_MESSAGE,getEEC1_t *EEC1)
 {
        uint64_t buff;
     EEC1->bt1.Engine_Torque_Mode = J1939_MESSAGE->Mxe.Data[0]>>0;
     EEC1->bt1.Actual_Engine___Percent_Torque_High_Resolution = J1939_MESSAGE->Mxe.Data[0]>>4;
-    EEC1->Driver_s_Demand_Engine___Percent_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],16,0) ;
-    EEC1->Actual_Engine___Percent_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],16,0) ;
+    EEC1->Driver_s_Demand_Engine___Percent_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,-125) ;
+    EEC1->Actual_Engine___Percent_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,-125) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    EEC1->Engine_Speed = Parameter_Translate(buff ,16,0) ;
-    EEC1->Source_Address_of_Controlling_Device_for_Engine_Control = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],16,0) ;
+    EEC1->Engine_Speed = Parameter_Translate(buff ,0.125,0) ;
+    EEC1->Source_Address_of_Controlling_Device_for_Engine_Control = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],1,0) ;
     EEC1->bt7.Engine_Starter_Mode = J1939_MESSAGE->Mxe.Data[6]>>0;
-    EEC1->Engine_Demand__Percent_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],16,0) ;
+    EEC1->Engine_Demand__Percent_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],1,-125) ;
 }
 void CheckETC2 ( J1939_MESSAGE *J1939_MESSAGE,getETC2_t *ETC2)
 {
@@ -606,14 +606,14 @@ void CheckETC2 ( J1939_MESSAGE *J1939_MESSAGE,getETC2_t *ETC2)
     ETC2->Transmission_Selected_Gear = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],1,-125) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    ETC2->Transmission_Actual_Gear_Ratio = Parameter_Translate(buff ,1,-125) ;
-    ETC2->Transmission_Current_Gear = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],1,-125) ;
+    ETC2->Transmission_Actual_Gear_Ratio = Parameter_Translate(buff ,0.001,0) ;
+    ETC2->Transmission_Current_Gear = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],4,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    ETC2->Transmission_Requested_Range = Parameter_Translate(buff ,1,-125) ;
+    ETC2->Transmission_Requested_Range = Parameter_Translate(buff ,4,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    ETC2->Transmission_Current_Range = Parameter_Translate(buff ,1,-125) ;
+    ETC2->Transmission_Current_Range = Parameter_Translate(buff ,4,0) ;
 }
 void CheckEAC1 ( J1939_MESSAGE *J1939_MESSAGE,getEAC1_t *EAC1)
 {
@@ -657,11 +657,11 @@ void CheckVDC2 ( J1939_MESSAGE *J1939_MESSAGE,getVDC2_t *VDC2)
     VDC2->bt3.Steering_Wheel_Angle_Sensor_Type = J1939_MESSAGE->Mxe.Data[2]>>6;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    VDC2->Yaw_Rate = Parameter_Translate(buff ,1,-31.374) ;
+    VDC2->Yaw_Rate = Parameter_Translate(buff ,1,-3.92) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6]);
-    VDC2->Lateral_Acceleration = Parameter_Translate(buff ,1,-31.374) ;
-    VDC2->Longitudinal_Acceleration = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],1,-31.374) ;
+    VDC2->Lateral_Acceleration = Parameter_Translate(buff ,0.01,-320) ;
+    VDC2->Longitudinal_Acceleration = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.1,-12.5) ;
 }
 void CheckEGF1 ( J1939_MESSAGE *J1939_MESSAGE,getEGF1_t *EGF1)
 {
@@ -697,7 +697,7 @@ void CheckETC8 ( J1939_MESSAGE *J1939_MESSAGE,getETC8_t *ETC8)
     ETC8->Transmission_Torque_Converter_Ratio = Parameter_Translate(buff ,0.001,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    ETC8->Transmission_Clutch_Converter_Input_Speed = Parameter_Translate(buff ,0.001,0) ;
+    ETC8->Transmission_Clutch_Converter_Input_Speed = Parameter_Translate(buff ,0.125,0) ;
 }
 void CheckLOI ( J1939_MESSAGE *J1939_MESSAGE,getLOI_t *LOI)
 {
@@ -722,7 +722,7 @@ void CheckAT1IG1 ( J1939_MESSAGE *J1939_MESSAGE,getAT1IG1_t *AT1IG1)
     AT1IG1->Aftertreatment_1_Intake_NOx = Parameter_Translate(buff ,0.05,-200) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT1IG1->Aftertreatment_1_Intake_O2 = Parameter_Translate(buff ,0.05,-200) ;
+    AT1IG1->Aftertreatment_1_Intake_O2 = Parameter_Translate(buff ,0.000514,-12) ;
     AT1IG1->bt5.Aftertreatment_1_Intake_Gas_Sensor_Power_Status = J1939_MESSAGE->Mxe.Data[4]>>0;
     AT1IG1->bt5.Aftertreatment_1_Intake_Gas_Sensor_at_Temperature = J1939_MESSAGE->Mxe.Data[4]>>2;
     AT1IG1->bt5.Aftertreatment_1_Intake_NOx_Reading_Stable = J1939_MESSAGE->Mxe.Data[4]>>4;
@@ -741,7 +741,7 @@ void CheckAT1OG1 ( J1939_MESSAGE *J1939_MESSAGE,getAT1OG1_t *AT1OG1)
     AT1OG1->Aftertreatment_1_Outlet_NOx = Parameter_Translate(buff ,0.05,-200) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT1OG1->Aftertreatment_1_Outlet_O2 = Parameter_Translate(buff ,0.05,-200) ;
+    AT1OG1->Aftertreatment_1_Outlet_O2 = Parameter_Translate(buff ,0.000514,-12) ;
     AT1OG1->bt5.Aftertreatment_1_Outlet_Gas_Sensor_Power_Status = J1939_MESSAGE->Mxe.Data[4]>>0;
     AT1OG1->bt5.Aftertreatment_1_Outlet_Gas_Sensor_at_Temperature = J1939_MESSAGE->Mxe.Data[4]>>2;
     AT1OG1->bt5.Aftertreatment_1_Outlet_NOx_Reading_Stable = J1939_MESSAGE->Mxe.Data[4]>>4;
@@ -760,7 +760,7 @@ void CheckAT2IG1 ( J1939_MESSAGE *J1939_MESSAGE,getAT2IG1_t *AT2IG1)
     AT2IG1->Aftertreatment_2_Intake_NOx = Parameter_Translate(buff ,0.05,-200) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT2IG1->Aftertreatment_2_Intake_O2 = Parameter_Translate(buff ,0.05,-200) ;
+    AT2IG1->Aftertreatment_2_Intake_O2 = Parameter_Translate(buff ,0.000514,-12) ;
     AT2IG1->bt5.Aftertreatment_2_Intake_Gas_Sensor_Power_Status = J1939_MESSAGE->Mxe.Data[4]>>0;
     AT2IG1->bt5.Aftertreatment_2_Intake_Gas_Sensor_at_Temperature = J1939_MESSAGE->Mxe.Data[4]>>2;
     AT2IG1->bt5.Aftertreatment_2_Intake_NOx_Reading_Stable = J1939_MESSAGE->Mxe.Data[4]>>4;
@@ -779,7 +779,7 @@ void CheckAT2OG1 ( J1939_MESSAGE *J1939_MESSAGE,getAT2OG1_t *AT2OG1)
     AT2OG1->Aftertreatment_2_Outlet_NOx = Parameter_Translate(buff ,0.05,-200) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT2OG1->Aftertreatment_2_Outlet_O2 = Parameter_Translate(buff ,0.05,-200) ;
+    AT2OG1->Aftertreatment_2_Outlet_O2 = Parameter_Translate(buff ,0.000514,-12) ;
     AT2OG1->bt5.Aftertreatment_2_Outlet_Gas_Sensor_Power_Status = J1939_MESSAGE->Mxe.Data[4]>>0;
     AT2OG1->bt5.Aftertreatment_2_Outlet_Gas_Sensor_at_Temperature = J1939_MESSAGE->Mxe.Data[4]>>2;
     AT2OG1->bt5.Aftertreatment_2_Outlet_NOx_Reading_Stable = J1939_MESSAGE->Mxe.Data[4]>>4;
@@ -798,10 +798,10 @@ void CheckFWSS1 ( J1939_MESSAGE *J1939_MESSAGE,getFWSS1_t *FWSS1)
     FWSS1->Fifth_Wheel_Vertical_Force = Parameter_Translate(buff ,5,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    FWSS1->Fifth_Wheel_Drawbar_Force = Parameter_Translate(buff ,5,0) ;
+    FWSS1->Fifth_Wheel_Drawbar_Force = Parameter_Translate(buff ,10,000) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    FWSS1->Fifth_Wheel_Roll_Moment = Parameter_Translate(buff ,5,0) ;
+    FWSS1->Fifth_Wheel_Roll_Moment = Parameter_Translate(buff ,10,000) ;
     FWSS1->bt7.Fifth_Wheel_Roll_Warning_Indicator = J1939_MESSAGE->Mxe.Data[6]>>0;
 }
 void CheckSSI ( J1939_MESSAGE *J1939_MESSAGE,getSSI_t *SSI)
@@ -820,7 +820,7 @@ void CheckSSI ( J1939_MESSAGE *J1939_MESSAGE,getSSI_t *SSI)
     SSI->bt7.Roll_Angle_Figure_of_Merit = J1939_MESSAGE->Mxe.Data[6]>>2;
     SSI->bt7.Pitch_Rate_Figure_of_Merit = J1939_MESSAGE->Mxe.Data[6]>>4;
     SSI->bt7.Pitch_and_Roll_Compensated = J1939_MESSAGE->Mxe.Data[6]>>6;
-    SSI->Roll_and_Pitch_Measurement_Latency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.002,-64) ;
+    SSI->Roll_and_Pitch_Measurement_Latency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.5,0) ;
 }
 void CheckBI ( J1939_MESSAGE *J1939_MESSAGE,getBI_t *BI)
 {
@@ -830,8 +830,8 @@ void CheckBI ( J1939_MESSAGE *J1939_MESSAGE,getBI_t *BI)
     BI->Relative_Blade_Height = Parameter_Translate(buff ,0.1,200) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    BI->Blade_Rotation_Angle = Parameter_Translate(buff ,0.1,200) ;
-    BI->Relative_Blade_Height_and_Blade_Rotation_Angle_Measurement_Latency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.1,200) ;
+    BI->Blade_Rotation_Angle = Parameter_Translate(buff ,1,-200) ;
+    BI->Relative_Blade_Height_and_Blade_Rotation_Angle_Measurement_Latency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.5,0) ;
     BI->bt6.Relative_Blade_Height_Figure_of_Merit = J1939_MESSAGE->Mxe.Data[5]>>0;
     BI->bt6.Blade_Rotation_Angle_Figure_of_Merit = J1939_MESSAGE->Mxe.Data[5]>>2;
 }
@@ -956,8 +956,8 @@ void CheckA1SCRDSI1 ( J1939_MESSAGE *J1939_MESSAGE,getA1SCRDSI1_t *A1SCRDSI1)
     A1SCRDSI1->bt3.Aftertreatment_1_SCR_System_State = J1939_MESSAGE->Mxe.Data[2]>>0;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    A1SCRDSI1->Aftertreatment_1_Diesel_Exhaust_Fluid_Actual_Quantity_of_Integrator = Parameter_Translate(buff ,0.3,0) ;
-    A1SCRDSI1->Aftertreatment_1_Diesel_Exhaust_Fluid_Doser_Absolute_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],0.3,0) ;
+    A1SCRDSI1->Aftertreatment_1_Diesel_Exhaust_Fluid_Actual_Quantity_of_Integrator = Parameter_Translate(buff ,0.10,0) ;
+    A1SCRDSI1->Aftertreatment_1_Diesel_Exhaust_Fluid_Doser_Absolute_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],8,0) ;
 }
 void CheckA1SCRDSR1 ( J1939_MESSAGE *J1939_MESSAGE,getA1SCRDSR1_t *A1SCRDSR1)
 {
@@ -968,7 +968,7 @@ void CheckA1SCRDSR1 ( J1939_MESSAGE *J1939_MESSAGE,getA1SCRDSR1_t *A1SCRDSR1)
     A1SCRDSR1->bt3.Aftertreatment_1_SCR_System_Requested_State = J1939_MESSAGE->Mxe.Data[2]>>0;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    A1SCRDSR1->Aftertreatment_1_Diesel_Exhaust_Fluid_Requested_Quantity_of_Integrator = Parameter_Translate(buff ,0.3,0) ;
+    A1SCRDSR1->Aftertreatment_1_Diesel_Exhaust_Fluid_Requested_Quantity_of_Integrator = Parameter_Translate(buff ,0.10,0) ;
 }
 void CheckA1SCRAI ( J1939_MESSAGE *J1939_MESSAGE,getA1SCRAI_t *A1SCRAI)
 {
@@ -992,8 +992,8 @@ void CheckA2SCRDSI1 ( J1939_MESSAGE *J1939_MESSAGE,getA2SCRDSI1_t *A2SCRDSI1)
     A2SCRDSI1->bt3.Aftertreatment_2_SCR_System_State = J1939_MESSAGE->Mxe.Data[2]>>0;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    A2SCRDSI1->Aftertreatment_2_Diesel_Exhaust_Fluid_Actual_Quantity_of_Integrator = Parameter_Translate(buff ,0.3,0) ;
-    A2SCRDSI1->Aftertreatment_2_Diesel_Exhaust_Fluid_Dosing_Absolute_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],0.3,0) ;
+    A2SCRDSI1->Aftertreatment_2_Diesel_Exhaust_Fluid_Actual_Quantity_of_Integrator = Parameter_Translate(buff ,0.10,0) ;
+    A2SCRDSI1->Aftertreatment_2_Diesel_Exhaust_Fluid_Dosing_Absolute_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],8,0) ;
 }
 void CheckA2SCRDSR1 ( J1939_MESSAGE *J1939_MESSAGE,getA2SCRDSR1_t *A2SCRDSR1)
 {
@@ -1004,7 +1004,7 @@ void CheckA2SCRDSR1 ( J1939_MESSAGE *J1939_MESSAGE,getA2SCRDSR1_t *A2SCRDSR1)
     A2SCRDSR1->bt3.Aftertreatment_2_SCR_System_Requested_State = J1939_MESSAGE->Mxe.Data[2]>>0;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    A2SCRDSR1->Aftertreatment_2_Diesel_Exhaust_Fluid_Requested_Quantity_of_Integrator = Parameter_Translate(buff ,0.3,0) ;
+    A2SCRDSR1->Aftertreatment_2_Diesel_Exhaust_Fluid_Requested_Quantity_of_Integrator = Parameter_Translate(buff ,0.10,0) ;
 }
 void CheckA2SCRAI ( J1939_MESSAGE *J1939_MESSAGE,getA2SCRAI_t *A2SCRAI)
 {
@@ -1034,7 +1034,7 @@ void CheckSSI2 ( J1939_MESSAGE *J1939_MESSAGE,getSSI2_t *SSI2)
     SSI2->bt7.Pitch_Angle_Extended_Range_Figure_of_Merit = J1939_MESSAGE->Mxe.Data[6]>>2;
     SSI2->bt7.Roll_Angle_Extended_Range_Compensation = J1939_MESSAGE->Mxe.Data[6]>>4;
     SSI2->bt7.Roll_Angle_Extended_Range_Figure_of_Merit = J1939_MESSAGE->Mxe.Data[6]>>6;
-    SSI2->Roll_and_Pitch_Extended_Range_Measurement_Latency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],1,-250) ;
+    SSI2->Roll_and_Pitch_Extended_Range_Measurement_Latency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.5,0) ;
 }
 void CheckARI ( J1939_MESSAGE *J1939_MESSAGE,getARI_t *ARI)
 {
@@ -1051,7 +1051,7 @@ void CheckARI ( J1939_MESSAGE *J1939_MESSAGE,getARI_t *ARI)
     ARI->bt7.Pitch_Rate_Extended_Range_Figure_of_Merit = J1939_MESSAGE->Mxe.Data[6]>>0;
     ARI->bt7.Roll_Rate_Extended_Range_Figure_of_Merit = J1939_MESSAGE->Mxe.Data[6]>>2;
     ARI->bt7.Yaw_Rate_Extended_Range_Figure_of_Merit = J1939_MESSAGE->Mxe.Data[6]>>4;
-    ARI->Angular_Rate_Measurement_Latency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],1,-250) ;
+    ARI->Angular_Rate_Measurement_Latency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.5,0) ;
 }
 void CheckCN ( J1939_MESSAGE *J1939_MESSAGE,getCN_t *CN)
 {
@@ -1084,10 +1084,10 @@ void CheckACCS ( J1939_MESSAGE *J1939_MESSAGE,getACCS_t *ACCS)
     ACCS->Lateral_Acceleration_Extended_Range = Parameter_Translate(buff ,1,-15.687) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    ACCS->Longitudinal_Acceleration_Extended_Range = Parameter_Translate(buff ,1,-15.687) ;
+    ACCS->Longitudinal_Acceleration_Extended_Range = Parameter_Translate(buff ,0.01,-320) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    ACCS->Vertical_Acceleration_Extended_Range = Parameter_Translate(buff ,1,-15.687) ;
+    ACCS->Vertical_Acceleration_Extended_Range = Parameter_Translate(buff ,0.01,-320) ;
     ACCS->bt7.Lateral_Acceleration_Extended_Range_Figure_of_Merit = J1939_MESSAGE->Mxe.Data[6]>>0;
     ACCS->bt7.Longitudinal_Acceleration_Extended_Range_Figure_of_Merit = J1939_MESSAGE->Mxe.Data[6]>>2;
     ACCS->bt7.Vertical_Acceleration_Extended_Range_Figure_of_Merit = J1939_MESSAGE->Mxe.Data[6]>>4;
@@ -1113,7 +1113,7 @@ void CheckAEBS1 ( J1939_MESSAGE *J1939_MESSAGE,getAEBS1_t *AEBS1)
     AEBS1->bt1.Collision_warning_level = J1939_MESSAGE->Mxe.Data[0]>>4;
     AEBS1->bt2.Relevant_object_detected_for_advanced_emergency_braking_system = J1939_MESSAGE->Mxe.Data[1]>>0;
     AEBS1->bt2.Bend_off_probability_of_relevant_object = J1939_MESSAGE->Mxe.Data[1]>>3;
-    AEBS1->Time_to_collision_with_relevant_object = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],16,0) ;
+    AEBS1->Time_to_collision_with_relevant_object = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.05,0) ;
 }
 void CheckWS ( J1939_MESSAGE *J1939_MESSAGE,getWS_t *WS)
 {
@@ -1126,7 +1126,7 @@ void CheckWS ( J1939_MESSAGE *J1939_MESSAGE,getWS_t *WS)
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
     WS->Transmitter_ID_1 = Parameter_Translate(buff ,1,0) ;
-    WS->Wireless_Signal_Strength_1 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],1,0) ;
+    WS->Wireless_Signal_Strength_1 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.5,0) ;
 }
 void CheckWAND ( J1939_MESSAGE *J1939_MESSAGE,getWAND_t *WAND)
 {
@@ -1222,11 +1222,11 @@ void CheckEEGR1A ( J1939_MESSAGE *J1939_MESSAGE,getEEGR1A_t *EEGR1A)
     EEGR1A->bt1.Engine_Exhaust_Gas_Recirculation_2_Actuator_1_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[0]>>0;
     EEGR1A->bt1.Engine_Exhaust_Gas_Recirculation_2_Actuator_1_Temperature_Status = J1939_MESSAGE->Mxe.Data[0]>>5;
     EEGR1A->Engine_Exhaust_Gas_Recirculation_2_Actuator_1_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,-40) ;
-    EEGR1A->Engine_Exhaust_Gas_Recirculation_2_Actuator_1_Desired_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,-40) ;
+    EEGR1A->Engine_Exhaust_Gas_Recirculation_2_Actuator_1_Desired_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.4,0) ;
     EEGR1A->bt4.Engine_Exhaust_Gas_Recirculation_2_Actuator_2_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[3]>>0;
     EEGR1A->bt4.Engine_Exhaust_Gas_Recirculation_2_Actuator_2_Temperature_Status = J1939_MESSAGE->Mxe.Data[3]>>5;
     EEGR1A->Engine_Exhaust_Gas_Recirculation_2_Actuator_2_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],1,-40) ;
-    EEGR1A->Engine_Exhaust_Gas_Recirculation_2_Actuator_2_Desired_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],1,-40) ;
+    EEGR1A->Engine_Exhaust_Gas_Recirculation_2_Actuator_2_Desired_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],0.4,0) ;
     EEGR1A->bt7.Engine_Exhaust_Gas_Recirculation_2_Actuator_1_Operation_Status = J1939_MESSAGE->Mxe.Data[6]>>0;
     EEGR1A->bt7.Engine_Exhaust_Gas_Recirculation_2_Actuator_2_Operation_Status = J1939_MESSAGE->Mxe.Data[6]>>4;
 }
@@ -1236,11 +1236,11 @@ void CheckEEGR1B ( J1939_MESSAGE *J1939_MESSAGE,getEEGR1B_t *EEGR1B)
     EEGR1B->bt1.Engine_Exhaust_Gas_Recirculation_1_Actuator_1_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[0]>>0;
     EEGR1B->bt1.Engine_Exhaust_Gas_Recirculation_1_Actuator_1_Temperature_Status = J1939_MESSAGE->Mxe.Data[0]>>5;
     EEGR1B->Engine_Exhaust_Gas_Recirculation_1_Actuator_1_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,-40) ;
-    EEGR1B->Engine_Exhaust_Gas_Recirculation_1_Actuator_1_Desired_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,-40) ;
+    EEGR1B->Engine_Exhaust_Gas_Recirculation_1_Actuator_1_Desired_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.4,0) ;
     EEGR1B->bt4.Engine_Exhaust_Gas_Recirculation_1_Actuator_2_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[3]>>0;
     EEGR1B->bt4.Engine_Exhaust_Gas_Recirculation_1_Actuator_2_Temperature_Status = J1939_MESSAGE->Mxe.Data[3]>>5;
     EEGR1B->Engine_Exhaust_Gas_Recirculation_1_Actuator_2_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],1,-40) ;
-    EEGR1B->Engine_Exhaust_Gas_Recirculation_1_Actuator_2_Desired_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],1,-40) ;
+    EEGR1B->Engine_Exhaust_Gas_Recirculation_1_Actuator_2_Desired_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],0.4,0) ;
     EEGR1B->bt7.Engine_Exhaust_Gas_Recirculation_1_Actuator_1_Operation_Status = J1939_MESSAGE->Mxe.Data[6]>>0;
     EEGR1B->bt7.Engine_Exhaust_Gas_Recirculation_1_Actuator_2_Operation_Status = J1939_MESSAGE->Mxe.Data[6]>>4;
 }
@@ -1283,13 +1283,13 @@ void CheckAT1DPF2S5 ( J1939_MESSAGE *J1939_MESSAGE,getAT1DPF2S5_t *AT1DPF2S5)
     AT1DPF2S5->Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Analysis_Frequency_3 = Parameter_Translate(buff ,0.1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT1DPF2S5->Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Frequency_3_Soot_Signal = Parameter_Translate(buff ,0.1,0) ;
+    AT1DPF2S5->Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Frequency_3_Soot_Signal = Parameter_Translate(buff ,0.0025,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
     AT1DPF2S5->Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Analysis_Frequency_4 = Parameter_Translate(buff ,0.1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    AT1DPF2S5->Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Frequency_4_Soot_Signal = Parameter_Translate(buff ,0.1,0) ;
+    AT1DPF2S5->Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Frequency_4_Soot_Signal = Parameter_Translate(buff ,0.0025,0) ;
 }
 void CheckAT1DPF2S4 ( J1939_MESSAGE *J1939_MESSAGE,getAT1DPF2S4_t *AT1DPF2S4)
 {
@@ -1299,13 +1299,13 @@ void CheckAT1DPF2S4 ( J1939_MESSAGE *J1939_MESSAGE,getAT1DPF2S4_t *AT1DPF2S4)
     AT1DPF2S4->Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Analysis_Frequency_1 = Parameter_Translate(buff ,0.1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT1DPF2S4->Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Frequency_1_Soot_Signal = Parameter_Translate(buff ,0.1,0) ;
+    AT1DPF2S4->Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Frequency_1_Soot_Signal = Parameter_Translate(buff ,0.0025,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
     AT1DPF2S4->Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Analysis_Frequency_2 = Parameter_Translate(buff ,0.1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    AT1DPF2S4->Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Frequency_2_Soot_Signal = Parameter_Translate(buff ,0.1,0) ;
+    AT1DPF2S4->Aftertreatment_1_Diesel_Particulate_Filter_2_Soot_Sensor_Frequency_2_Soot_Signal = Parameter_Translate(buff ,0.0025,0) ;
 }
 void CheckAT1DPF2S3 ( J1939_MESSAGE *J1939_MESSAGE,getAT1DPF2S3_t *AT1DPF2S3)
 {
@@ -1331,13 +1331,13 @@ void CheckAT1DPF1S5 ( J1939_MESSAGE *J1939_MESSAGE,getAT1DPF1S5_t *AT1DPF1S5)
     AT1DPF1S5->Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Analysis_Frequency_3 = Parameter_Translate(buff ,0.1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT1DPF1S5->Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Frequency_3_Soot_Signal = Parameter_Translate(buff ,0.1,0) ;
+    AT1DPF1S5->Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Frequency_3_Soot_Signal = Parameter_Translate(buff ,0.0025,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
     AT1DPF1S5->Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Analysis_Frequency_4 = Parameter_Translate(buff ,0.1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    AT1DPF1S5->Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Frequency_4_Soot_Signal = Parameter_Translate(buff ,0.1,0) ;
+    AT1DPF1S5->Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Frequency_4_Soot_Signal = Parameter_Translate(buff ,0.0025,0) ;
 }
 void CheckAT1DPF1S4 ( J1939_MESSAGE *J1939_MESSAGE,getAT1DPF1S4_t *AT1DPF1S4)
 {
@@ -1347,13 +1347,13 @@ void CheckAT1DPF1S4 ( J1939_MESSAGE *J1939_MESSAGE,getAT1DPF1S4_t *AT1DPF1S4)
     AT1DPF1S4->Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Analysis_Frequency_1 = Parameter_Translate(buff ,0.1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT1DPF1S4->Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Frequency_1_Soot_Signal = Parameter_Translate(buff ,0.1,0) ;
+    AT1DPF1S4->Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Frequency_1_Soot_Signal = Parameter_Translate(buff ,0.0025,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
     AT1DPF1S4->Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Analysis_Frequency_2 = Parameter_Translate(buff ,0.1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    AT1DPF1S4->Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Frequency_2_Soot_Signal = Parameter_Translate(buff ,0.1,0) ;
+    AT1DPF1S4->Aftertreatment_1_Diesel_Particulate_Filter_1_Soot_Sensor_Frequency_2_Soot_Signal = Parameter_Translate(buff ,0.0025,0) ;
 }
 void CheckAT1DPF1S3 ( J1939_MESSAGE *J1939_MESSAGE,getAT1DPF1S3_t *AT1DPF1S3)
 {
@@ -1376,8 +1376,8 @@ void CheckCCVS3 ( J1939_MESSAGE *J1939_MESSAGE,getCCVS3_t *CCVS3)
        uint64_t buff;
     CCVS3->bt1.Adaptive_Cruise_Control_Readiness_Status = J1939_MESSAGE->Mxe.Data[0]>>0;
     CCVS3->bt1.Cruise_Control_System_Command_State = J1939_MESSAGE->Mxe.Data[0]>>2;
-    CCVS3->Source_Address_of_Controlling_Device_for_Disabling_Cruise_Control = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],4,0) ;
-    CCVS3->Source_Address_of_Controlling_Device_for_Pausing_Cruise_Control = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],4,0) ;
+    CCVS3->Source_Address_of_Controlling_Device_for_Disabling_Cruise_Control = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,0) ;
+    CCVS3->Source_Address_of_Controlling_Device_for_Pausing_Cruise_Control = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,0) ;
 }
 void CheckAT2AC3 ( J1939_MESSAGE *J1939_MESSAGE,getAT2AC3_t *AT2AC3)
 {
@@ -1399,7 +1399,7 @@ void CheckEFL_P12 ( J1939_MESSAGE *J1939_MESSAGE,getEFL_P12_t *EFL_P12)
     EFL_P12->Engine_Fuel_Delivery_Absolute_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],4,0) ;
     EFL_P12->Engine_Filtered_Fuel_Delivery_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],4,0) ;
     EFL_P12->Engine_Filtered_Fuel_Delivery_Absolute_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],4,0) ;
-    EFL_P12->Engine_Fuel_Filter_Degradation = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],4,0) ;
+    EFL_P12->Engine_Fuel_Filter_Degradation = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],1,0) ;
 }
 void CheckDPFC2 ( J1939_MESSAGE *J1939_MESSAGE,getDPFC2_t *DPFC2)
 {
@@ -1409,13 +1409,13 @@ void CheckDPFC2 ( J1939_MESSAGE *J1939_MESSAGE,getDPFC2_t *DPFC2)
     DPFC2->Aftertreatment_1_Diesel_Particulate_Filter_Intake_Temperature_Set_Point = Parameter_Translate(buff ,0.03125,-273) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    DPFC2->Relative_Unburned_Fuel_Mass_from_Engine = Parameter_Translate(buff ,0.03125,-273) ;
+    DPFC2->Relative_Unburned_Fuel_Mass_from_Engine = Parameter_Translate(buff ,0.0025,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    DPFC2->Aftertreatment_1_Fuel_Mass_Rate = Parameter_Translate(buff ,0.03125,-273) ;
+    DPFC2->Aftertreatment_1_Fuel_Mass_Rate = Parameter_Translate(buff ,0.05,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    DPFC2->Aftertreatment_2_Fuel_Mass_Rate = Parameter_Translate(buff ,0.03125,-273) ;
+    DPFC2->Aftertreatment_2_Fuel_Mass_Rate = Parameter_Translate(buff ,0.05,0) ;
 }
 void CheckLFE2 ( J1939_MESSAGE *J1939_MESSAGE,getLFE2_t *LFE2)
 {
@@ -1434,21 +1434,21 @@ void CheckSFS ( J1939_MESSAGE *J1939_MESSAGE,getSFS_t *SFS)
     SFS->bt1.Supplemental_Fan_Velocity_Status = J1939_MESSAGE->Mxe.Data[0]>>4;
     SFS->bt2.Supplemental_Fan_Controller_Temperature_Status = J1939_MESSAGE->Mxe.Data[1]>>0;
     SFS->bt2.Supplemental_Fan_Drive_Status = J1939_MESSAGE->Mxe.Data[1]>>3;
-    SFS->Supplemental_Fan_Controller_ECU_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],4,0) ;
+    SFS->Supplemental_Fan_Controller_ECU_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,-40) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    SFS->Supplemental_Fan_Speed = Parameter_Translate(buff ,4,0) ;
-    SFS->Supplemental_Fan_Current = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],4,0) ;
+    SFS->Supplemental_Fan_Speed = Parameter_Translate(buff ,0.5,0) ;
+    SFS->Supplemental_Fan_Current = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],1,-125) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    SFS->Supplemental_Fan_Power = Parameter_Translate(buff ,4,0) ;
+    SFS->Supplemental_Fan_Power = Parameter_Translate(buff ,0.5,0) ;
 }
 void CheckEBCC ( J1939_MESSAGE *J1939_MESSAGE,getEBCC_t *EBCC)
 {
        uint64_t buff;
     EBCC->Engine_Turbocharger_1_Turbine_Outlet_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],2,0) ;
     EBCC->Desired_Engine_Turbocharger_1_Turbine_Outlet_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],2,0) ;
-    EBCC->Engine_Exhaust_Brake_Actuator_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],2,0) ;
+    EBCC->Engine_Exhaust_Brake_Actuator_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.4,0) ;
     EBCC->Engine_Turbocharger_2_Turbine_Outlet_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],2,0) ;
     EBCC->Desired_Engine_Turbocharger_2_Turbine_Outlet_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],2,0) ;
 }
@@ -1460,13 +1460,13 @@ void CheckEFP ( J1939_MESSAGE *J1939_MESSAGE,getEFP_t *EFP)
     EFP->Engine_Fuel_Dynamic_Viscosity = Parameter_Translate(buff ,0.015625,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    EFP->Engine_Fuel_Density = Parameter_Translate(buff ,0.015625,0) ;
+    EFP->Engine_Fuel_Density = Parameter_Translate(buff ,0.00003052,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    EFP->Engine_Fuel_Dielectricity__high_resolution_ = Parameter_Translate(buff ,0.015625,0) ;
+    EFP->Engine_Fuel_Dielectricity__high_resolution_ = Parameter_Translate(buff ,1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    EFP->Engine_Fuel_Temperature__High_Resolution_ = Parameter_Translate(buff ,0.015625,0) ;
+    EFP->Engine_Fuel_Temperature__High_Resolution_ = Parameter_Translate(buff ,0.03125,-273) ;
 }
 void CheckHOP ( J1939_MESSAGE *J1939_MESSAGE,getHOP_t *HOP)
 {
@@ -1476,13 +1476,13 @@ void CheckHOP ( J1939_MESSAGE *J1939_MESSAGE,getHOP_t *HOP)
     HOP->Hydraulic_Oil_Dynamic_Viscosity = Parameter_Translate(buff ,0.015625,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    HOP->Hydraulic_Oil_Density = Parameter_Translate(buff ,0.015625,0) ;
+    HOP->Hydraulic_Oil_Density = Parameter_Translate(buff ,0.00003052,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    HOP->Hydraulic_Oil_Relative_Dielectricity__high_resolution_ = Parameter_Translate(buff ,0.015625,0) ;
+    HOP->Hydraulic_Oil_Relative_Dielectricity__high_resolution_ = Parameter_Translate(buff ,1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    HOP->Hydraulic_Oil_Temperature__High_Resolution_ = Parameter_Translate(buff ,0.015625,0) ;
+    HOP->Hydraulic_Oil_Temperature__High_Resolution_ = Parameter_Translate(buff ,0.03125,-273) ;
 }
 void CheckVLS2 ( J1939_MESSAGE *J1939_MESSAGE,getVLS2_t *VLS2)
 {
@@ -1586,13 +1586,13 @@ void CheckInformation ( J1939_MESSAGE *J1939_MESSAGE,getInformation_t *Informati
     Information->bt1.Engine_Turbocharger_Wastegate_Actuator_2_Temperature_Status = J1939_MESSAGE->Mxe.Data[0]>>5;
     Information->bt2.Engine_Turbocharger_Wastegate_Actuator_1_Operation_Status = J1939_MESSAGE->Mxe.Data[1]>>0;
     Information->bt2.Engine_Turbocharger_Wastegate_Actuator_2_Operation_Status = J1939_MESSAGE->Mxe.Data[1]>>4;
-    Information->Engine_Exhaust_Back_Pressure_Regulator_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],2,0) ;
+    Information->Engine_Exhaust_Back_Pressure_Regulator_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.4,0) ;
     Information->bt4.Engine_Exhaust_Back_Pressure_Regulator_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[3]>>0;
     Information->bt4.Engine_Exhaust_Back_Pressure_Regulator_Temperature_Status = J1939_MESSAGE->Mxe.Data[3]>>5;
     Information->bt5.Engine_Exhaust_Back_Pressure_Regulator_Control_Operation_Status = J1939_MESSAGE->Mxe.Data[4]>>0;
-    Information->Engine_Turbocharger_Wastegate_Actuator_1_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],2,0) ;
-    Information->Engine_Exhaust_Back_Pressure_Actuator_1_Desired_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],2,0) ;
-    Information->Engine_Exhaust_Back_Pressure_Actuator_1_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],2,0) ;
+    Information->Engine_Turbocharger_Wastegate_Actuator_1_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],1,-40) ;
+    Information->Engine_Exhaust_Back_Pressure_Actuator_1_Desired_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.4,0) ;
+    Information->Engine_Exhaust_Back_Pressure_Actuator_1_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],1,-40) ;
 }
 void CheckEFTVI1 ( J1939_MESSAGE *J1939_MESSAGE,getEFTVI1_t *EFTVI1)
 {
@@ -1621,8 +1621,8 @@ void CheckETCBI ( J1939_MESSAGE *J1939_MESSAGE,getETCBI_t *ETCBI)
     ETCBI->bt3.Engine_Turbocharger_Compressor_Bypass_Actuator_2_Temperature_Status = J1939_MESSAGE->Mxe.Data[2]>>5;
     ETCBI->bt4.Engine_Turbocharger_Compressor_Bypass_Actuator_1_Operation_Status = J1939_MESSAGE->Mxe.Data[3]>>0;
     ETCBI->bt4.Engine_Turbocharger_Compressor_Bypass_Actuator_2_Operation_Status = J1939_MESSAGE->Mxe.Data[3]>>4;
-    ETCBI->Engine_Turbocharger_Compressor_Bypass_Actuator_1_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.4,0) ;
-    ETCBI->Engine_Turbocharger_Compressor_Bypass_Actuator_2_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],0.4,0) ;
+    ETCBI->Engine_Turbocharger_Compressor_Bypass_Actuator_1_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],1,-40) ;
+    ETCBI->Engine_Turbocharger_Compressor_Bypass_Actuator_2_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],1,-40) ;
 }
 void CheckCAC2 ( J1939_MESSAGE *J1939_MESSAGE,getCAC2_t *CAC2)
 {
@@ -1636,7 +1636,7 @@ void CheckCAC2 ( J1939_MESSAGE *J1939_MESSAGE,getCAC2_t *CAC2)
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
     CAC2->Engine_Charge_Air_Cooler_2_Ambient_Air_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
-    CAC2->Engine_Charge_Air_Cooler_2_Efficiency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.03125,-273) ;
+    CAC2->Engine_Charge_Air_Cooler_2_Efficiency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.4,0) ;
 }
 void CheckCAC2P ( J1939_MESSAGE *J1939_MESSAGE,getCAC2P_t *CAC2P)
 {
@@ -1647,7 +1647,7 @@ void CheckCAC2P ( J1939_MESSAGE *J1939_MESSAGE,getCAC2P_t *CAC2P)
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
     CAC2P->Engine_Charge_Air_Cooler_2_Precooler_Outlet_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
-    CAC2P->Engine_Charge_Air_Cooler_2_Precooler_Efficiency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.03125,-273) ;
+    CAC2P->Engine_Charge_Air_Cooler_2_Precooler_Efficiency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.4,0) ;
 }
 void CheckCAC1 ( J1939_MESSAGE *J1939_MESSAGE,getCAC1_t *CAC1)
 {
@@ -1658,7 +1658,7 @@ void CheckCAC1 ( J1939_MESSAGE *J1939_MESSAGE,getCAC1_t *CAC1)
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
     CAC1->Engine_Charge_Air_Cooler_1_Ambient_Air_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
-    CAC1->Engine_Charge_Air_Cooler_1_Efficiency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.03125,-273) ;
+    CAC1->Engine_Charge_Air_Cooler_1_Efficiency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.4,0) ;
 }
 void CheckCAC1P ( J1939_MESSAGE *J1939_MESSAGE,getCAC1P_t *CAC1P)
 {
@@ -1669,7 +1669,7 @@ void CheckCAC1P ( J1939_MESSAGE *J1939_MESSAGE,getCAC1P_t *CAC1P)
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
     CAC1P->Engine_Charge_Air_Cooler_1_Precooler_Outlet_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
-    CAC1P->Engine_Charge_Air_Cooler_1_Precooler_Efficiency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.03125,-273) ;
+    CAC1P->Engine_Charge_Air_Cooler_1_Precooler_Efficiency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.4,0) ;
 }
 void CheckDPF2S2 ( J1939_MESSAGE *J1939_MESSAGE,getDPF2S2_t *DPF2S2)
 {
@@ -1708,10 +1708,10 @@ void CheckEEC11 ( J1939_MESSAGE *J1939_MESSAGE,getEEC11_t *EEC11)
     EEC11->Engine_Exhaust_Gas_Recirculation_2__EGR2__Valve_2_Control = Parameter_Translate(buff ,0.0025,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    EEC11->Engine_Exhaust_Gas_Recirculation_2_Valve_1_Position_Error = Parameter_Translate(buff ,0.0025,0) ;
+    EEC11->Engine_Exhaust_Gas_Recirculation_2_Valve_1_Position_Error = Parameter_Translate(buff ,0.004,-125) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    EEC11->Engine_Exhaust_Gas_Recirculation_2_Valve_2_Position_Error = Parameter_Translate(buff ,0.0025,0) ;
+    EEC11->Engine_Exhaust_Gas_Recirculation_2_Valve_2_Position_Error = Parameter_Translate(buff ,0.004,-125) ;
 }
 void CheckEMAP ( J1939_MESSAGE *J1939_MESSAGE,getEMAP_t *EMAP)
 {
@@ -1744,10 +1744,10 @@ void CheckEEC9 ( J1939_MESSAGE *J1939_MESSAGE,getEEC9_t *EEC9)
     EEC9->Engine_Exhaust_Gas_Recirculation_2_Valve_2_Position = Parameter_Translate(buff ,0.0025,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    EEC9->Commanded_Engine_Fuel_Rail_Pressure = Parameter_Translate(buff ,0.0025,0) ;
+    EEC9->Commanded_Engine_Fuel_Rail_Pressure = Parameter_Translate(buff ,1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    EEC9->Commanded_Engine_Fuel_Injection_Control_Pressure = Parameter_Translate(buff ,0.0025,0) ;
+    EEC9->Commanded_Engine_Fuel_Injection_Control_Pressure = Parameter_Translate(buff ,1,0) ;
 }
 void CheckEEC10 ( J1939_MESSAGE *J1939_MESSAGE,getEEC10_t *EEC10)
 {
@@ -1757,9 +1757,9 @@ void CheckEEC10 ( J1939_MESSAGE *J1939_MESSAGE,getEEC10_t *EEC10)
     EEC10->Engine_Exhaust_Gas_Recirculation_2__EGR2__Cooler_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    EEC10->Engine_Exhaust_Gas_Recirculation_2__EGR2__Cooler_Gas_Absolute_Pressure = Parameter_Translate(buff ,0.03125,-273) ;
-    EEC10->Engine_Exhaust_Gas_Recirculation_2__EGR2__Cooler = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.03125,-273) ;
-    EEC10->EGR_2_Cooler_Bypass_Actuator_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],0.03125,-273) ;
+    EEC10->Engine_Exhaust_Gas_Recirculation_2__EGR2__Cooler_Gas_Absolute_Pressure = Parameter_Translate(buff ,0.5,0) ;
+    EEC10->Engine_Exhaust_Gas_Recirculation_2__EGR2__Cooler = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.4,0) ;
+    EEC10->EGR_2_Cooler_Bypass_Actuator_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],0.4,0) ;
 }
 void CheckET5 ( J1939_MESSAGE *J1939_MESSAGE,getET5_t *ET5)
 {
@@ -1777,14 +1777,14 @@ void CheckEFL_P10 ( J1939_MESSAGE *J1939_MESSAGE,getEFL_P10_t *EFL_P10)
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
     EFL_P10->Engine_Exhaust_Gas_Recirculation_2_Differential_Pressure = Parameter_Translate(buff ,1,-250) ;
-    EFL_P10->Engine_Exhaust_Gas_Recirculation_2_Intake_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,-250) ;
+    EFL_P10->Engine_Exhaust_Gas_Recirculation_2_Intake_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],2,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    EFL_P10->Engine_Exhaust_Gas_Recirculation_2_Outlet_Absolute_Pressure = Parameter_Translate(buff ,1,-250) ;
+    EFL_P10->Engine_Exhaust_Gas_Recirculation_2_Outlet_Absolute_Pressure = Parameter_Translate(buff ,0.1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6]);
-    EFL_P10->Engine_Exhaust_Gas_Recirculation_2_Intake_Absolute_Pressure = Parameter_Translate(buff ,1,-250) ;
-    EFL_P10->Engine_Coolant_Pressure_2 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],1,-250) ;
+    EFL_P10->Engine_Exhaust_Gas_Recirculation_2_Intake_Absolute_Pressure = Parameter_Translate(buff ,0.1,0) ;
+    EFL_P10->Engine_Coolant_Pressure_2 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],2,0) ;
 }
 void CheckLVDS ( J1939_MESSAGE *J1939_MESSAGE,getLVDS_t *LVDS)
 {
@@ -1796,7 +1796,7 @@ void CheckLVDS ( J1939_MESSAGE *J1939_MESSAGE,getLVDS_t *LVDS)
     LVDS->bt2.Low_Voltage_Disconnect_Output_2_State = J1939_MESSAGE->Mxe.Data[1]>>4;
     LVDS->bt3.Low_Voltage_Disconnect_Output_1_State = J1939_MESSAGE->Mxe.Data[2]>>0;
     LVDS->bt3.Low_Voltage_Disconnect_Vout_Output_State = J1939_MESSAGE->Mxe.Data[2]>>4;
-    LVDS->Low_Voltage_Disconnect_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],4,0) ;
+    LVDS->Low_Voltage_Disconnect_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],1,-40) ;
 }
 void CheckDLCD2 ( J1939_MESSAGE *J1939_MESSAGE,getDLCD2_t *DLCD2)
 {
@@ -1857,15 +1857,15 @@ void CheckEOM ( J1939_MESSAGE *J1939_MESSAGE,getEOM_t *EOM)
     EOM->Engine_Oil_Viscosity = Parameter_Translate(buff ,0.015625,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    EOM->Engine_Oil_Density = Parameter_Translate(buff ,0.015625,0) ;
+    EOM->Engine_Oil_Density = Parameter_Translate(buff ,0.00003052,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    EOM->Engine_Oil_Relative_Dielectricity__high_resolution_ = Parameter_Translate(buff ,0.015625,0) ;
+    EOM->Engine_Oil_Relative_Dielectricity__high_resolution_ = Parameter_Translate(buff ,1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<24;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<16;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    EOM->High_Resolution_Engine_Total_Fuel_Used = Parameter_Translate(buff ,0.015625,0) ;
+    EOM->High_Resolution_Engine_Total_Fuel_Used = Parameter_Translate(buff ,0.001,0) ;
 }
 void CheckAT2OGC2 ( J1939_MESSAGE *J1939_MESSAGE,getAT2OGC2_t *AT2OGC2)
 {
@@ -1874,7 +1874,7 @@ void CheckAT2OGC2 ( J1939_MESSAGE *J1939_MESSAGE,getAT2OGC2_t *AT2OGC2)
     AT2OGC2->Aftertreatment_2_Outlet_Gas_NOx_Sensor_Correction_of_pressure_Nox = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.5,0) ;
     AT2OGC2->Aftertreatment_2_Outlet_Gas_NOx_Sensor_NO2_Correction = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.5,0) ;
     AT2OGC2->Aftertreatment_2_Outlet_Gas_NOx_Sensor_NH3_Correction = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.5,0) ;
-    AT2OGC2->NOx_Sensor_ATO2_Self_diagnosis_Final_Result = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.5,0) ;
+    AT2OGC2->NOx_Sensor_ATO2_Self_diagnosis_Final_Result = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],1,0) ;
 }
 void CheckAT2OGC1 ( J1939_MESSAGE *J1939_MESSAGE,getAT2OGC1_t *AT2OGC1)
 {
@@ -1884,11 +1884,11 @@ void CheckAT2OGC1 ( J1939_MESSAGE *J1939_MESSAGE,getAT2OGC1_t *AT2OGC1)
     AT2OGC1->Aftertreatment_2_Outlet_Gas_NOx_Sensor_Heater_Ratio = Parameter_Translate(buff ,0.001,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT2OGC1->Aftertreatment_2_Outlet_Gas_NOx_Sensor_New_part_deviation_NOx_Gain = Parameter_Translate(buff ,0.001,0) ;
-    AT2OGC1->Aftertreatment_2_Outlet_Gas_NOx_Sensor_New_part_deviation_NOx_Offset = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.001,0) ;
+    AT2OGC1->Aftertreatment_2_Outlet_Gas_NOx_Sensor_New_part_deviation_NOx_Gain = Parameter_Translate(buff ,0.1,-100) ;
+    AT2OGC1->Aftertreatment_2_Outlet_Gas_NOx_Sensor_New_part_deviation_NOx_Offset = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],1,-125) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6]);
-    AT2OGC1->NOx_Sensor_ATO2_Operation_Hours_Counter = Parameter_Translate(buff ,0.001,0) ;
+    AT2OGC1->NOx_Sensor_ATO2_Operation_Hours_Counter = Parameter_Translate(buff ,1,0) ;
 }
 void CheckAT2IGC2 ( J1939_MESSAGE *J1939_MESSAGE,getAT2IGC2_t *AT2IGC2)
 {
@@ -1897,7 +1897,7 @@ void CheckAT2IGC2 ( J1939_MESSAGE *J1939_MESSAGE,getAT2IGC2_t *AT2IGC2)
     AT2IGC2->Aftertreatment_2_Intake_Gas_NOx_Sensor_Correction_of_pressure_Nox = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.5,0) ;
     AT2IGC2->Aftertreatment_2_Intake_Gas_NOx_Sensor_NO2_Correction = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.5,0) ;
     AT2IGC2->Aftertreatment_2_Intake_Gas_NOx_Sensor_NH3_Correction = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.5,0) ;
-    AT2IGC2->NOx_Sensor_ATI2_Self_diagnosis_Final_Result = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.5,0) ;
+    AT2IGC2->NOx_Sensor_ATI2_Self_diagnosis_Final_Result = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],1,0) ;
 }
 void CheckAT2IGC1 ( J1939_MESSAGE *J1939_MESSAGE,getAT2IGC1_t *AT2IGC1)
 {
@@ -1907,11 +1907,11 @@ void CheckAT2IGC1 ( J1939_MESSAGE *J1939_MESSAGE,getAT2IGC1_t *AT2IGC1)
     AT2IGC1->Aftertreatment_2_Intake_Gas_NOx_Sensor_Heater_Ratio = Parameter_Translate(buff ,0.001,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT2IGC1->Aftertreatment_2_Intake_Gas_NOx_Sensor_New_part_deviation_NOx_Gain = Parameter_Translate(buff ,0.001,0) ;
-    AT2IGC1->Aftertreatment_2_Intake_Gas_NOx_Sensor_New_part_deviation_NOx_Offset = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.001,0) ;
+    AT2IGC1->Aftertreatment_2_Intake_Gas_NOx_Sensor_New_part_deviation_NOx_Gain = Parameter_Translate(buff ,0.1,-100) ;
+    AT2IGC1->Aftertreatment_2_Intake_Gas_NOx_Sensor_New_part_deviation_NOx_Offset = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],1,-125) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6]);
-    AT2IGC1->NOx_Sensor_ATI2_Operation_Hours_Counter = Parameter_Translate(buff ,0.001,0) ;
+    AT2IGC1->NOx_Sensor_ATI2_Operation_Hours_Counter = Parameter_Translate(buff ,1,0) ;
 }
 void CheckAT1OGC2 ( J1939_MESSAGE *J1939_MESSAGE,getAT1OGC2_t *AT1OGC2)
 {
@@ -1920,7 +1920,7 @@ void CheckAT1OGC2 ( J1939_MESSAGE *J1939_MESSAGE,getAT1OGC2_t *AT1OGC2)
     AT1OGC2->Aftertreatment_1_Outlet_Gas_NOx_Sensor_Correction_of_Pressure_NOx = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.5,0) ;
     AT1OGC2->Aftertreatment_1_Outlet_Gas_NOx_Sensor_NO2_Correction = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.5,0) ;
     AT1OGC2->Aftertreatment_1_Outlet_Gas_NOx_Sensor_NH3_Correction = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.5,0) ;
-    AT1OGC2->NOx_Sensor_ATO1_Self_diagnosis_Final_Result = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.5,0) ;
+    AT1OGC2->NOx_Sensor_ATO1_Self_diagnosis_Final_Result = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],1,0) ;
 }
 void CheckAT1OGC1 ( J1939_MESSAGE *J1939_MESSAGE,getAT1OGC1_t *AT1OGC1)
 {
@@ -1930,11 +1930,11 @@ void CheckAT1OGC1 ( J1939_MESSAGE *J1939_MESSAGE,getAT1OGC1_t *AT1OGC1)
     AT1OGC1->Aftertreatment_1_Outlet_Gas_NOx_Sensor_Heater_Ratio = Parameter_Translate(buff ,0.001,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT1OGC1->Aftertreatment_1_Outlet_Gas_NOx_Sensor_New_Part_Deviation_NOx_Gain = Parameter_Translate(buff ,0.001,0) ;
-    AT1OGC1->Aftertreatment_1_Outlet_Gas_NOx_Sensor_New_Part_Deviation_NOx_Offset = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.001,0) ;
+    AT1OGC1->Aftertreatment_1_Outlet_Gas_NOx_Sensor_New_Part_Deviation_NOx_Gain = Parameter_Translate(buff ,0.1,-100) ;
+    AT1OGC1->Aftertreatment_1_Outlet_Gas_NOx_Sensor_New_Part_Deviation_NOx_Offset = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],1,-125) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6]);
-    AT1OGC1->NOx_Sensor_ATO1_Operation_Hours_Counter = Parameter_Translate(buff ,0.001,0) ;
+    AT1OGC1->NOx_Sensor_ATO1_Operation_Hours_Counter = Parameter_Translate(buff ,1,0) ;
 }
 void CheckAT1IGC2 ( J1939_MESSAGE *J1939_MESSAGE,getAT1IGC2_t *AT1IGC2)
 {
@@ -1943,7 +1943,7 @@ void CheckAT1IGC2 ( J1939_MESSAGE *J1939_MESSAGE,getAT1IGC2_t *AT1IGC2)
     AT1IGC2->Aftertreatment_1_Intake_Gas_NOx_Sensor_Correction_of_Pressure_NOx = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.5,0) ;
     AT1IGC2->Aftertreatment_1_Intake_Gas_NOx_Sensor_NO2_Correction = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.5,0) ;
     AT1IGC2->Aftertreatment_1_Intake_Gas_NOx_Sensor_NH3_Correction = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.5,0) ;
-    AT1IGC2->NOx_Sensor_ATI1_Self_diagnosis_Final_Result = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.5,0) ;
+    AT1IGC2->NOx_Sensor_ATI1_Self_diagnosis_Final_Result = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],1,0) ;
 }
 void CheckAT1IGC1 ( J1939_MESSAGE *J1939_MESSAGE,getAT1IGC1_t *AT1IGC1)
 {
@@ -1953,11 +1953,11 @@ void CheckAT1IGC1 ( J1939_MESSAGE *J1939_MESSAGE,getAT1IGC1_t *AT1IGC1)
     AT1IGC1->Aftertreatment_1_Intake_Gas_NOx_Sensor_Heater_Ratio = Parameter_Translate(buff ,0.001,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT1IGC1->Aftertreatment_1_Intake_Gas_NOx_Sensor_New_part_deviation_NOx_Gain = Parameter_Translate(buff ,0.001,0) ;
-    AT1IGC1->Aftertreatment_1_Intake_Gas_NOx_Sensor_New_part_deviation_NOx_Offset = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.001,0) ;
+    AT1IGC1->Aftertreatment_1_Intake_Gas_NOx_Sensor_New_part_deviation_NOx_Gain = Parameter_Translate(buff ,0.1,-100) ;
+    AT1IGC1->Aftertreatment_1_Intake_Gas_NOx_Sensor_New_part_deviation_NOx_Offset = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],1,-125) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6]);
-    AT1IGC1->NOx_Sensor_ATI1_Operation_Hours_Counter = Parameter_Translate(buff ,0.001,0) ;
+    AT1IGC1->NOx_Sensor_ATI1_Operation_Hours_Counter = Parameter_Translate(buff ,1,0) ;
 }
 void CheckMSI1 ( J1939_MESSAGE *J1939_MESSAGE,getMSI1_t *MSI1)
 {
@@ -1977,7 +1977,7 @@ void CheckMSCI ( J1939_MESSAGE *J1939_MESSAGE,getMSCI_t *MSCI)
     MSCI->Magnet_Boost_Time = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],0.25,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    MSCI->Magnet_Rated_Power = Parameter_Translate(buff ,0.25,0) ;
+    MSCI->Magnet_Rated_Power = Parameter_Translate(buff ,0.5,0) ;
 }
 void CheckBCH2 ( J1939_MESSAGE *J1939_MESSAGE,getBCH2_t *BCH2)
 {
@@ -1986,10 +1986,10 @@ void CheckBCH2 ( J1939_MESSAGE *J1939_MESSAGE,getBCH2_t *BCH2)
     BCH2->bt1.Battery_Charger_2_Power_Line_State = J1939_MESSAGE->Mxe.Data[0]>>4;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    BCH2->Battery_Charger_2_Output_Voltage = Parameter_Translate(buff ,16,0) ;
+    BCH2->Battery_Charger_2_Output_Voltage = Parameter_Translate(buff ,0.05,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    BCH2->Battery_Charger_2_Output_Current = Parameter_Translate(buff ,16,0) ;
+    BCH2->Battery_Charger_2_Output_Current = Parameter_Translate(buff ,0.05,-1600) ;
 }
 void CheckBCH1 ( J1939_MESSAGE *J1939_MESSAGE,getBCH1_t *BCH1)
 {
@@ -1998,10 +1998,10 @@ void CheckBCH1 ( J1939_MESSAGE *J1939_MESSAGE,getBCH1_t *BCH1)
     BCH1->bt1.Battery_Charger_1_Power_Line_State = J1939_MESSAGE->Mxe.Data[0]>>4;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    BCH1->Battery_Charger_1_Output_Voltage = Parameter_Translate(buff ,16,0) ;
+    BCH1->Battery_Charger_1_Output_Voltage = Parameter_Translate(buff ,0.05,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    BCH1->Battery_Charger_1_Output_Current = Parameter_Translate(buff ,16,0) ;
+    BCH1->Battery_Charger_1_Output_Current = Parameter_Translate(buff ,0.05,-1600) ;
 }
 void CheckOCSI ( J1939_MESSAGE *J1939_MESSAGE,getOCSI_t *OCSI)
 {
@@ -2056,305 +2056,505 @@ void CheckCSI ( J1939_MESSAGE *J1939_MESSAGE,getCSI_t *CSI)
 void CheckILI ( J1939_MESSAGE *J1939_MESSAGE,getILI_t *ILI)
 {
        uint64_t buff;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
     ILI->Driver_Airbag_Ignitor_Loop_1st_Stage___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
     ILI->Passenger_Airbag_Ignitor_Loop_1st_Stage___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
     ILI->Driver_Airbag_Ignitor_Loop_2nd_Stage___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[8])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[9]);
     ILI->Passenger_Airbag_Ignitor_Loop_2nd_Stage___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[8])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[9])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[10])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[11]);
     ILI->Driver_Belt_Tensioner_Ignitior_Loop___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[10])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[11])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[12])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[13]);
     ILI->Passenger_Belt_Tensioner_Ignitor_Loop___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[12])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[13])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[14])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[15]);
     ILI->Side_Bag_Ignitor_Loop_1___Left___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[14])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[15])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[16])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[17]);
     ILI->Side_Bag_Ignitor_Loop_2___Left___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[16])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[17])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[18])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[19]);
     ILI->Side_Bag_Ignitor_Loop_1___Right___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[18])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[19])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[20])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[21]);
     ILI->Side_Bag_Ignitor_Loop_2___Right___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[20])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[21])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[22])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[23]);
     ILI->Special_Ignitor_Loop_1___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[22])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[23])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[24])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[25]);
     ILI->Special_Ignitor_Loop_2___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[24])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[25])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[26])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[27]);
     ILI->Special_Ignitor_Loop_3___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[26])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[27])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[28])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[29]);
     ILI->Special_Ignitor_Loop_4___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[28])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[29])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[30])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[31]);
     ILI->Special_Ignitor_Loop_5___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[30])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[31])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[32])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[33]);
     ILI->Special_Ignitor_Loop_6___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[32])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[33])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[34])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[35]);
     ILI->Special_Ignitor_Loop_7___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[34])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[35])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[36])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[37]);
     ILI->Special_Ignitor_Loop_8___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[36])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[37])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[38])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[39]);
     ILI->Special_Ignitor_Loop_9___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[38])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[39])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[40])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[41]);
     ILI->Special_Ignitor_Loop_10___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[40])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[41])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[42])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[43]);
     ILI->Special_Ignitor_Loop_11___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[42])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[43])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[44])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[45]);
     ILI->Special_Ignitor_Loop_12___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[44])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[45])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[46])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[47]);
     ILI->Special_Ignitor_Loop_13___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[46])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[47])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[48])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[49]);
     ILI->Special_Ignitor_Loop_14___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[48])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[49])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[50])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[51]);
     ILI->Special_Ignitor_Loop_15___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[50])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[51])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[52])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[53]);
     ILI->Special_Ignitor_Loop_16___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[52])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[53])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[54])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[55]);
     ILI->Special_Ignitor_Loop_17___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[54])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[55])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[56])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[57]);
     ILI->Special_Ignitor_Loop_18___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[56])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[57])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[58])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[59]);
     ILI->Special_Ignitor_Loop_19___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[58])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[59])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[60])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[61]);
     ILI->Special_Ignitor_Loop_20___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[60])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[61])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[62])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[63]);
     ILI->Special_Ignitor_Loop_21___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[62])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[63])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[64])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[65]);
     ILI->Special_Ignitor_Loop_22___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[64])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[65])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[66])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[67]);
     ILI->Special_Ignitor_Loop_23___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[66])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[67])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[68])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[69]);
     ILI->Special_Ignitor_Loop_24___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[68])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[69])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[70])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[71]);
     ILI->Special_Ignitor_Loop_25___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[70])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[71])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[72])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[73]);
     ILI->Special_Ignitor_Loop_26___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[72])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[73])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[74])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[75]);
     ILI->Special_Ignitor_Loop_27___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[74])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[75])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[76])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[77]);
     ILI->Special_Ignitor_Loop_28___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[76])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[77])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[78])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[79]);
     ILI->Special_Ignitor_Loop_29___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[78])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[79])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[80])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[81]);
     ILI->Special_Ignitor_Loop_30___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[80])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[81])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[82])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[83]);
     ILI->Special_Ignitor_Loop_31___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[82])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[83])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[84])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[85]);
     ILI->Special_Ignitor_Loop_32___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[84])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[85])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[86])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[87]);
     ILI->Special_Ignitor_Loop_33___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[86])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[87])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[88])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[89]);
     ILI->Special_Ignitor_Loop_34___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[88])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[89])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[90])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[91]);
     ILI->Special_Ignitor_Loop_35___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[90])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[91])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[92])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[93]);
     ILI->Special_Ignitor_Loop_36___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[92])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[93])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[94])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[95]);
     ILI->Special_Ignitor_Loop_37___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[94])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[95])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[96])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[97]);
     ILI->Special_Ignitor_Loop_38___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[96])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[97])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[98])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[99]);
     ILI->Special_Ignitor_Loop_39___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[98])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[99])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[100])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[101]);
     ILI->Special_Ignitor_Loop_40___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[100])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[101])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[102])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[103]);
     ILI->Special_Ignitor_Loop_41___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[102])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[103])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[104])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[105]);
     ILI->Special_Ignitor_Loop_42___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[104])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[105])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[106])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[107]);
     ILI->Special_Ignitor_Loop_43___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[106])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[107])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[108])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[109]);
     ILI->Special_Ignitor_Loop_44___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[108])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[109])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[110])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[111]);
     ILI->Special_Ignitor_Loop_45___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[110])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[111])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[112])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[113]);
     ILI->Special_Ignitor_Loop_46___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[112])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[113])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[114])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[115]);
     ILI->Special_Ignitor_Loop_47___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[114])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[115])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[116])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[117]);
     ILI->Special_Ignitor_Loop_48___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[116])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[117])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[118])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[119]);
     ILI->Special_Ignitor_Loop_49___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[118])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[119])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[120])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[121]);
     ILI->Special_Ignitor_Loop_50___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[120])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[121])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[122])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[123]);
     ILI->Special_Ignitor_Loop_51___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[122])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[123])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[124])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[125]);
     ILI->Special_Ignitor_Loop_52___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[124])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[125])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[126])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[127]);
     ILI->Special_Ignitor_Loop_53___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[126])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[127])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[128])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[129]);
     ILI->Special_Ignitor_Loop_54___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[128])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[129])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[130])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[131]);
     ILI->Special_Ignitor_Loop_55___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[130])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[131])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[132])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[133]);
     ILI->Special_Ignitor_Loop_56___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[132])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[133])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[134])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[135]);
     ILI->Special_Ignitor_Loop_57___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[134])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[135])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[136])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[137]);
     ILI->Special_Ignitor_Loop_58___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[136])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[137])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[138])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[139]);
     ILI->Special_Ignitor_Loop_59___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[138])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[139])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[140])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[141]);
     ILI->Special_Ignitor_Loop_60___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[140])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[141])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[142])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[143]);
     ILI->Special_Ignitor_Loop_61___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[142])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[143])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[144])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[145]);
     ILI->Special_Ignitor_Loop_62___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[144])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[145])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[146])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[147]);
     ILI->Special_Ignitor_Loop_63___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[146])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[147])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[148])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[149]);
     ILI->Special_Ignitor_Loop_64___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[148])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[149])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[150])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[151]);
     ILI->Special_Ignitor_Loop_65___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[150])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[151])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[152])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[153]);
     ILI->Special_Ignitor_Loop_66___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[152])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[153])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[154])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[155]);
     ILI->Special_Ignitor_Loop_67___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[154])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[155])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[156])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[157]);
     ILI->Special_Ignitor_Loop_68___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[156])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[157])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[158])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[159]);
     ILI->Special_Ignitor_Loop_69___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[158])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[159])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[160])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[161]);
     ILI->Special_Ignitor_Loop_70___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[160])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[161])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[162])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[163]);
     ILI->Special_Ignitor_Loop_71___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[162])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[163])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[164])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[165]);
     ILI->Special_Ignitor_Loop_72___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[164])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[165])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[166])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[167]);
     ILI->Special_Ignitor_Loop_73___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[166])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[167])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[168])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[169]);
     ILI->Special_Ignitor_Loop_74___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[168])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[169])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[170])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[171]);
     ILI->Special_Ignitor_Loop_75___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[170])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[171])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[172])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[173]);
     ILI->Special_Ignitor_Loop_76___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[172])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[173])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[174])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[175]);
     ILI->Special_Ignitor_Loop_77___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[174])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[175])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[176])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[177]);
     ILI->Special_Ignitor_Loop_78___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[176])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[177])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[178])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[179]);
     ILI->Special_Ignitor_Loop_79___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[178])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[179])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[180])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[181]);
     ILI->Special_Ignitor_Loop_80___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[180])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[181])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[182])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[183]);
     ILI->Special_Ignitor_Loop_81___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[182])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[183])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[184])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[185]);
     ILI->Special_Ignitor_Loop_82___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[184])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[185])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[186])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[187]);
     ILI->Special_Ignitor_Loop_83___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[186])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[187])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[188])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[189]);
     ILI->Special_Ignitor_Loop_84___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[188])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[189])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[190])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[191]);
     ILI->Special_Ignitor_Loop_85___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[190])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[191])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[192])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[193]);
     ILI->Special_Ignitor_Loop_86___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[192])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[193])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[194])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[195]);
     ILI->Special_Ignitor_Loop_87___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[194])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[195])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[196])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[197]);
     ILI->Special_Ignitor_Loop_88___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[196])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[197])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[198])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[199]);
     ILI->Special_Ignitor_Loop_89___Resistance = Parameter_Translate(buff ,0.1,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[198])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[199])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[200])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[201]);
     ILI->Special_Ignitor_Loop_90___Resistance = Parameter_Translate(buff ,0.1,0) ;
 }
 void CheckAT1WUDOC ( J1939_MESSAGE *J1939_MESSAGE,getAT1WUDOC_t *AT1WUDOC)
@@ -2371,29 +2571,29 @@ void CheckDPF2S ( J1939_MESSAGE *J1939_MESSAGE,getDPF2S_t *DPF2S)
 {
        uint64_t buff;
     DPF2S->Diesel_Particulate_Filter_2_Soot_Mass = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],4,0) ;
-    DPF2S->Diesel_Particulate_Filter_2_Soot_Density = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],4,0) ;
+    DPF2S->Diesel_Particulate_Filter_2_Soot_Density = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.08,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    DPF2S->Diesel_Particulate_Filter_2_Mean_Soot_Signal = Parameter_Translate(buff ,4,0) ;
+    DPF2S->Diesel_Particulate_Filter_2_Mean_Soot_Signal = Parameter_Translate(buff ,0.0025,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    DPF2S->Diesel_Particulate_Filter_2_Median_Soot_Signal = Parameter_Translate(buff ,4,0) ;
+    DPF2S->Diesel_Particulate_Filter_2_Median_Soot_Signal = Parameter_Translate(buff ,0.0025,0) ;
     DPF2S->bt7.Diesel_Particulate_Filter_2_Soot_Sensor_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[6]>>0;
-    DPF2S->Diesel_Particulate_Filter_2_Soot_Sensor_ECU_Internal_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],4,0) ;
+    DPF2S->Diesel_Particulate_Filter_2_Soot_Sensor_ECU_Internal_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],1,-40) ;
 }
 void CheckDPF1S ( J1939_MESSAGE *J1939_MESSAGE,getDPF1S_t *DPF1S)
 {
        uint64_t buff;
     DPF1S->Diesel_Particulate_Filter_1_Soot_Mass = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],4,0) ;
-    DPF1S->Diesel_Particulate_Filter_1_Soot_Density = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],4,0) ;
+    DPF1S->Diesel_Particulate_Filter_1_Soot_Density = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.08,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    DPF1S->Diesel_Particulate_Filter_1_Mean_Soot_Signal = Parameter_Translate(buff ,4,0) ;
+    DPF1S->Diesel_Particulate_Filter_1_Mean_Soot_Signal = Parameter_Translate(buff ,0.0025,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    DPF1S->Diesel_Particulate_Filter_1_Median_Soot_Signal = Parameter_Translate(buff ,4,0) ;
+    DPF1S->Diesel_Particulate_Filter_1_Median_Soot_Signal = Parameter_Translate(buff ,0.0025,0) ;
     DPF1S->bt7.Diesel_Particulate_Filter_1_Soot_Sensor_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[6]>>0;
-    DPF1S->Diesel_Particulate_Filter_1_Soot_Sensor_ECU_Internal_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],4,0) ;
+    DPF1S->Diesel_Particulate_Filter_1_Soot_Sensor_ECU_Internal_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],1,-40) ;
 }
 void CheckATDT2 ( J1939_MESSAGE *J1939_MESSAGE,getATDT2_t *ATDT2)
 {
@@ -2426,7 +2626,7 @@ void CheckA2DOC ( J1939_MESSAGE *J1939_MESSAGE,getA2DOC_t *A2DOC)
     A2DOC->Aftertreatment_2_Diesel_Oxidation_Catalyst_Outlet_Gas_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    A2DOC->Aftertreatment_2_Diesel_Oxidation_Catalyst_Differential_Pressure = Parameter_Translate(buff ,0.03125,-273) ;
+    A2DOC->Aftertreatment_2_Diesel_Oxidation_Catalyst_Differential_Pressure = Parameter_Translate(buff ,0.5,0) ;
     A2DOC->bt7.Aftertreatment_2_Diesel_Oxidation_Catalyst_Intake_Gas_Temperature_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[6]>>0;
     uint16_t buff16;
     buff16 =J1939_MESSAGE->Mxe.Data[6]>>5;
@@ -2445,7 +2645,7 @@ void CheckA1DOC ( J1939_MESSAGE *J1939_MESSAGE,getA1DOC_t *A1DOC)
     A1DOC->Aftertreatment_1_Diesel_Oxidation_Catalyst_Outlet_Gas_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    A1DOC->Aftertreatment_1_Diesel_Oxidation_Catalyst_Differential_Pressure = Parameter_Translate(buff ,0.03125,-273) ;
+    A1DOC->Aftertreatment_1_Diesel_Oxidation_Catalyst_Differential_Pressure = Parameter_Translate(buff ,0.1,0) ;
     A1DOC->bt7.Aftertreatment_1_Diesel_Oxidation_Catalyst_Intake_Gas_Temperature_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[6]>>0;
     uint16_t buff16;
     buff16 =J1939_MESSAGE->Mxe.Data[6]>>5;
@@ -2464,7 +2664,7 @@ void CheckA2GOC ( J1939_MESSAGE *J1939_MESSAGE,getA2GOC_t *A2GOC)
     A2GOC->Aftertreatment_2_Gas_Oxidation_Catalyst_Outlet_Gas_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    A2GOC->Aftertreatment_2_Gas_Oxidation_Catalyst_Differential_Pressure = Parameter_Translate(buff ,0.03125,-273) ;
+    A2GOC->Aftertreatment_2_Gas_Oxidation_Catalyst_Differential_Pressure = Parameter_Translate(buff ,0.1,0) ;
     A2GOC->bt7.Aftertreatment_2_Gas_Oxidation_Catalyst_Intake_Gas_Temperature_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[6]>>0;
     uint16_t buff16;
     buff16 =J1939_MESSAGE->Mxe.Data[6]>>5;
@@ -2483,7 +2683,7 @@ void CheckA1GOC ( J1939_MESSAGE *J1939_MESSAGE,getA1GOC_t *A1GOC)
     A1GOC->Aftertreatment_1_Gas_Oxidation_Catalyst_Outlet_Gas_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    A1GOC->Aftertreatment_1_Gas_Oxidation_Catalyst_Differential_Pressure = Parameter_Translate(buff ,0.03125,-273) ;
+    A1GOC->Aftertreatment_1_Gas_Oxidation_Catalyst_Differential_Pressure = Parameter_Translate(buff ,0.1,0) ;
     A1GOC->bt7.Aftertreatment_1_Gas_Oxidation_Catalyst_Intake_Gas_Temperature_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[6]>>0;
     uint16_t buff16;
     buff16 =J1939_MESSAGE->Mxe.Data[6]>>5;
@@ -2778,10 +2978,10 @@ void CheckFD2 ( J1939_MESSAGE *J1939_MESSAGE,getFD2_t *FD2)
     FD2->bt2.Fan_2_Drive_State = J1939_MESSAGE->Mxe.Data[1]>>0;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    FD2->Fan_2_Speed = Parameter_Translate(buff ,0.4,0) ;
+    FD2->Fan_2_Speed = Parameter_Translate(buff ,0.125,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    FD2->Hydraulic_Fan_2_Motor_Pressure = Parameter_Translate(buff ,0.4,0) ;
+    FD2->Hydraulic_Fan_2_Motor_Pressure = Parameter_Translate(buff ,0.5,0) ;
     FD2->Fan_2_Drive_Bypass_Command_Status = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.4,0) ;
 }
 void CheckA2DEFSI ( J1939_MESSAGE *J1939_MESSAGE,getA2DEFSI_t *A2DEFSI)
@@ -2790,20 +2990,20 @@ void CheckA2DEFSI ( J1939_MESSAGE *J1939_MESSAGE,getA2DEFSI_t *A2DEFSI)
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
     A2DEFSI->Aftertreatment_2_Diesel_Exhaust_Fluid_Pump_Motor_Speed = Parameter_Translate(buff ,0.5,0) ;
-    A2DEFSI->Aftertreatment_2_Diesel_Exhaust_Fluid_Pump_Drive_Percentage = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.5,0) ;
-    A2DEFSI->Aftertreatment_2_Diesel_Exhaust_Fluid_Return_Valve = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.5,0) ;
-    A2DEFSI->Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Fill_Valve_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.5,0) ;
+    A2DEFSI->Aftertreatment_2_Diesel_Exhaust_Fluid_Pump_Drive_Percentage = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.4,0) ;
+    A2DEFSI->Aftertreatment_2_Diesel_Exhaust_Fluid_Return_Valve = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.4,0) ;
+    A2DEFSI->Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Fill_Valve_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.4,0) ;
     A2DEFSI->bt6.Aftertreatment_2_Diesel_Exhaust_Fluid_Pump_State = J1939_MESSAGE->Mxe.Data[5]>>0;
-    A2DEFSI->Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Drain_Valve_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.5,0) ;
+    A2DEFSI->Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Drain_Valve_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.4,0) ;
 }
 void CheckA2SCRRT2I ( J1939_MESSAGE *J1939_MESSAGE,getA2SCRRT2I_t *A2SCRRT2I)
 {
        uint64_t buff;
     A2SCRRT2I->Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Level = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],0.4,0) ;
-    A2SCRRT2I->Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.4,0) ;
+    A2SCRRT2I->Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,-40) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    A2SCRRT2I->Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Level_2 = Parameter_Translate(buff ,0.4,0) ;
+    A2SCRRT2I->Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Level_2 = Parameter_Translate(buff ,0.1,0) ;
     A2SCRRT2I->bt5.Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Level_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[4]>>0;
     A2SCRRT2I->bt6.Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Temperature_Prelminary_FMI = J1939_MESSAGE->Mxe.Data[5]>>0;
     A2SCRRT2I->bt7.Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Heater = J1939_MESSAGE->Mxe.Data[6]>>-1;
@@ -2813,10 +3013,10 @@ void CheckA2SCRRT1I ( J1939_MESSAGE *J1939_MESSAGE,getA2SCRRT1I_t *A2SCRRT1I)
 {
        uint64_t buff;
     A2SCRRT1I->Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Level = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],0.4,0) ;
-    A2SCRRT1I->Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.4,0) ;
+    A2SCRRT1I->Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,-40) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    A2SCRRT1I->Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Level_2 = Parameter_Translate(buff ,0.4,0) ;
+    A2SCRRT1I->Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Level_2 = Parameter_Translate(buff ,0.1,0) ;
     A2SCRRT1I->bt5.Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Level_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[4]>>0;
     A2SCRRT1I->bt6.Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_1_Temperature_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[5]>>0;
     A2SCRRT1I->Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Heater = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.4,0) ;
@@ -2826,8 +3026,8 @@ void CheckA2DEFI ( J1939_MESSAGE *J1939_MESSAGE,getA2DEFI_t *A2DEFI)
 {
        uint64_t buff;
     A2DEFI->Aftertreatment_2_Diesel_Exhaust_Fluid_Temperature_2 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],1,-40) ;
-    A2DEFI->Aftertreatment_2_Diesel_Exhaust_Fluid_Concentration = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,-40) ;
-    A2DEFI->Aftertreatment_2_Diesel_Exhaust_Fluid_Conductivity = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,-40) ;
+    A2DEFI->Aftertreatment_2_Diesel_Exhaust_Fluid_Concentration = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.25,0) ;
+    A2DEFI->Aftertreatment_2_Diesel_Exhaust_Fluid_Conductivity = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],5,0) ;
     A2DEFI->bt4.Aftertreatment_2_Diesel_Exhaust_Fluid_Temperature_2_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[3]>>0;
     A2DEFI->bt5.Aftertreatment_2_Diesel_Exhaust_Fluid_Properties_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[4]>>0;
     A2DEFI->bt6.Aftertreatment_2_Diesel_Exhaust_Fluid_Type = J1939_MESSAGE->Mxe.Data[5]>>0;
@@ -2841,7 +3041,7 @@ void CheckA2SCRSI ( J1939_MESSAGE *J1939_MESSAGE,getA2SCRSI_t *A2SCRSI)
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
     A2SCRSI->Aftertreatment_2_SCR_Commanded_Catalyst_Diesel_Exhaust_Fluid_Consumption = Parameter_Translate(buff ,0.05,0) ;
-    A2SCRSI->Aftertreatment_2_SCR_Conversion_Efficiency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.05,0) ;
+    A2SCRSI->Aftertreatment_2_SCR_Conversion_Efficiency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.4,0) ;
 }
 void CheckA2SCREGT1 ( J1939_MESSAGE *J1939_MESSAGE,getA2SCREGT1_t *A2SCREGT1)
 {
@@ -2872,15 +3072,15 @@ void CheckA2SCRDSR2 ( J1939_MESSAGE *J1939_MESSAGE,getA2SCRDSR2_t *A2SCRDSR2)
     A2SCRDSR2->bt2.Aftertreatment_2_Diesel_Exhaust_Fluid_Line_Heater_2 = J1939_MESSAGE->Mxe.Data[1]>>2;
     A2SCRDSR2->bt2.Aftertreatment_2_Diesel_Exhaust_Fluid_Line_Heater_3 = J1939_MESSAGE->Mxe.Data[1]>>4;
     A2SCRDSR2->bt2.Aftertreatment_2_Diesel_Exhaust_Fluid_Line_Heater_4 = J1939_MESSAGE->Mxe.Data[1]>>6;
-    A2SCRDSR2->Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Heater_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],4,0) ;
-    A2SCRDSR2->Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Heater_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],4,0) ;
+    A2SCRDSR2->Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_Heater_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.4,0) ;
+    A2SCRDSR2->Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Heater_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.4,0) ;
 }
 void CheckA2SCRDSI2 ( J1939_MESSAGE *J1939_MESSAGE,getA2SCRDSI2_t *A2SCRDSI2)
 {
        uint64_t buff;
     A2SCRDSI2->Aftertreatment_2_SCR_Dosing_Air_Assist_Absolute_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],8,0) ;
-    A2SCRDSI2->Aftertreatment_2_SCR_Dosing_Air_Assist_Valve = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],8,0) ;
-    A2SCRDSI2->Aftertreatment_2_Diesel_Exhaust_Fluid_Dosing_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],8,0) ;
+    A2SCRDSI2->Aftertreatment_2_SCR_Dosing_Air_Assist_Valve = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.4,0) ;
+    A2SCRDSI2->Aftertreatment_2_Diesel_Exhaust_Fluid_Dosing_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,-40) ;
     A2SCRDSI2->bt4.Aftertreatment_2_SCR_Dosing_Valve_Exhaust_Temp__Reduction_Request = J1939_MESSAGE->Mxe.Data[3]>>0;
     A2SCRDSI2->bt4.Aftertreatment_2_SCR_Feedback_Control_Status = J1939_MESSAGE->Mxe.Data[3]>>3;
     A2SCRDSI2->bt5.Aftertreatment_2_Diesel_Exhaust_Fluid_Line_Heater_1_State = J1939_MESSAGE->Mxe.Data[4]>>0;
@@ -2898,20 +3098,20 @@ void CheckA1DEFSI ( J1939_MESSAGE *J1939_MESSAGE,getA1DEFSI_t *A1DEFSI)
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
     A1DEFSI->Aftertreatment_1_Diesel_Exhaust_Fluid_Pump_Motor_Speed = Parameter_Translate(buff ,0.5,0) ;
-    A1DEFSI->Aftertreatment_1_Diesel_Exhaust_Fluid_Pump_Drive_Percentage = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.5,0) ;
-    A1DEFSI->Aftertreatment_1_Diesel_Exhaust_Fluid_Return_Valve = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.5,0) ;
-    A1DEFSI->Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Fill_Valve_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.5,0) ;
+    A1DEFSI->Aftertreatment_1_Diesel_Exhaust_Fluid_Pump_Drive_Percentage = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.4,0) ;
+    A1DEFSI->Aftertreatment_1_Diesel_Exhaust_Fluid_Return_Valve = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.4,0) ;
+    A1DEFSI->Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Fill_Valve_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.4,0) ;
     A1DEFSI->bt6.Aftertreatment_1_Diesel_Exhaust_Fluid_Pump_State = J1939_MESSAGE->Mxe.Data[5]>>0;
-    A1DEFSI->Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Drain_Valve_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.5,0) ;
+    A1DEFSI->Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Drain_Valve_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.4,0) ;
 }
 void CheckA1SCRRT2I ( J1939_MESSAGE *J1939_MESSAGE,getA1SCRRT2I_t *A1SCRRT2I)
 {
        uint64_t buff;
     A1SCRRT2I->Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Level = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],0.4,0) ;
-    A1SCRRT2I->Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.4,0) ;
+    A1SCRRT2I->Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,-40) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    A1SCRRT2I->Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Level_2 = Parameter_Translate(buff ,0.4,0) ;
+    A1SCRRT2I->Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Level_2 = Parameter_Translate(buff ,0.1,0) ;
     A1SCRRT2I->bt5.Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Level_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[4]>>0;
     A1SCRRT2I->bt6.Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Temperature_Prelminary_FMI = J1939_MESSAGE->Mxe.Data[5]>>0;
     A1SCRRT2I->Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Heater = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.4,0) ;
@@ -2946,16 +3146,16 @@ void CheckA1SCRDSR2 ( J1939_MESSAGE *J1939_MESSAGE,getA1SCRDSR2_t *A1SCRDSR2)
     A1SCRDSR2->bt2.Aftertreatment_1_Diesel_Exhaust_Fluid_Line_Heater_2 = J1939_MESSAGE->Mxe.Data[1]>>2;
     A1SCRDSR2->bt2.Aftertreatment_1_Diesel_Exhaust_Fluid_Line_Heater_3 = J1939_MESSAGE->Mxe.Data[1]>>4;
     A1SCRDSR2->bt2.Aftertreatment_1_Diesel_Exhaust_Fluid_Line_Heater_4 = J1939_MESSAGE->Mxe.Data[1]>>6;
-    A1SCRDSR2->Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Heater_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],4,0) ;
-    A1SCRDSR2->Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Heater_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],4,0) ;
-    A1SCRDSR2->Aftertreatment_1_Diesel_Exhaust_Fluid_Pump_Heater_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],4,0) ;
+    A1SCRDSR2->Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Heater_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.4,0) ;
+    A1SCRDSR2->Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_2_Heater_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.4,0) ;
+    A1SCRDSR2->Aftertreatment_1_Diesel_Exhaust_Fluid_Pump_Heater_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.4,0) ;
 }
 void CheckA1SCRDSI2 ( J1939_MESSAGE *J1939_MESSAGE,getA1SCRDSI2_t *A1SCRDSI2)
 {
        uint64_t buff;
     A1SCRDSI2->Aftertreatment_1_SCR_Dosing_Air_Assist_Absolute_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],8,0) ;
-    A1SCRDSI2->Aftertreatment_1_SCR_Dosing_Air_Assist_Valve = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],8,0) ;
-    A1SCRDSI2->Aftertreatment_1_Diesel_Exhaust_Fluid_Dosing_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],8,0) ;
+    A1SCRDSI2->Aftertreatment_1_SCR_Dosing_Air_Assist_Valve = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.4,0) ;
+    A1SCRDSI2->Aftertreatment_1_Diesel_Exhaust_Fluid_Dosing_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,-40) ;
     A1SCRDSI2->bt4.Aftertreatment_1_SCR_Dosing_Valve_Exhaust_Temperature_Reduction_Request = J1939_MESSAGE->Mxe.Data[3]>>0;
     A1SCRDSI2->bt4.Aftertreatment_1_SCR_Feedback_Control_Status = J1939_MESSAGE->Mxe.Data[3]>>3;
     A1SCRDSI2->bt5.Aftertreatment_1_Diesel_Exhaust_Fluid_Line_Heater_1_State = J1939_MESSAGE->Mxe.Data[4]>>0;
@@ -2977,7 +3177,7 @@ void CheckAT2FC2 ( J1939_MESSAGE *J1939_MESSAGE,getAT2FC2_t *AT2FC2)
     AT2FC2->bt3.Aftertreatment_2_Fuel_Flow_Diverter_Valve_Control = J1939_MESSAGE->Mxe.Data[2]>>2;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    AT2FC2->Aftertreatment_2_Fuel_Pressure_2_Control = Parameter_Translate(buff ,0.1,0) ;
+    AT2FC2->Aftertreatment_2_Fuel_Pressure_2_Control = Parameter_Translate(buff ,0.0025,0) ;
 }
 void CheckAT2TWCC ( J1939_MESSAGE *J1939_MESSAGE,getAT2TWCC_t *AT2TWCC)
 {
@@ -2990,7 +3190,7 @@ void CheckAT2TWCC ( J1939_MESSAGE *J1939_MESSAGE,getAT2TWCC_t *AT2TWCC)
     AT2TWCC->Aftertreatment_2_Three_Way_Catalytic_Converter_Outlet_Gas_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    AT2TWCC->Aftertreatment_2_Three_Way_Catalytic_Converter_Differential_Pressure = Parameter_Translate(buff ,0.03125,-273) ;
+    AT2TWCC->Aftertreatment_2_Three_Way_Catalytic_Converter_Differential_Pressure = Parameter_Translate(buff ,0.1,0) ;
     AT2TWCC->bt7.Aftertreatment_2_Three_Way_Catalytic_Converter_Intake_Gas_Temperature_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[6]>>0;
     uint16_t buff16;
     buff16 =J1939_MESSAGE->Mxe.Data[6]>>5;
@@ -3009,7 +3209,7 @@ void CheckAT1TWCC ( J1939_MESSAGE *J1939_MESSAGE,getAT1TWCC_t *AT1TWCC)
     AT1TWCC->Aftertreatment_1_Three_Way_Catalytic_Converter_Outlet_Gas_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    AT1TWCC->Aftertreatment_1_Three_Way_Catalytic_Converter_Differential_Pressure = Parameter_Translate(buff ,0.03125,-273) ;
+    AT1TWCC->Aftertreatment_1_Three_Way_Catalytic_Converter_Differential_Pressure = Parameter_Translate(buff ,0.1,0) ;
     AT1TWCC->bt7.Aftertreatment_1_Three_Way_Catalytic_Converter_Intake_Gas_Temperature_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[6]>>0;
     uint16_t buff16;
     buff16 =J1939_MESSAGE->Mxe.Data[6]>>5;
@@ -3043,17 +3243,17 @@ void CheckACCVC ( J1939_MESSAGE *J1939_MESSAGE,getACCVC_t *ACCVC)
 {
        uint64_t buff;
     ACCVC->bt1.Aftercooler_Coolant_Thermostat_Mode = J1939_MESSAGE->Mxe.Data[0]>>0;
-    ACCVC->Desired_Aftercooler_Coolant_Intake_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],4,0) ;
-    ACCVC->Desired_Aftercooler_Coolant_Thermostat_Opening = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],4,0) ;
+    ACCVC->Desired_Aftercooler_Coolant_Intake_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,-40) ;
+    ACCVC->Desired_Aftercooler_Coolant_Thermostat_Opening = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.4,0) ;
 }
 void CheckECCVC ( J1939_MESSAGE *J1939_MESSAGE,getECCVC_t *ECCVC)
 {
        uint64_t buff;
     ECCVC->bt1.Engine_Coolant_Thermostat_Mode = J1939_MESSAGE->Mxe.Data[0]>>0;
-    ECCVC->Desired_Engine_Coolant_Pump_Outlet_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],4,0) ;
-    ECCVC->Desired_Engine_Coolant_Thermostat_Opening = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],4,0) ;
-    ECCVC->Engine_Auxiliary_Cooler_Supply_Valve_1_Actuator_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],4,0) ;
-    ECCVC->Engine_Auxiliary_Cooler_Supply_Valve_2_Actuator_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],4,0) ;
+    ECCVC->Desired_Engine_Coolant_Pump_Outlet_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,-40) ;
+    ECCVC->Desired_Engine_Coolant_Thermostat_Opening = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.4,0) ;
+    ECCVC->Engine_Auxiliary_Cooler_Supply_Valve_1_Actuator_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.4,0) ;
+    ECCVC->Engine_Auxiliary_Cooler_Supply_Valve_2_Actuator_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.4,0) ;
 }
 void CheckEAI ( J1939_MESSAGE *J1939_MESSAGE,getEAI_t *EAI)
 {
@@ -3078,21 +3278,21 @@ void CheckAT1FC2 ( J1939_MESSAGE *J1939_MESSAGE,getAT1FC2_t *AT1FC2)
     AT1FC2->bt3.Aftertreatment_1_Fuel_Flow_Diverter_Valve_Control = J1939_MESSAGE->Mxe.Data[2]>>2;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    AT1FC2->Aftertreatment_1_Fuel_Pressure_2_Actuator_Control = Parameter_Translate(buff ,0.1,0) ;
-    AT1FC2->Aftertreatment_1_Hydrocarbon_Doser_Intake_Fuel_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],0.1,0) ;
+    AT1FC2->Aftertreatment_1_Fuel_Pressure_2_Actuator_Control = Parameter_Translate(buff ,0.0025,0) ;
+    AT1FC2->Aftertreatment_1_Hydrocarbon_Doser_Intake_Fuel_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],1,-40) ;
 }
 void CheckET4 ( J1939_MESSAGE *J1939_MESSAGE,getET4_t *ET4)
 {
        uint64_t buff;
     ET4->Engine_Coolant_Temperature_2 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],1,-40) ;
     ET4->Engine_Coolant_Pump_Outlet_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,-40) ;
-    ET4->Engine_Coolant_Thermostat_Opening = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,-40) ;
+    ET4->Engine_Coolant_Thermostat_Opening = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.4,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    ET4->Engine_Exhaust_Valve_Actuation_System_Oil_Temperature = Parameter_Translate(buff ,1,-40) ;
+    ET4->Engine_Exhaust_Valve_Actuation_System_Oil_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6]);
-    ET4->Engine_Exhaust_Gas_Recirculation_1_Mixer_Intake_Temperature = Parameter_Translate(buff ,1,-40) ;
+    ET4->Engine_Exhaust_Gas_Recirculation_1_Mixer_Intake_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
 }
 void CheckZNVW ( J1939_MESSAGE *J1939_MESSAGE,getZNVW_t *ZNVW)
 {
@@ -3109,7 +3309,7 @@ void CheckGCVW ( J1939_MESSAGE *J1939_MESSAGE,getGCVW_t *GCVW)
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<16;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    GCVW->Net_Vehicle_Weight_Change = Parameter_Translate(buff ,2,0) ;
+    GCVW->Net_Vehicle_Weight_Change = Parameter_Translate(buff ,2,535) ;
 }
 void CheckAGCW ( J1939_MESSAGE *J1939_MESSAGE,getAGCW_t *AGCW)
 {
@@ -3117,10 +3317,10 @@ void CheckAGCW ( J1939_MESSAGE *J1939_MESSAGE,getAGCW_t *AGCW)
     AGCW->bt1.Axle_Group_Location = J1939_MESSAGE->Mxe.Data[0]>>0;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    AGCW->Axle_Group_Empty_Weight_Calibration = Parameter_Translate(buff ,16,0) ;
+    AGCW->Axle_Group_Empty_Weight_Calibration = Parameter_Translate(buff ,2,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    AGCW->Axle_Group_Full_Weight_Calibration = Parameter_Translate(buff ,16,0) ;
+    AGCW->Axle_Group_Full_Weight_Calibration = Parameter_Translate(buff ,2,0) ;
 }
 void CheckAGW ( J1939_MESSAGE *J1939_MESSAGE,getAGW_t *AGW)
 {
@@ -3128,7 +3328,7 @@ void CheckAGW ( J1939_MESSAGE *J1939_MESSAGE,getAGW_t *AGW)
     AGW->bt1.Axle_Group_Location = J1939_MESSAGE->Mxe.Data[0]>>0;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    AGW->Axle_Group_Weight = Parameter_Translate(buff ,16,0) ;
+    AGW->Axle_Group_Weight = Parameter_Translate(buff ,2,0) ;
 }
 void CheckAAGW ( J1939_MESSAGE *J1939_MESSAGE,getAAGW_t *AAGW)
 {
@@ -3156,13 +3356,13 @@ void CheckAT2AC2 ( J1939_MESSAGE *J1939_MESSAGE,getAT2AC2_t *AT2AC2)
     AT2AC2->Aftertreatment_2_Secondary_Air_Differential_Pressure = Parameter_Translate(buff ,1,-250) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT2AC2->Aftertreatment_2_Secondary_Air_Temperature = Parameter_Translate(buff ,1,-250) ;
+    AT2AC2->Aftertreatment_2_Secondary_Air_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    AT2AC2->Aftertreatment_2_Secondary_Air_Mass_Flow = Parameter_Translate(buff ,1,-250) ;
+    AT2AC2->Aftertreatment_2_Secondary_Air_Mass_Flow = Parameter_Translate(buff ,0.2,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    AT2AC2->Aftertreatment_2_Secondary_Air_Pressure = Parameter_Translate(buff ,1,-250) ;
+    AT2AC2->Aftertreatment_2_Secondary_Air_Pressure = Parameter_Translate(buff ,0.1,0) ;
 }
 void CheckAT1AC2 ( J1939_MESSAGE *J1939_MESSAGE,getAT1AC2_t *AT1AC2)
 {
@@ -3172,13 +3372,13 @@ void CheckAT1AC2 ( J1939_MESSAGE *J1939_MESSAGE,getAT1AC2_t *AT1AC2)
     AT1AC2->Aftertreatment_1_Secondary_Air_Differential_Pressure = Parameter_Translate(buff ,1,-250) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT1AC2->Aftertreatment_1_Secondary_Air_Temperature = Parameter_Translate(buff ,1,-250) ;
+    AT1AC2->Aftertreatment_1_Secondary_Air_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    AT1AC2->Aftertreatment_1_Secondary_Air_Mass_Flow = Parameter_Translate(buff ,1,-250) ;
+    AT1AC2->Aftertreatment_1_Secondary_Air_Mass_Flow = Parameter_Translate(buff ,0.2,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    AT1AC2->Aftertreatment_1_Secondary_Air_Pressure = Parameter_Translate(buff ,1,-250) ;
+    AT1AC2->Aftertreatment_1_Secondary_Air_Pressure = Parameter_Translate(buff ,0.1,0) ;
 }
 void CheckSCR1 ( J1939_MESSAGE *J1939_MESSAGE,getSCR1_t *SCR1)
 {
@@ -3189,10 +3389,10 @@ void CheckSCR1 ( J1939_MESSAGE *J1939_MESSAGE,getSCR1_t *SCR1)
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
     SCR1->Aftertreatment_1_Commanded_Diesel_Exhaust_Fluid_Consumption = Parameter_Translate(buff ,0.05,0) ;
-    SCR1->Aftertreatment_1_SCR_Conversion_Efficiency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.05,0) ;
+    SCR1->Aftertreatment_1_SCR_Conversion_Efficiency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.4,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6]);
-    SCR1->Aftertreatment_1_SCR_Operator_Inducement_Active_Traveled_Distance = Parameter_Translate(buff ,0.05,0) ;
+    SCR1->Aftertreatment_1_SCR_Operator_Inducement_Active_Traveled_Distance = Parameter_Translate(buff ,1,0) ;
 }
 void CheckEEC8 ( J1939_MESSAGE *J1939_MESSAGE,getEEC8_t *EEC8)
 {
@@ -3202,11 +3402,11 @@ void CheckEEC8 ( J1939_MESSAGE *J1939_MESSAGE,getEEC8_t *EEC8)
     EEC8->Engine_Exhaust_Gas_Recirculation_1__EGR1__Valve_2_Control = Parameter_Translate(buff ,0.0025,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    EEC8->Engine_Exhaust_Gas_Recirculation_1__EGR1__Cooler_Intake_Temperature = Parameter_Translate(buff ,0.0025,0) ;
+    EEC8->Engine_Exhaust_Gas_Recirculation_1__EGR1__Cooler_Intake_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    EEC8->Engine_Exhaust_Gas_Recirculation_1__EGR1__Cooler_Intake_Gas_Absolute_Pressure = Parameter_Translate(buff ,0.0025,0) ;
-    EEC8->Engine_Exhaust_Gas_Recirculation_1__EGR1__Cooler_Efficiency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.0025,0) ;
+    EEC8->Engine_Exhaust_Gas_Recirculation_1__EGR1__Cooler_Intake_Gas_Absolute_Pressure = Parameter_Translate(buff ,0.5,0) ;
+    EEC8->Engine_Exhaust_Gas_Recirculation_1__EGR1__Cooler_Efficiency = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.4,0) ;
 }
 void CheckDRC ( J1939_MESSAGE *J1939_MESSAGE,getDRC_t *DRC)
 {
@@ -3361,90 +3561,90 @@ void CheckESV1 ( J1939_MESSAGE *J1939_MESSAGE,getESV1_t *ESV1)
 void CheckAT2TI ( J1939_MESSAGE *J1939_MESSAGE,getAT2TI_t *AT2TI)
 {
        uint64_t buff;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
     AT2TI->Aftertreatment_2_Diesel_Particulate_Filter_Trip_Fuel_Used = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    AT2TI->Aftertreatment_2_Diesel_Particulate_Filter_Trip_Active_Regeneration_Time = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    AT2TI->Aftertreatment_2_Diesel_Particulate_Filter_Trip_Disabled_Time = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT2TI->Aftertreatment_2_Diesel_Particulate_Filter_Trip_Number_of_Active_Regenerations = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT2TI->Aftertreatment_2_Diesel_Particulate_Filter_Trip_Passive_Regeneration_Time = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    AT2TI->Aftertreatment_2_Diesel_Particulate_Filter_Trip_Number_of_Passive_Regenerations = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    AT2TI->Aftertreatment_2_Diesel_Particulate_Filter_Trip_Number_of_Active_Regeneration_Inhibit_Requests = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    AT2TI->Aftertreatment_2_Diesel_Particulate_Filter_Trip_Number_of_Active_Regeneration_Manual_Requests = Parameter_Translate(buff ,0.5,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
+    AT2TI->Aftertreatment_2_Diesel_Particulate_Filter_Trip_Active_Regeneration_Time = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[8])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[9])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[10])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[11]);
+    AT2TI->Aftertreatment_2_Diesel_Particulate_Filter_Trip_Disabled_Time = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[12])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[13])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[14])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[15]);
+    AT2TI->Aftertreatment_2_Diesel_Particulate_Filter_Trip_Number_of_Active_Regenerations = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[16])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[17])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[18])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[19]);
+    AT2TI->Aftertreatment_2_Diesel_Particulate_Filter_Trip_Passive_Regeneration_Time = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[20])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[21])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[22])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[23]);
+    AT2TI->Aftertreatment_2_Diesel_Particulate_Filter_Trip_Number_of_Passive_Regenerations = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[24])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[25])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[26])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[27]);
+    AT2TI->Aftertreatment_2_Diesel_Particulate_Filter_Trip_Number_of_Active_Regeneration_Inhibit_Requests = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[28])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[29])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[30])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[31]);
+    AT2TI->Aftertreatment_2_Diesel_Particulate_Filter_Trip_Number_of_Active_Regeneration_Manual_Requests = Parameter_Translate(buff ,1,0) ;
 }
 void CheckAT1TI ( J1939_MESSAGE *J1939_MESSAGE,getAT1TI_t *AT1TI)
 {
        uint64_t buff;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
     AT1TI->Aftertreatment_1_Diesel_Particulate_Filter_Trip_Fuel_Used = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    AT1TI->Aftertreatment_1_Diesel_Particulate_Filter_Trip_Active_Regeneration_Time = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    AT1TI->Aftertreatment_1_Diesel_Particulate_Filter_Trip_Disabled_Time = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT1TI->Aftertreatment_1_Diesel_Particulate_Filter_Trip_Number_of_Active_Regenerations = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT1TI->Aftertreatment_1_Diesel_Particulate_Filter_Trip_Passive_Regeneration_Time = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    AT1TI->Aftertreatment_1_Diesel_Particulate_Filter_Trip_Number_of_Passive_Regenerations = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    AT1TI->Aftertreatment_1_Diesel_Particulate_Filter_Trip_Number_of_Active_Regeneration_Inhibit_Requests = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    AT1TI->Aftertreatment_1_Diesel_Particulate_Filter_Trip_Number_of_Active_Regeneration_Manual_Requests = Parameter_Translate(buff ,0.5,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
+    AT1TI->Aftertreatment_1_Diesel_Particulate_Filter_Trip_Active_Regeneration_Time = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[8])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[9])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[10])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[11]);
+    AT1TI->Aftertreatment_1_Diesel_Particulate_Filter_Trip_Disabled_Time = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[12])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[13])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[14])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[15]);
+    AT1TI->Aftertreatment_1_Diesel_Particulate_Filter_Trip_Number_of_Active_Regenerations = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[16])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[17])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[18])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[19]);
+    AT1TI->Aftertreatment_1_Diesel_Particulate_Filter_Trip_Passive_Regeneration_Time = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[20])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[21])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[22])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[23]);
+    AT1TI->Aftertreatment_1_Diesel_Particulate_Filter_Trip_Number_of_Passive_Regenerations = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[24])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[25])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[26])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[27]);
+    AT1TI->Aftertreatment_1_Diesel_Particulate_Filter_Trip_Number_of_Active_Regeneration_Inhibit_Requests = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[28])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[29])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[30])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[31]);
+    AT1TI->Aftertreatment_1_Diesel_Particulate_Filter_Trip_Number_of_Active_Regeneration_Manual_Requests = Parameter_Translate(buff ,1,0) ;
 }
 void CheckAT2S ( J1939_MESSAGE *J1939_MESSAGE,getAT2S_t *AT2S)
 {
@@ -3458,7 +3658,7 @@ void CheckAT2S ( J1939_MESSAGE *J1939_MESSAGE,getAT2S_t *AT2S)
     AT2S->Diesel_Particulate_Filter_2_Time_Since_Last_Active_Regeneration = Parameter_Translate(buff ,1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    AT2S->Aftertreatment_2_Diesel_Particulate_Filter_Soot_Load_Regeneration_Threshold = Parameter_Translate(buff ,1,0) ;
+    AT2S->Aftertreatment_2_Diesel_Particulate_Filter_Soot_Load_Regeneration_Threshold = Parameter_Translate(buff ,0.0025,0) ;
 }
 void CheckAT1S ( J1939_MESSAGE *J1939_MESSAGE,getAT1S_t *AT1S)
 {
@@ -3472,7 +3672,7 @@ void CheckAT1S ( J1939_MESSAGE *J1939_MESSAGE,getAT1S_t *AT1S)
     AT1S->Diesel_Particulate_Filter_1_Time_Since_Last_Active_Regeneration = Parameter_Translate(buff ,1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    AT1S->Aftertreatment_1_Diesel_Particulate_Filter_Soot_Load_Regeneration_Threshold = Parameter_Translate(buff ,1,0) ;
+    AT1S->Aftertreatment_1_Diesel_Particulate_Filter_Soot_Load_Regeneration_Threshold = Parameter_Translate(buff ,0.0025,0) ;
 }
 void CheckDPFC1 ( J1939_MESSAGE *J1939_MESSAGE,getDPFC1_t *DPFC1)
 {
@@ -3659,7 +3859,7 @@ void CheckEOI ( J1939_MESSAGE *J1939_MESSAGE,getEOI_t *EOI)
     EOI->bt1.Fuel_Pump_Primer_Control = J1939_MESSAGE->Mxe.Data[0]>>4;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    EOI->Time_Remaining_in_Engine_Operating_State = Parameter_Translate(buff ,16,0) ;
+    EOI->Time_Remaining_in_Engine_Operating_State = Parameter_Translate(buff ,1,0) ;
     EOI->bt4.Engine_Fuel_Shutoff_Vent_Control = J1939_MESSAGE->Mxe.Data[3]>>0;
     EOI->bt4.Engine_Fuel_Shutoff_1_Control = J1939_MESSAGE->Mxe.Data[3]>>2;
     EOI->bt4.Engine_Fuel_Shutoff_2_Control = J1939_MESSAGE->Mxe.Data[3]>>4;
@@ -3671,7 +3871,7 @@ void CheckEOI ( J1939_MESSAGE *J1939_MESSAGE,getEOI_t *EOI)
     EOI->bt6.Engine_Coolant_Circulating_Pump_Control = J1939_MESSAGE->Mxe.Data[5]>>0;
     EOI->bt6.Engine_Controlled_Shutdown_Request = J1939_MESSAGE->Mxe.Data[5]>>2;
     EOI->bt6.Engine_Emergency__Immediate__Shutdown_Indication = J1939_MESSAGE->Mxe.Data[5]>>4;
-    EOI->Engine_Derate_Request = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],16,0) ;
+    EOI->Engine_Derate_Request = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.4,0) ;
 }
 void CheckEEC7 ( J1939_MESSAGE *J1939_MESSAGE,getEEC7_t *EEC7)
 {
@@ -3684,10 +3884,10 @@ void CheckEEC7 ( J1939_MESSAGE *J1939_MESSAGE,getEEC7_t *EEC7)
     EEC7->Engine_Exhaust_Gas_Recirculation_1_Valve_2_Position = Parameter_Translate(buff ,0.0025,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    EEC7->Engine_Crankcase_Breather_Oil_Separator_Speed = Parameter_Translate(buff ,0.0025,0) ;
+    EEC7->Engine_Crankcase_Breather_Oil_Separator_Speed = Parameter_Translate(buff ,1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    EEC7->Commanded_Engine_Intake_Manifold_Pressure = Parameter_Translate(buff ,0.0025,0) ;
+    EEC7->Commanded_Engine_Intake_Manifold_Pressure = Parameter_Translate(buff ,0.125,0) ;
 }
 void CheckTRF2 ( J1939_MESSAGE *J1939_MESSAGE,getTRF2_t *TRF2)
 {
@@ -3697,129 +3897,129 @@ void CheckTRF2 ( J1939_MESSAGE *J1939_MESSAGE,getTRF2_t *TRF2)
     TRF2->bt1.Transmission_Overheat_Indicator = J1939_MESSAGE->Mxe.Data[0]>>4;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    TRF2->Transmission_Torque_Converter_Oil_Outlet_Temperature = Parameter_Translate(buff ,4,0) ;
-    TRF2->Transmission_Oil_Life_Remaining = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],4,0) ;
+    TRF2->Transmission_Torque_Converter_Oil_Outlet_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
+    TRF2->Transmission_Oil_Life_Remaining = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.4,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    TRF2->Transmission_Oil_Temperature_2 = Parameter_Translate(buff ,4,0) ;
-    TRF2->Transmission_Oil_Level_2_High___Low = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],4,0) ;
+    TRF2->Transmission_Oil_Temperature_2 = Parameter_Translate(buff ,0.03125,-273) ;
+    TRF2->Transmission_Oil_Level_2_High___Low = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.5,-62.5) ;
     TRF2->bt8.Transmission_Oil_Level_2_Countdown_Timer = J1939_MESSAGE->Mxe.Data[7]>>0;
     TRF2->bt8.Transmission_Oil_Level_2_Measurement_Status = J1939_MESSAGE->Mxe.Data[7]>>4;
 }
 void CheckAT1HI ( J1939_MESSAGE *J1939_MESSAGE,getAT1HI_t *AT1HI)
 {
        uint64_t buff;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
     AT1HI->Aftertreatment_1_Total_Fuel_Used = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    AT1HI->Aftertreatment_1_Total_Regeneration_Time = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    AT1HI->Aftertreatment_1_Total_Disabled_Time = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT1HI->Aftertreatment_1_Total_Number_of_Active_Regenerations = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT1HI->Aftertreatment_1_Diesel_Particulate_Filter_Total_Passive_Regeneration_Time = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    AT1HI->Aftertreatment_1_Diesel_Particulate_Filter_Total_Number_of_Passive_Regenerations = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    AT1HI->Aftertreatment_1_Diesel_Particulate_Filter_Total_Number_of_Active_Regeneration_Inhibit_Requests = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    AT1HI->Aftertreatment_1_Diesel_Particulate_Filter_Total_Number_of_Active_Regeneration_Manual_Requests = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    AT1HI->Aftertreatment_1_Average_Time_Between_Active_Regenerations = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    AT1HI->Aftertreatment_1_Average_Distance_Between_Active_DPF_Regenerations = Parameter_Translate(buff ,0.5,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
+    AT1HI->Aftertreatment_1_Total_Regeneration_Time = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[8])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[9])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[10])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[11]);
+    AT1HI->Aftertreatment_1_Total_Disabled_Time = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[12])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[13])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[14])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[15]);
+    AT1HI->Aftertreatment_1_Total_Number_of_Active_Regenerations = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[16])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[17])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[18])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[19]);
+    AT1HI->Aftertreatment_1_Diesel_Particulate_Filter_Total_Passive_Regeneration_Time = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[20])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[21])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[22])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[23]);
+    AT1HI->Aftertreatment_1_Diesel_Particulate_Filter_Total_Number_of_Passive_Regenerations = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[24])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[25])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[26])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[27]);
+    AT1HI->Aftertreatment_1_Diesel_Particulate_Filter_Total_Number_of_Active_Regeneration_Inhibit_Requests = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[28])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[29])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[30])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[31]);
+    AT1HI->Aftertreatment_1_Diesel_Particulate_Filter_Total_Number_of_Active_Regeneration_Manual_Requests = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[32])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[33])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[34])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[35]);
+    AT1HI->Aftertreatment_1_Average_Time_Between_Active_Regenerations = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[36])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[37])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[38])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[39]);
+    AT1HI->Aftertreatment_1_Average_Distance_Between_Active_DPF_Regenerations = Parameter_Translate(buff ,0.125,0) ;
 }
 void CheckAT2HI ( J1939_MESSAGE *J1939_MESSAGE,getAT2HI_t *AT2HI)
 {
        uint64_t buff;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
     AT2HI->Aftertreatment_2_Total_Fuel_Used = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    AT2HI->Aftertreatment_2_Total_Regeneration_Time = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    AT2HI->Aftertreatment_2_Total_Disabled_Time = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT2HI->Aftertreatment_2_Total_Number_of_Active_Regenerations = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT2HI->Aftertreatment_2_Diesel_Particulate_Filter_Total_Passive_Regeneration_Time = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    AT2HI->Aftertreatment_2_Diesel_Particulate_Filter_Total_Number_of_Passive_Regenerations = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    AT2HI->Aftertreatment_2_Diesel_Particulate_Filter_Total_Number_of_Active_Regeneration_Inhibit_Requests = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    AT2HI->Aftertreatment_2_Diesel_Particulate_Filter_Total_Number_of_Active_Regeneration_Manual_Requests = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    AT2HI->Aftertreatment_2_Average_Time_Between_Active_Regenerations = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    AT2HI->Aftertreatment_2_Average_Distance_Between_Active_DPF_Regenerations = Parameter_Translate(buff ,0.5,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
+    AT2HI->Aftertreatment_2_Total_Regeneration_Time = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[8])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[9])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[10])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[11]);
+    AT2HI->Aftertreatment_2_Total_Disabled_Time = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[12])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[13])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[14])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[15]);
+    AT2HI->Aftertreatment_2_Total_Number_of_Active_Regenerations = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[16])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[17])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[18])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[19]);
+    AT2HI->Aftertreatment_2_Diesel_Particulate_Filter_Total_Passive_Regeneration_Time = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[20])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[21])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[22])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[23]);
+    AT2HI->Aftertreatment_2_Diesel_Particulate_Filter_Total_Number_of_Passive_Regenerations = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[24])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[25])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[26])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[27]);
+    AT2HI->Aftertreatment_2_Diesel_Particulate_Filter_Total_Number_of_Active_Regeneration_Inhibit_Requests = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[28])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[29])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[30])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[31]);
+    AT2HI->Aftertreatment_2_Diesel_Particulate_Filter_Total_Number_of_Active_Regeneration_Manual_Requests = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[32])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[33])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[34])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[35]);
+    AT2HI->Aftertreatment_2_Average_Time_Between_Active_Regenerations = Parameter_Translate(buff ,1,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[36])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[37])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[38])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[39]);
+    AT2HI->Aftertreatment_2_Average_Distance_Between_Active_DPF_Regenerations = Parameter_Translate(buff ,0.125,0) ;
 }
 void CheckA1DEFI ( J1939_MESSAGE *J1939_MESSAGE,getA1DEFI_t *A1DEFI)
 {
        uint64_t buff;
     A1DEFI->Aftertreatment_1_Diesel_Exhaust_Fluid_Temperature_2 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],1,-40) ;
-    A1DEFI->Aftertreatment_1_Diesel_Exhaust_Fluid_Concentration = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,-40) ;
-    A1DEFI->Aftertreatment_1_Diesel_Exhaust_Fluid_Conductivity = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,-40) ;
+    A1DEFI->Aftertreatment_1_Diesel_Exhaust_Fluid_Concentration = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.25,0) ;
+    A1DEFI->Aftertreatment_1_Diesel_Exhaust_Fluid_Conductivity = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],5,0) ;
     A1DEFI->bt4.Aftertreatment_1_Diesel_Exhaust_Fluid_Temperature_2_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[3]>>0;
     A1DEFI->bt5.Aftertreatment_1_Diesel_Exhaust_Fluid_Properties_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[4]>>0;
     A1DEFI->bt6.Aftertreatment_1_Diesel_Exhaust_Fluid_Property = J1939_MESSAGE->Mxe.Data[5]>>0;
@@ -3867,8 +4067,8 @@ void CheckAT2AC1 ( J1939_MESSAGE *J1939_MESSAGE,getAT2AC1_t *AT2AC1)
     AT2AC1->Aftertreatment_2_Purge_Air_Pressure = Parameter_Translate(buff ,0.1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    AT2AC1->Aftertreatment_2_Air_Pressure_Control = Parameter_Translate(buff ,0.1,0) ;
-    AT2AC1->Aftertreatment_2_Air_Pressure_Actuator_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.1,0) ;
+    AT2AC1->Aftertreatment_2_Air_Pressure_Control = Parameter_Translate(buff ,0.0025,0) ;
+    AT2AC1->Aftertreatment_2_Air_Pressure_Actuator_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.4,0) ;
     AT2AC1->bt7.Aftertreatment_2_Air_Pressure_Actuator_Position = J1939_MESSAGE->Mxe.Data[6]>>0;
     AT2AC1->bt8.Aftertreatment_2_Air_System_Relay = J1939_MESSAGE->Mxe.Data[7]>>0;
     AT2AC1->bt8.Aftertreatment_2_Atomization_Air_Actuator = J1939_MESSAGE->Mxe.Data[7]>>2;
@@ -3886,8 +4086,8 @@ void CheckAT1AC1 ( J1939_MESSAGE *J1939_MESSAGE,getAT1AC1_t *AT1AC1)
     AT1AC1->Aftertreatment_1_Purge_Air_Pressure = Parameter_Translate(buff ,0.1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    AT1AC1->Aftertreatment_1_Air_Pressure_Control = Parameter_Translate(buff ,0.1,0) ;
-    AT1AC1->Aftertreatment_1_Air_Pressure_Actuator_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.1,0) ;
+    AT1AC1->Aftertreatment_1_Air_Pressure_Control = Parameter_Translate(buff ,0.0025,0) ;
+    AT1AC1->Aftertreatment_1_Air_Pressure_Actuator_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.4,0) ;
     AT1AC1->bt7.Aftertreatment_1_Air_Pressure_Actuator_Position = J1939_MESSAGE->Mxe.Data[6]>>0;
     AT1AC1->bt8.Aftertreatment_1_Air_System_Relay = J1939_MESSAGE->Mxe.Data[7]>>0;
     AT1AC1->bt8.Aftertreatment_1_Atomization_Air_Actuator = J1939_MESSAGE->Mxe.Data[7]>>2;
@@ -3902,15 +4102,15 @@ void CheckAT2FC1 ( J1939_MESSAGE *J1939_MESSAGE,getAT2FC1_t *AT2FC1)
     AT2FC1->Aftertreatment_2_Fuel_Pressure_1 = Parameter_Translate(buff ,0.1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT2FC1->Aftertreatment_2_Fuel_Rate = Parameter_Translate(buff ,0.1,0) ;
+    AT2FC1->Aftertreatment_2_Fuel_Rate = Parameter_Translate(buff ,0.05,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    AT2FC1->Aftertreatment_2_Fuel_Pressure_1_Control = Parameter_Translate(buff ,0.1,0) ;
+    AT2FC1->Aftertreatment_2_Fuel_Pressure_1_Control = Parameter_Translate(buff ,0.0025,0) ;
     AT2FC1->bt7.Aftertreatment_2_Fuel_Drain_Actuator = J1939_MESSAGE->Mxe.Data[6]>>0;
     AT2FC1->bt7.Aftertreatment_2_Ignition = J1939_MESSAGE->Mxe.Data[6]>>2;
     AT2FC1->bt7.Aftertreatment_2_Regeneration_Status = J1939_MESSAGE->Mxe.Data[6]>>4;
     AT2FC1->bt7.Aftertreatment_2_Fuel_Enable_Actuator = J1939_MESSAGE->Mxe.Data[6]>>6;
-    AT2FC1->Aftertreatment_2_Fuel_Injector_1_Heater_Control = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.1,0) ;
+    AT2FC1->Aftertreatment_2_Fuel_Injector_1_Heater_Control = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.4,0) ;
 }
 void CheckAT1FC1 ( J1939_MESSAGE *J1939_MESSAGE,getAT1FC1_t *AT1FC1)
 {
@@ -3920,15 +4120,15 @@ void CheckAT1FC1 ( J1939_MESSAGE *J1939_MESSAGE,getAT1FC1_t *AT1FC1)
     AT1FC1->Aftertreatment_1_Fuel_Pressure_1 = Parameter_Translate(buff ,0.1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT1FC1->Aftertreatment_1_Fuel_Rate = Parameter_Translate(buff ,0.1,0) ;
+    AT1FC1->Aftertreatment_1_Fuel_Rate = Parameter_Translate(buff ,0.05,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    AT1FC1->Aftertreatment_1_Fuel_Pressure_1_Control = Parameter_Translate(buff ,0.1,0) ;
+    AT1FC1->Aftertreatment_1_Fuel_Pressure_1_Control = Parameter_Translate(buff ,0.0025,0) ;
     AT1FC1->bt7.Aftertreatment_1_Fuel_Drain_Actuator = J1939_MESSAGE->Mxe.Data[6]>>0;
     AT1FC1->bt7.Aftertreatment_1_Ignition = J1939_MESSAGE->Mxe.Data[6]>>2;
     AT1FC1->bt7.Aftertreatment_1_Regeneration_Status = J1939_MESSAGE->Mxe.Data[6]>>4;
     AT1FC1->bt7.Aftertreatment_1_Fuel_Enable_Actuator = J1939_MESSAGE->Mxe.Data[6]>>6;
-    AT1FC1->Aftertreatment_1_Fuel_Injector_1_Heater_Control = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.1,0) ;
+    AT1FC1->Aftertreatment_1_Fuel_Injector_1_Heater_Control = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.4,0) ;
 }
 void CheckGFI ( J1939_MESSAGE *J1939_MESSAGE,getGFI_t *GFI)
 {
@@ -3938,8 +4138,8 @@ void CheckGFI ( J1939_MESSAGE *J1939_MESSAGE,getGFI_t *GFI)
     GFI->Engine_Fuel_Valve_2_Intake_Absolute_Pressure = Parameter_Translate(buff ,0.1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    GFI->Engine_Gas_2_Mass_Flow_Rate = Parameter_Translate(buff ,0.1,0) ;
-    GFI->Engine_Fuel_Temperature_2 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.1,0) ;
+    GFI->Engine_Gas_2_Mass_Flow_Rate = Parameter_Translate(buff ,0.05,0) ;
+    GFI->Engine_Fuel_Temperature_2 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],1,-40) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
     GFI->Engine_Fuel = Parameter_Translate(buff ,0.1,0) ;
@@ -3950,12 +4150,12 @@ void CheckEEC6 ( J1939_MESSAGE *J1939_MESSAGE,getEEC6_t *EEC6)
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
     EEC6->Engine_Turbocharger_Compressor_Bypass_Actuator_1_Command = Parameter_Translate(buff ,0.0025,0) ;
-    EEC6->Engine_Variable_Geometry_Turbocharger_Actuator_1 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.0025,0) ;
-    EEC6->Engine_Turbocharger_Compressor_Bypass_Actuator_1 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.0025,0) ;
+    EEC6->Engine_Variable_Geometry_Turbocharger_Actuator_1 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.4,0) ;
+    EEC6->Engine_Turbocharger_Compressor_Bypass_Actuator_1 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.4,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
     EEC6->Engine_Turbocharger_Compressor_Bypass_Actuator_2_command = Parameter_Translate(buff ,0.0025,0) ;
-    EEC6->Engine_Desired_Turbocharger_Compressor_Bypass_Actuator_1_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.0025,0) ;
+    EEC6->Engine_Desired_Turbocharger_Compressor_Bypass_Actuator_1_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.4,0) ;
     EEC6->bt8.Engine_Turbocharger_Compressor_Bypass_Actuator_1_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[7]>>0;
     EEC6->bt8.Engine_Turbocharger_Compressor_Bypass_Actuator_1_Temperature_Status = J1939_MESSAGE->Mxe.Data[7]>>5;
 }
@@ -4025,7 +4225,7 @@ void CheckWCM2 ( J1939_MESSAGE *J1939_MESSAGE,getWCM2_t *WCM2)
     WCM2->bt1.Network_Transceiver_Status_2 = J1939_MESSAGE->Mxe.Data[0]>>0;
     WCM2->bt2.Network_Service_Status_2 = J1939_MESSAGE->Mxe.Data[1]>>0;
     WCM2->bt3.Network_Antenna_Status_2 = J1939_MESSAGE->Mxe.Data[2]>>0;
-    WCM2->Network_Signal_Strength_2 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],256,0) ;
+    WCM2->Network_Signal_Strength_2 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.4,0) ;
     WCM2->bt5.Wireless_Communication_Network_Type_2 = J1939_MESSAGE->Mxe.Data[4]>>0;
 }
 void CheckWCM1 ( J1939_MESSAGE *J1939_MESSAGE,getWCM1_t *WCM1)
@@ -4034,7 +4234,7 @@ void CheckWCM1 ( J1939_MESSAGE *J1939_MESSAGE,getWCM1_t *WCM1)
     WCM1->bt1.Network_Transceiver_Status_1 = J1939_MESSAGE->Mxe.Data[0]>>0;
     WCM1->bt2.Network_Service_Status_1 = J1939_MESSAGE->Mxe.Data[1]>>0;
     WCM1->bt3.Network_Antenna_Status_1 = J1939_MESSAGE->Mxe.Data[2]>>0;
-    WCM1->Network_Signal_Strength_1 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],256,0) ;
+    WCM1->Network_Signal_Strength_1 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.4,0) ;
     WCM1->bt5.Wireless_Communication_Network_Type_1 = J1939_MESSAGE->Mxe.Data[4]>>0;
 }
 void CheckEFL_P4 ( J1939_MESSAGE *J1939_MESSAGE,getEFL_P4_t *EFL_P4)
@@ -4042,11 +4242,11 @@ void CheckEFL_P4 ( J1939_MESSAGE *J1939_MESSAGE,getEFL_P4_t *EFL_P4)
        uint64_t buff;
     EFL_P4->Engine_Charge_Air_Cooler_1_Intake_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],2,0) ;
     EFL_P4->Engine_Charge_Air_Cooler_2_Intake_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],2,0) ;
-    EFL_P4->Engine_Coolant_Pump_Differential_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],2,0) ;
+    EFL_P4->Engine_Coolant_Pump_Differential_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1.64,-7) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    EFL_P4->Engine_Centrifugal_Oil_Filter_speed = Parameter_Translate(buff ,2,0) ;
-    EFL_P4->Engine_Intercooler_Coolant_Level = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],2,0) ;
+    EFL_P4->Engine_Centrifugal_Oil_Filter_speed = Parameter_Translate(buff ,4,0) ;
+    EFL_P4->Engine_Intercooler_Coolant_Level = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],0.4,0) ;
     EFL_P4->Engine_Charge_Air_Cooler_Outlet_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],2,0) ;
 }
 void CheckFWSS2 ( J1939_MESSAGE *J1939_MESSAGE,getFWSS2_t *FWSS2)
@@ -4055,7 +4255,7 @@ void CheckFWSS2 ( J1939_MESSAGE *J1939_MESSAGE,getFWSS2_t *FWSS2)
     FWSS2->bt1.Fifth_Wheel_Error_Status = J1939_MESSAGE->Mxe.Data[0]>>0;
     FWSS2->bt1.Fifth_Wheel_Lock_Ready_to_Couple_Indicator = J1939_MESSAGE->Mxe.Data[0]>>4;
     FWSS2->bt1.Fifth_Wheel_Lock_Couple_Status_Indicator = J1939_MESSAGE->Mxe.Data[0]>>6;
-    FWSS2->Fifth_Wheel_Slider_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],16,0) ;
+    FWSS2->Fifth_Wheel_Slider_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],10,0) ;
     FWSS2->bt3.Fifth_Wheel_Slider_Lock_Indicator = J1939_MESSAGE->Mxe.Data[2]>>0;
 }
 void CheckAT2IMG ( J1939_MESSAGE *J1939_MESSAGE,getAT2IMG_t *AT2IMG)
@@ -4069,7 +4269,7 @@ void CheckAT2IMG ( J1939_MESSAGE *J1939_MESSAGE,getAT2IMG_t *AT2IMG)
     AT2IMG->Aftertreatment_2_Diesel_Particulate_Filter_Intermediate_Gas_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    AT2IMG->Aftertreatment_2_Diesel_Particulate_Filter_Differential_Pressure = Parameter_Translate(buff ,0.03125,-273) ;
+    AT2IMG->Aftertreatment_2_Diesel_Particulate_Filter_Differential_Pressure = Parameter_Translate(buff ,0.1,0) ;
     AT2IMG->bt7.Aftertreatment_2_Exhaust_Gas_Temperature_2_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[6]>>0;
     uint16_t buff16;
     buff16 =J1939_MESSAGE->Mxe.Data[6]>>5;
@@ -4112,7 +4312,7 @@ void CheckAT1IMG ( J1939_MESSAGE *J1939_MESSAGE,getAT1IMG_t *AT1IMG)
     AT1IMG->Aftertreatment_1_Diesel_Particulate_Filter_Intermediate_Gas_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    AT1IMG->Aftertreatment_1_Diesel_Particulate_Filter_Differential_Pressure = Parameter_Translate(buff ,0.03125,-273) ;
+    AT1IMG->Aftertreatment_1_Diesel_Particulate_Filter_Differential_Pressure = Parameter_Translate(buff ,0.1,0) ;
     AT1IMG->bt7.Aftertreatment_1_Exhaust_Gas_Temperature_2_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[6]>>0;
     uint16_t buff16;
     buff16 =J1939_MESSAGE->Mxe.Data[6]>>5;
@@ -4148,7 +4348,7 @@ void CheckTPRI ( J1939_MESSAGE *J1939_MESSAGE,getTPRI_t *TPRI)
 {
        uint64_t buff;
     TPRI->bt1.Tire_Location = J1939_MESSAGE->Mxe.Data[0]>>0;
-    TPRI->Reference_Tire_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],256,0) ;
+    TPRI->Reference_Tire_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],8,0) ;
 }
 void CheckTR6 ( J1939_MESSAGE *J1939_MESSAGE,getTR6_t *TR6)
 {
@@ -4168,7 +4368,7 @@ void CheckTR5 ( J1939_MESSAGE *J1939_MESSAGE,getTR5_t *TR5)
     TR5->bt4.Initial_Fare_Agency = J1939_MESSAGE->Mxe.Data[3]>>0;
     TR5->bt5.Type_of_Service = J1939_MESSAGE->Mxe.Data[4]>>0;
     TR5->bt5.Transfer_Type = J1939_MESSAGE->Mxe.Data[4]>>3;
-    TR5->Transfer_Sold = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],16,0) ;
+    TR5->Transfer_Sold = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],1,0) ;
 }
 void CheckTR3 ( J1939_MESSAGE *J1939_MESSAGE,getTR3_t *TR3)
 {
@@ -4181,7 +4381,7 @@ void CheckTR3 ( J1939_MESSAGE *J1939_MESSAGE,getTR3_t *TR3)
     TR3->bt2.Strobe_Activation_Control_Status = J1939_MESSAGE->Mxe.Data[1]>>6;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    TR3->Vehicle_ID = Parameter_Translate(buff ,4,0) ;
+    TR3->Vehicle_ID = Parameter_Translate(buff ,1,0) ;
 }
 void CheckTR1 ( J1939_MESSAGE *J1939_MESSAGE,getTR1_t *TR1)
 {
@@ -4200,7 +4400,7 @@ void CheckTR7 ( J1939_MESSAGE *J1939_MESSAGE,getTR7_t *TR7)
 {
        uint64_t buff;
     TR7->bt1.Type_of_Passenger_Count = J1939_MESSAGE->Mxe.Data[0]>>0;
-    TR7->Patron_Count = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],256,0) ;
+    TR7->Patron_Count = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,0) ;
     TR7->bt3.Silent_Alarm_Status = J1939_MESSAGE->Mxe.Data[2]>>0;
     TR7->bt3.Vehicle_Use_Status = J1939_MESSAGE->Mxe.Data[2]>>2;
     TR7->bt3.Transit_Run_Status = J1939_MESSAGE->Mxe.Data[2]>>4;
@@ -4211,14 +4411,14 @@ void CheckEFL_P3 ( J1939_MESSAGE *J1939_MESSAGE,getEFL_P3_t *EFL_P3)
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
     EFL_P3->Engine_Intake_Valve_Actuation_System_Oil_Pressure = Parameter_Translate(buff ,1,0) ;
-    EFL_P3->Engine_Exhaust_Gas_Recirculation_1_Intake_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,0) ;
+    EFL_P3->Engine_Exhaust_Gas_Recirculation_1_Intake_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],2,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
     EFL_P3->Engine_Exhaust_Valve_Actuation_System_Oil_Pressure = Parameter_Translate(buff ,1,0) ;
-    EFL_P3->Engine_Exhaust_Gas_Recirculation_1_Outlet_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],1,0) ;
+    EFL_P3->Engine_Exhaust_Gas_Recirculation_1_Outlet_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],2,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    EFL_P3->Engine_Throttle_Valve_1_Differential_Pressure = Parameter_Translate(buff ,1,0) ;
+    EFL_P3->Engine_Throttle_Valve_1_Differential_Pressure = Parameter_Translate(buff ,0.1,0) ;
 }
 void CheckEEC14 ( J1939_MESSAGE *J1939_MESSAGE,getEEC14_t *EEC14)
 {
@@ -4231,7 +4431,7 @@ void CheckEEC14 ( J1939_MESSAGE *J1939_MESSAGE,getEEC14_t *EEC14)
     EEC14->Engine_Exhaust_Gas_Recirculation_1_Valve_2_Position_Error = Parameter_Translate(buff ,0.004,-125) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    EEC14->Engine_Fuel_Mass_Flow_Rate = Parameter_Translate(buff ,0.004,-125) ;
+    EEC14->Engine_Fuel_Mass_Flow_Rate = Parameter_Translate(buff ,0.005,0) ;
     EEC14->bt7.Fuel_Type = J1939_MESSAGE->Mxe.Data[6]>>0;
 }
 void CheckEEC15 ( J1939_MESSAGE *J1939_MESSAGE,getEEC15_t *EEC15)
@@ -4251,7 +4451,7 @@ void CheckEBC5 ( J1939_MESSAGE *J1939_MESSAGE,getEBC5_t *EBC5)
     EBC5->bt2.Foundation_Brake_Use = J1939_MESSAGE->Mxe.Data[1]>>0;
     EBC5->bt2.XBR_System_State = J1939_MESSAGE->Mxe.Data[1]>>2;
     EBC5->bt2.XBR_Active_Control_Mode = J1939_MESSAGE->Mxe.Data[1]>>4;
-    EBC5->XBR_Acceleration_Limit = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],4,0) ;
+    EBC5->XBR_Acceleration_Limit = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.1,-12.5) ;
     EBC5->bt4.Parking_Brake_Actuator_Fully_Activated = J1939_MESSAGE->Mxe.Data[3]>>0;
     EBC5->bt4.Emergency_Braking_Active = J1939_MESSAGE->Mxe.Data[3]>>2;
 }
@@ -4262,7 +4462,7 @@ void CheckCSA ( J1939_MESSAGE *J1939_MESSAGE,getCSA_t *CSA)
     CSA->bt1.Engine_Start_Enable_Device_2 = J1939_MESSAGE->Mxe.Data[0]>>2;
     CSA->bt2.Engine_Start_Enable_Device_1_Configuration = J1939_MESSAGE->Mxe.Data[1]>>0;
     CSA->bt2.Engine_Start_Enable_Device_2_Configuration = J1939_MESSAGE->Mxe.Data[1]>>4;
-    CSA->Engine_Cold_Start_Fuel_Igniter_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],4,0) ;
+    CSA->Engine_Cold_Start_Fuel_Igniter_Command = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.4,0) ;
     CSA->bt4.Engine_Cold_Start_Fuel_Igniter_Relay = J1939_MESSAGE->Mxe.Data[3]>>0;
     CSA->bt4.Engine_Cold_Start_Fuel_Igniter_Relay_Feedback = J1939_MESSAGE->Mxe.Data[3]>>2;
 }
@@ -4301,7 +4501,7 @@ void CheckOHECS ( J1939_MESSAGE *J1939_MESSAGE,getOHECS_t *OHECS)
     OHECS->bt1.Engine_Auxiliary_Governor_Switch = J1939_MESSAGE->Mxe.Data[0]>>0;
     OHECS->bt1.Engine_Synchronization_Switch = J1939_MESSAGE->Mxe.Data[0]>>2;
     OHECS->bt1.Engine_Alternate_Low_Idle_Switch = J1939_MESSAGE->Mxe.Data[0]>>4;
-    OHECS->Engine_Alternate_Rating_Select = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],4,0) ;
+    OHECS->Engine_Alternate_Rating_Select = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,0) ;
     OHECS->bt3.Engine_Alternate_Droop_Accelerator_1_Select = J1939_MESSAGE->Mxe.Data[2]>>0;
     OHECS->bt3.Engine_Alternate_Droop_Accelerator_2_Select = J1939_MESSAGE->Mxe.Data[2]>>4;
     OHECS->bt4.Engine_Alternate_Droop_Remote_Accelerator_Select = J1939_MESSAGE->Mxe.Data[3]>>0;
@@ -4315,10 +4515,10 @@ void CheckOEL ( J1939_MESSAGE *J1939_MESSAGE,getOEL_t *OEL)
     OEL->bt2.Turn_Signal_Switch = J1939_MESSAGE->Mxe.Data[1]>>0;
     OEL->bt2.Hazard_Light_Switch = J1939_MESSAGE->Mxe.Data[1]>>4;
     OEL->bt2.High_Low_Beam_Switch = J1939_MESSAGE->Mxe.Data[1]>>6;
-    OEL->Operators_Desired_Back_light = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],16,0) ;
+    OEL->Operators_Desired_Back_light = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.4,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    OEL->Operators_Desired___Delayed_Lamp_Off_Time = Parameter_Translate(buff ,16,0) ;
+    OEL->Operators_Desired___Delayed_Lamp_Off_Time = Parameter_Translate(buff ,1,0) ;
 }
 void CheckOWW ( J1939_MESSAGE *J1939_MESSAGE,getOWW_t *OWW)
 {
@@ -4326,9 +4526,9 @@ void CheckOWW ( J1939_MESSAGE *J1939_MESSAGE,getOWW_t *OWW)
     OWW->bt1.Front_Non_operator_Wiper_Switch = J1939_MESSAGE->Mxe.Data[0]>>0;
     OWW->bt1.Front_Operator_Wiper_Switch = J1939_MESSAGE->Mxe.Data[0]>>4;
     OWW->bt2.Rear_Wiper_Switch = J1939_MESSAGE->Mxe.Data[1]>>4;
-    OWW->Front_Operator_Wiper_Delay_Control = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],16,0) ;
-    OWW->Front_Non_operator_Wiper_Delay_Control = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],16,0) ;
-    OWW->Rear_Wiper_Delay_Control = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],16,0) ;
+    OWW->Front_Operator_Wiper_Delay_Control = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.4,0) ;
+    OWW->Front_Non_operator_Wiper_Delay_Control = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.4,0) ;
+    OWW->Rear_Wiper_Delay_Control = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.4,0) ;
     OWW->bt6.Front_Non_operator_Washer_Switch = J1939_MESSAGE->Mxe.Data[5]>>2;
     OWW->bt6.Front_Operator_Washer_Switch = J1939_MESSAGE->Mxe.Data[5]>>5;
     OWW->bt7.Rear_Washer_Function = J1939_MESSAGE->Mxe.Data[6]>>5;
@@ -4339,12 +4539,12 @@ void CheckIC2 ( J1939_MESSAGE *J1939_MESSAGE,getIC2_t *IC2)
     IC2->Engine_Air_Filter_2_Differential_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],0.05,0) ;
     IC2->Engine_Air_Filter_3_Differential_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.05,0) ;
     IC2->Engine_Air_Filter_4_Differential_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.05,0) ;
-    IC2->Engine_Intake_Manifold_2_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.05,0) ;
-    IC2->Engine_Intake_Manifold_1_Absolute_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.05,0) ;
+    IC2->Engine_Intake_Manifold_2_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],2,0) ;
+    IC2->Engine_Intake_Manifold_1_Absolute_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],2,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6]);
-    IC2->Engine_Intake_Manifold_1_Absolute_Pressure__High_Resolution_ = Parameter_Translate(buff ,0.05,0) ;
-    IC2->Engine_Intake_Manifold_2_Absolute_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.05,0) ;
+    IC2->Engine_Intake_Manifold_1_Absolute_Pressure__High_Resolution_ = Parameter_Translate(buff ,0.1,0) ;
+    IC2->Engine_Intake_Manifold_2_Absolute_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],2,0) ;
 }
 void CheckFMS ( J1939_MESSAGE *J1939_MESSAGE,getFMS_t *FMS)
 {
@@ -4363,7 +4563,7 @@ void CheckEP ( J1939_MESSAGE *J1939_MESSAGE,getEP_t *EP)
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
     EP->Keep_Alive_Battery_Consumption = Parameter_Translate(buff ,1,0) ;
-    EP->Data_Memory_Usage = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,0) ;
+    EP->Data_Memory_Usage = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.4,0) ;
 }
 void CheckTCI6 ( J1939_MESSAGE *J1939_MESSAGE,getTCI6_t *TCI6)
 {
@@ -4400,11 +4600,11 @@ void CheckEEC5 ( J1939_MESSAGE *J1939_MESSAGE,getEEC5_t *EEC5)
     EEC5->Engine_Turbocharger_1_Calculated_Turbine_Outlet_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    EEC5->Engine_Exhaust_Gas_Recirculation_1__EGR1__Valve_Control = Parameter_Translate(buff ,0.03125,-273) ;
+    EEC5->Engine_Exhaust_Gas_Recirculation_1__EGR1__Valve_Control = Parameter_Translate(buff ,0.0025,0) ;
     EEC5->bt7.Engine_Variable_Geometry_Turbocharger__VGT__Air_Control_Shutoff_Valve = J1939_MESSAGE->Mxe.Data[6]>>0;
     EEC5->bt7.Engine_Fuel_Control_Control_Mode = J1939_MESSAGE->Mxe.Data[6]>>2;
     EEC5->bt7.Engine_Variable_Geometry_Turbocharger_1_Control_Mode = J1939_MESSAGE->Mxe.Data[6]>>4;
-    EEC5->Engine_Variable_Geometry_Turbocharger__VGT__1_Actuator_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.03125,-273) ;
+    EEC5->Engine_Variable_Geometry_Turbocharger__VGT__1_Actuator_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.4,0) ;
 }
 void CheckBJM1 ( J1939_MESSAGE *J1939_MESSAGE,getBJM1_t *BJM1)
 {
@@ -4545,13 +4745,13 @@ void CheckAMB2 ( J1939_MESSAGE *J1939_MESSAGE,getAMB2_t *AMB2)
     AMB2->Solar_Sensor_Maximum = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.4,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AMB2->Specific_Humidity = Parameter_Translate(buff ,0.4,0) ;
+    AMB2->Specific_Humidity = Parameter_Translate(buff ,0.01,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    AMB2->Calculated_Ambient_Air_Temperature = Parameter_Translate(buff ,0.4,0) ;
+    AMB2->Calculated_Ambient_Air_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    AMB2->Barometric_Absolute_Pressure__High_Resolution_ = Parameter_Translate(buff ,0.4,0) ;
+    AMB2->Barometric_Absolute_Pressure__High_Resolution_ = Parameter_Translate(buff ,0.1,0) ;
 }
 void CheckCACI ( J1939_MESSAGE *J1939_MESSAGE,getCACI_t *CACI)
 {
@@ -4698,7 +4898,7 @@ void CheckETC7 ( J1939_MESSAGE *J1939_MESSAGE,getETC7_t *ETC7)
     ETC7->bt3.Transmission_Mode_3_Indicator = J1939_MESSAGE->Mxe.Data[2]>>2;
     ETC7->bt3.Transmission_Mode_2_Indicator = J1939_MESSAGE->Mxe.Data[2]>>4;
     ETC7->bt3.Transmission_Mode_1_Indicator = J1939_MESSAGE->Mxe.Data[2]>>6;
-    ETC7->Transmission_Requested_Gear_Feedback = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],4,0) ;
+    ETC7->Transmission_Requested_Gear_Feedback = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],1,-125) ;
     ETC7->bt5.Transmission_Mode_5_Indicator = J1939_MESSAGE->Mxe.Data[4]>>0;
     ETC7->bt5.Transmission_Mode_6_Indicator = J1939_MESSAGE->Mxe.Data[4]>>2;
     ETC7->bt5.Transmission_Mode_7_Indicator = J1939_MESSAGE->Mxe.Data[4]>>4;
@@ -4723,7 +4923,7 @@ void CheckML ( J1939_MESSAGE *J1939_MESSAGE,getML_t *ML)
     ML->bt3.Black_Out_Brake_Stop_Lamp_Select = J1939_MESSAGE->Mxe.Data[2]>>6;
     ML->bt4.Night_Vision_Illuminator_Select = J1939_MESSAGE->Mxe.Data[3]>>0;
     ML->bt4.Black_Out_Work_Lamp_Select = J1939_MESSAGE->Mxe.Data[3]>>6;
-    ML->Operators_Black_Out_Intensity_Selection = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],4,0) ;
+    ML->Operators_Black_Out_Intensity_Selection = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.4,0) ;
 }
 void CheckTAVG ( J1939_MESSAGE *J1939_MESSAGE,getTAVG_t *TAVG)
 {
@@ -4733,7 +4933,7 @@ void CheckTAVG ( J1939_MESSAGE *J1939_MESSAGE,getTAVG_t *TAVG)
     TAVG->Engine_Total_Average_Fuel_Rate = Parameter_Translate(buff ,0.05,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    TAVG->Engine_Total_Average_Fuel_Economy = Parameter_Translate(buff ,0.05,0) ;
+    TAVG->Engine_Total_Average_Fuel_Economy = Parameter_Translate(buff ,1,0) ;
 }
 void CheckDC1 ( J1939_MESSAGE *J1939_MESSAGE,getDC1_t *DC1)
 {
@@ -4781,24 +4981,24 @@ void CheckRTC1 ( J1939_MESSAGE *J1939_MESSAGE,getRTC1_t *RTC1)
        uint64_t buff;
     RTC1->Low_Limit_Threshold_for_Maximum_RPM_from_Retarder = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],32,0) ;
     RTC1->High_Limit_Threshold_for_Minimum_Continuous_RPM_from_Retarder = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],32,0) ;
-    RTC1->Low_Limit_Threshold_for_Maximum_Torque_from_Retarder = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],32,0) ;
-    RTC1->High_Limit_Threshold_for_Minimum_Continuous_Torque_from_Retarder = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],32,0) ;
+    RTC1->Low_Limit_Threshold_for_Maximum_Torque_from_Retarder = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,-125) ;
+    RTC1->High_Limit_Threshold_for_Minimum_Continuous_Torque_from_Retarder = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],1,-125) ;
     RTC1->Maximum_Continuous_Retarder_Speed = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],32,0) ;
     RTC1->Minimum_Continuous_Retarder_Speed = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],32,0) ;
-    RTC1->Maximum_Continuous_Retarder_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],32,0) ;
-    RTC1->Minimum_Continuous_Retarder_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],32,0) ;
+    RTC1->Maximum_Continuous_Retarder_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],1,-125) ;
+    RTC1->Minimum_Continuous_Retarder_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],1,-125) ;
 }
 void CheckECT1 ( J1939_MESSAGE *J1939_MESSAGE,getECT1_t *ECT1)
 {
        uint64_t buff;
     ECT1->Engine_Low_Limit_Threshold_for_Maximum_RPM_from_Engine = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],32,0) ;
     ECT1->Engine_High_Limit_Threshold_for_Minimum_Continuous_Engine_RPM = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],32,0) ;
-    ECT1->Engine_Low_Limit_Threshold_for_Maximum_Torque_from_Engine = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],32,0) ;
-    ECT1->Engine_High_Limit_Threshold_for_Minimum_Continuous_Torque_from_Engine = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],32,0) ;
+    ECT1->Engine_Low_Limit_Threshold_for_Maximum_Torque_from_Engine = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,-125) ;
+    ECT1->Engine_High_Limit_Threshold_for_Minimum_Continuous_Torque_from_Engine = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],1,-125) ;
     ECT1->Engine_Maximum_Continuous_RPM = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],32,0) ;
     ECT1->Engine_Minimum_Continuous_RPM = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],32,0) ;
-    ECT1->Engine_Maximum_Continuous_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],32,0) ;
-    ECT1->Engine_Minimum_Continuous_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],32,0) ;
+    ECT1->Engine_Maximum_Continuous_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],1,-125) ;
+    ECT1->Engine_Minimum_Continuous_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],1,-125) ;
 }
 void CheckGFD ( J1939_MESSAGE *J1939_MESSAGE,getGFD_t *GFD)
 {
@@ -4808,19 +5008,19 @@ void CheckGFD ( J1939_MESSAGE *J1939_MESSAGE,getGFD_t *GFD)
     GFD->Specific_Heat_Ratio = Parameter_Translate(buff ,0.001,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    GFD->Reference_Engine_Gas_Mass_Flow_Rate = Parameter_Translate(buff ,0.001,0) ;
+    GFD->Reference_Engine_Gas_Mass_Flow_Rate = Parameter_Translate(buff ,0.05,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    GFD->Fuel_energy_content = Parameter_Translate(buff ,0.001,0) ;
+    GFD->Fuel_energy_content = Parameter_Translate(buff ,1,0) ;
 }
 void CheckAT1T1I ( J1939_MESSAGE *J1939_MESSAGE,getAT1T1I_t *AT1T1I)
 {
        uint64_t buff;
     AT1T1I->Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Level = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],0.4,0) ;
-    AT1T1I->Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.4,0) ;
+    AT1T1I->Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,-40) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    AT1T1I->Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Level_2 = Parameter_Translate(buff ,0.4,0) ;
+    AT1T1I->Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Level_2 = Parameter_Translate(buff ,0.1,0) ;
     AT1T1I->bt5.Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_Level_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[4]>>0;
     AT1T1I->bt5.Aftertreatment_Selective_Catalytic_Reduction_Operator_Inducement_Active = J1939_MESSAGE->Mxe.Data[4]>>5;
     AT1T1I->bt6.Aftertreatment_1_Diesel_Exhaust_Fluid_Tank_1_Temperature_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[5]>>0;
@@ -4855,13 +5055,13 @@ void CheckASC4 ( J1939_MESSAGE *J1939_MESSAGE,getASC4_t *ASC4)
     ASC4->Bellow_Pressure_Rear_Axle_Right = Parameter_Translate(buff ,0.1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    ASC4->Relative_Level_Front_Axle_Right = Parameter_Translate(buff ,0.1,0) ;
+    ASC4->Relative_Level_Front_Axle_Right = Parameter_Translate(buff ,0.1,200) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    ASC4->Relative_Level_Rear_Axle_Left = Parameter_Translate(buff ,0.1,0) ;
+    ASC4->Relative_Level_Rear_Axle_Left = Parameter_Translate(buff ,0.1,200) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    ASC4->Relative_Level_Rear_Axle_Right = Parameter_Translate(buff ,0.1,0) ;
+    ASC4->Relative_Level_Rear_Axle_Right = Parameter_Translate(buff ,0.1,200) ;
 }
 void CheckASC1 ( J1939_MESSAGE *J1939_MESSAGE,getASC1_t *ASC1)
 {
@@ -4917,7 +5117,7 @@ void CheckVF ( J1939_MESSAGE *J1939_MESSAGE,getVF_t *VF)
     VF->Hydraulic_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],1,-40) ;
     VF->bt2.Hydraulic_Oil_Filter_Restriction_Switch = J1939_MESSAGE->Mxe.Data[1]>>0;
     VF->bt2.Winch_Oil_Pressure_Switch = J1939_MESSAGE->Mxe.Data[1]>>2;
-    VF->Hydraulic_Oil_Level = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,-40) ;
+    VF->Hydraulic_Oil_Level = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.4,0) ;
 }
 void CheckET3 ( J1939_MESSAGE *J1939_MESSAGE,getET3_t *ET3)
 {
@@ -4939,10 +5139,10 @@ void CheckEFS ( J1939_MESSAGE *J1939_MESSAGE,getEFS_t *EFS)
 {
        uint64_t buff;
     EFS->Engine_Oil_Level_Remote_Reservoir = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],0.4,0) ;
-    EFS->Engine_Fuel_Supply_Pump_Intake_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.4,0) ;
-    EFS->Engine_Fuel_Filter__suction_side__Differential_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.4,0) ;
+    EFS->Engine_Fuel_Supply_Pump_Intake_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],2,0) ;
+    EFS->Engine_Fuel_Filter__suction_side__Differential_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],2,0) ;
     EFS->Engine_Waste_Oil_Reservoir_Level = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.4,0) ;
-    EFS->Engine_Oil_Filter_Outlet_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.4,0) ;
+    EFS->Engine_Oil_Filter_Outlet_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],4,0) ;
     EFS->bt6.Engine_Oil_Priming_Pump_Switch = J1939_MESSAGE->Mxe.Data[5]>>0;
     EFS->bt6.Engine_Oil_Priming_State = J1939_MESSAGE->Mxe.Data[5]>>2;
     EFS->bt6.Engine_Oil_Pre_Heated_State = J1939_MESSAGE->Mxe.Data[5]>>4;
@@ -4967,17 +5167,17 @@ void CheckTCO1 ( J1939_MESSAGE *J1939_MESSAGE,getTCO1_t *TCO1)
     TCO1->bt4.Direction_indicator = J1939_MESSAGE->Mxe.Data[3]>>6;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    TCO1->Tachograph_output_shaft_speed = Parameter_Translate(buff ,8,0) ;
+    TCO1->Tachograph_output_shaft_speed = Parameter_Translate(buff ,0.125,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    TCO1->Tachograph_vehicle_speed = Parameter_Translate(buff ,8,0) ;
+    TCO1->Tachograph_vehicle_speed = Parameter_Translate(buff ,1,0) ;
 }
 void CheckHTR ( J1939_MESSAGE *J1939_MESSAGE,getHTR_t *HTR)
 {
        uint64_t buff;
     HTR->Auxiliary_Heater_Output_Coolant_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],1,-40) ;
     HTR->Auxiliary_Heater_Input_Air_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,-40) ;
-    HTR->Auxiliary_Heater_Output_Power_Percent = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,-40) ;
+    HTR->Auxiliary_Heater_Output_Power_Percent = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.4,0) ;
     HTR->bt4.Auxiliary_Heater_Mode = J1939_MESSAGE->Mxe.Data[3]>>0;
     HTR->bt5.Auxiliary_Heater_Water_Pump_Status = J1939_MESSAGE->Mxe.Data[4]>>0;
     HTR->bt5.Cab_Ventilation = J1939_MESSAGE->Mxe.Data[4]>>2;
@@ -5010,7 +5210,7 @@ void CheckACC1 ( J1939_MESSAGE *J1939_MESSAGE,getACC1_t *ACC1)
     ACC1->bt4.Adaptive_cruise_control_set_distance_mode = J1939_MESSAGE->Mxe.Data[3]>>3;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    ACC1->Road_curvature = Parameter_Translate(buff ,1,0) ;
+    ACC1->Road_curvature = Parameter_Translate(buff ,1,1) ;
     ACC1->bt7.ACC_Target_Detected = J1939_MESSAGE->Mxe.Data[6]>>0;
     ACC1->bt7.ACC_System_Shutoff_Warning = J1939_MESSAGE->Mxe.Data[6]>>2;
     ACC1->bt7.ACC_Distance_Alert_Signal = J1939_MESSAGE->Mxe.Data[6]>>4;
@@ -5034,8 +5234,8 @@ void CheckLTP ( J1939_MESSAGE *J1939_MESSAGE,getLTP_t *LTP)
     LTP->Laser_Tracer_Target_Deviation = Parameter_Translate(buff ,0.1,200) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    LTP->Laser_Tracer_Vertical_Distance = Parameter_Translate(buff ,0.1,200) ;
-    LTP->Laser_Tracer_Horizontal_Deviation = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.1,200) ;
+    LTP->Laser_Tracer_Vertical_Distance = Parameter_Translate(buff ,0.1,0) ;
+    LTP->Laser_Tracer_Horizontal_Deviation = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],1,0) ;
     LTP->bt6.LED_Display_Data_2 = J1939_MESSAGE->Mxe.Data[5]>>0;
     LTP->bt7.Laser_Tracer_Information = J1939_MESSAGE->Mxe.Data[6]>>0;
 }
@@ -5067,7 +5267,7 @@ void CheckLSP ( J1939_MESSAGE *J1939_MESSAGE,getLSP_t *LSP)
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<16;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    LSP->Blade_Height_Set_Point___High_Resolution = Parameter_Translate(buff ,0.1,200) ;
+    LSP->Blade_Height_Set_Point___High_Resolution = Parameter_Translate(buff ,100,-209.7152) ;
 }
 void CheckLVD ( J1939_MESSAGE *J1939_MESSAGE,getLVD_t *LVD)
 {
@@ -5075,13 +5275,13 @@ void CheckLVD ( J1939_MESSAGE *J1939_MESSAGE,getLVD_t *LVD)
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
     LVD->Laser_Strike_Vertical_Deviation = Parameter_Translate(buff ,0.1,200) ;
-    LVD->Laser_Receiver_Type = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.1,200) ;
+    LVD->Laser_Receiver_Type = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    LVD->Laser_Strike_Data_Latency = Parameter_Translate(buff ,0.1,200) ;
+    LVD->Laser_Strike_Data_Latency = Parameter_Translate(buff ,51.2,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6]);
-    LVD->Absolute_Laser_Strike_Position = Parameter_Translate(buff ,0.1,200) ;
+    LVD->Absolute_Laser_Strike_Position = Parameter_Translate(buff ,0.1,0) ;
 }
 void CheckLVDD ( J1939_MESSAGE *J1939_MESSAGE,getLVDD_t *LVDD)
 {
@@ -5245,10 +5445,10 @@ void CheckGFI2 ( J1939_MESSAGE *J1939_MESSAGE,getGFI2_t *GFI2)
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
     GFI2->Engine_Fuel_Flow_Rate_2 = Parameter_Translate(buff ,0.1,0) ;
-    GFI2->Engine_Fuel_Valve_1_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.1,0) ;
-    GFI2->Engine_Fuel_Valve_2_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],0.1,0) ;
-    GFI2->Engine_Requested_Fuel_Valve_1_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.1,0) ;
-    GFI2->Engine_Requested_Fuel_Valve_2_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.1,0) ;
+    GFI2->Engine_Fuel_Valve_1_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.4,0) ;
+    GFI2->Engine_Fuel_Valve_2_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],0.4,0) ;
+    GFI2->Engine_Requested_Fuel_Valve_1_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.4,0) ;
+    GFI2->Engine_Requested_Fuel_Valve_2_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.4,0) ;
 }
 void CheckIT1 ( J1939_MESSAGE *J1939_MESSAGE,getIT1_t *IT1)
 {
@@ -5399,12 +5599,12 @@ void CheckAAI ( J1939_MESSAGE *J1939_MESSAGE,getAAI_t *AAI)
        uint64_t buff;
     AAI->Auxiliary_Temperature_1 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],1,-40) ;
     AAI->Auxiliary_Temperature_2 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,-40) ;
-    AAI->Auxiliary_Pressure_1 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,-40) ;
-    AAI->Auxiliary_Pressure_2 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],1,-40) ;
+    AAI->Auxiliary_Pressure_1 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],16,0) ;
+    AAI->Auxiliary_Pressure_2 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],16,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    AAI->Auxiliary_Level = Parameter_Translate(buff ,1,-40) ;
-    AAI->Relative_Humidity = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],1,-40) ;
+    AAI->Auxiliary_Level = Parameter_Translate(buff ,0.1,0) ;
+    AAI->Relative_Humidity = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.4,0) ;
 }
 void CheckVEP2 ( J1939_MESSAGE *J1939_MESSAGE,getVEP2_t *VEP2)
 {
@@ -5441,14 +5641,14 @@ void CheckEI ( J1939_MESSAGE *J1939_MESSAGE,getEI_t *EI)
     EI->Engine_Pre_filter_Oil_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],4,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    EI->Engine_Exhaust_Gas_Pressure_1 = Parameter_Translate(buff ,4,0) ;
-    EI->Engine_Fuel_Rack_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],4,0) ;
+    EI->Engine_Exhaust_Gas_Pressure_1 = Parameter_Translate(buff ,1,-250) ;
+    EI->Engine_Fuel_Rack_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.4,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    EI->Engine_Gas_Mass_Flow_Rate_1 = Parameter_Translate(buff ,4,0) ;
+    EI->Engine_Gas_Mass_Flow_Rate_1 = Parameter_Translate(buff ,0.05,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    EI->Instantaneous_Estimated_Brake_Power = Parameter_Translate(buff ,4,0) ;
+    EI->Instantaneous_Estimated_Brake_Power = Parameter_Translate(buff ,0.5,0) ;
 }
 void CheckEES ( J1939_MESSAGE *J1939_MESSAGE,getEES_t *EES)
 {
@@ -5462,8 +5662,8 @@ void CheckEAC ( J1939_MESSAGE *J1939_MESSAGE,getEAC_t *EAC)
 {
        uint64_t buff;
     EAC->Engine_Auxiliary_Coolant_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],4,0) ;
-    EAC->Engine_Auxiliary_Coolant_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],4,0) ;
-    EAC->Sea_Water_Pump_Outlet_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],4,0) ;
+    EAC->Engine_Auxiliary_Coolant_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,-40) ;
+    EAC->Sea_Water_Pump_Outlet_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],2,0) ;
     EAC->Engine_Extended_Range_Coolant_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],4,0) ;
 }
 void CheckRBI ( J1939_MESSAGE *J1939_MESSAGE,getRBI_t *RBI)
@@ -5482,7 +5682,7 @@ void CheckTCW ( J1939_MESSAGE *J1939_MESSAGE,getTCW_t *TCW)
     TCW->Engine_Turbocharger_Wastegate_Actuator_2_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.4,0) ;
     TCW->Engine_Turbocharger_Wastegate_Actuator_3_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.4,0) ;
     TCW->Engine_Turbocharger_Wastegate_Actuator_4_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.4,0) ;
-    TCW->Engine_Turbocharger_Wastegate_Actuator_Control_Air_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.4,0) ;
+    TCW->Engine_Turbocharger_Wastegate_Actuator_Control_Air_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],4,0) ;
     TCW->Engine_Desired_Turbocharger_Wastegate_Actuator_1_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],0.4,0) ;
     TCW->bt7.Engine_Turbocharger_Wastegate_Actuator_1_Preliminary_FMI = J1939_MESSAGE->Mxe.Data[6]>>0;
     TCW->bt7.Engine_Turbocharger_Wastegate_Actuator_1_Temperature_Status = J1939_MESSAGE->Mxe.Data[6]>>5;
@@ -5702,7 +5902,7 @@ void CheckET2 ( J1939_MESSAGE *J1939_MESSAGE,getET2_t *ET2)
     ET2->Engine_ECU_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    ET2->Engine_Exhaust_Gas_Recirculation_1_Differential_Pressure = Parameter_Translate(buff ,0.03125,-273) ;
+    ET2->Engine_Exhaust_Gas_Recirculation_1_Differential_Pressure = Parameter_Translate(buff ,1,-250) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
     ET2->Engine_Exhaust_Gas_Recirculation_1_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
@@ -5758,7 +5958,7 @@ void CheckEO1 ( J1939_MESSAGE *J1939_MESSAGE,getEO1_t *EO1)
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
     EO1->Engine_Actual_Exhaust_Oxygen = Parameter_Translate(buff ,0.0025,0) ;
-    EO1->Engine_Exhaust_Gas_Oxygen_Sensor_Fueling_Correction = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.0025,0) ;
+    EO1->Engine_Exhaust_Gas_Oxygen_Sensor_Fueling_Correction = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],1,-125) ;
     EO1->bt8.Engine_Exhaust_Gas_Oxygen_Sensor_Closed_Loop_Operation = J1939_MESSAGE->Mxe.Data[7]>>6;
 }
 void CheckAF2 ( J1939_MESSAGE *J1939_MESSAGE,getAF2_t *AF2)
@@ -5767,9 +5967,9 @@ void CheckAF2 ( J1939_MESSAGE *J1939_MESSAGE,getAF2_t *AF2)
     AF2->Engine_Gaseous_Fuel_Correction_Factor = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    AF2->Engine_Desired_Absolute_Intake_Manifold_Pressure__Turbo_Boost_Limit_ = Parameter_Translate(buff ,1,0) ;
-    AF2->Engine_Turbocharger_Wastegate_Valve_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],1,0) ;
-    AF2->Engine_Gas_Mass_Flow_Sensor_Fueling_Correction = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],1,0) ;
+    AF2->Engine_Desired_Absolute_Intake_Manifold_Pressure__Turbo_Boost_Limit_ = Parameter_Translate(buff ,0.1,0) ;
+    AF2->Engine_Turbocharger_Wastegate_Valve_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.4,0) ;
+    AF2->Engine_Gas_Mass_Flow_Sensor_Fueling_Correction = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],1,-125) ;
 }
 void CheckETC6 ( J1939_MESSAGE *J1939_MESSAGE,getETC6_t *ETC6)
 {
@@ -5777,7 +5977,7 @@ void CheckETC6 ( J1939_MESSAGE *J1939_MESSAGE,getETC6_t *ETC6)
     ETC6->Recommended_Gear = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],1,-125) ;
     ETC6->Highest_Possible_Gear = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,-125) ;
     ETC6->Lowest_Possible_Gear = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,-125) ;
-    ETC6->Clutch_Life_Remaining = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],1,-125) ;
+    ETC6->Clutch_Life_Remaining = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.4,0) ;
 }
 void CheckEBC4 ( J1939_MESSAGE *J1939_MESSAGE,getEBC4_t *EBC4)
 {
@@ -5831,30 +6031,30 @@ void CheckGFC ( J1939_MESSAGE *J1939_MESSAGE,getGFC_t *GFC)
 void CheckTTI2 ( J1939_MESSAGE *J1939_MESSAGE,getTTI2_t *TTI2)
 {
        uint64_t buff;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
     TTI2->Trip_Cruise_Time = Parameter_Translate(buff ,0.05,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
     TTI2->Trip_PTO_Governor_Time = Parameter_Translate(buff ,0.05,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[8])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[9])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[10])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[11]);
     TTI2->Trip_Engine_Running_Time = Parameter_Translate(buff ,0.05,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[12])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[13])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[14])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[15]);
     TTI2->Trip_Idle_Time = Parameter_Translate(buff ,0.05,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[16])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[17])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[18])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[19]);
     TTI2->Trip_Air_Compressor_On_Time = Parameter_Translate(buff ,0.05,0) ;
 }
 void CheckEH ( J1939_MESSAGE *J1939_MESSAGE,getEH_t *EH)
@@ -5869,7 +6069,7 @@ void CheckEH ( J1939_MESSAGE *J1939_MESSAGE,getEH_t *EH)
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<16;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    EH->Total_ECU_Run_Time = Parameter_Translate(buff ,0.125,0) ;
+    EH->Total_ECU_Run_Time = Parameter_Translate(buff ,0.05,0) ;
 }
 void CheckGFI1 ( J1939_MESSAGE *J1939_MESSAGE,getGFI1_t *GFI1)
 {
@@ -5881,10 +6081,10 @@ void CheckGFI1 ( J1939_MESSAGE *J1939_MESSAGE,getGFI1_t *GFI1)
     GFI1->Total_Engine_PTO_Governor_Fuel_Used__Gaseous_ = Parameter_Translate(buff ,0.5,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    GFI1->Trip_Average_Fuel_Rate__Gaseous_ = Parameter_Translate(buff ,0.5,0) ;
+    GFI1->Trip_Average_Fuel_Rate__Gaseous_ = Parameter_Translate(buff ,0.05,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    GFI1->Engine_Fuel_Specific_Gravity = Parameter_Translate(buff ,0.5,0) ;
+    GFI1->Engine_Fuel_Specific_Gravity = Parameter_Translate(buff ,0.0001,0) ;
 }
 void CheckLFI ( J1939_MESSAGE *J1939_MESSAGE,getLFI_t *LFI)
 {
@@ -5896,33 +6096,33 @@ void CheckLFI ( J1939_MESSAGE *J1939_MESSAGE,getLFI_t *LFI)
     LFI->Total_Engine_PTO_Governor_Fuel_Used = Parameter_Translate(buff ,0.5,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    LFI->Trip_Average_Fuel_Rate = Parameter_Translate(buff ,0.5,0) ;
+    LFI->Trip_Average_Fuel_Rate = Parameter_Translate(buff ,0.05,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    LFI->Flexible_Fuel_Percentage = Parameter_Translate(buff ,0.5,0) ;
+    LFI->Flexible_Fuel_Percentage = Parameter_Translate(buff ,0.0025,0) ;
 }
 void CheckTTI1 ( J1939_MESSAGE *J1939_MESSAGE,getTTI1_t *TTI1)
 {
        uint64_t buff;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    TTI1->Trip_Time_in_VSL = Parameter_Translate(buff ,0.05,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    TTI1->Trip_Time_in_Top_Gear = Parameter_Translate(buff ,0.05,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    TTI1->Trip_Time_in_Gear_Down = Parameter_Translate(buff ,0.05,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
+    TTI1->Trip_Time_in_VSL = Parameter_Translate(buff ,0.05,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
+    TTI1->Trip_Time_in_Top_Gear = Parameter_Translate(buff ,0.05,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[8])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[9])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[10])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[11]);
+    TTI1->Trip_Time_in_Gear_Down = Parameter_Translate(buff ,0.05,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[12])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[13])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[14])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[15]);
     TTI1->Trip_Time_in_Derate_by_Engine = Parameter_Translate(buff ,0.05,0) ;
 }
 void CheckTSI ( J1939_MESSAGE *J1939_MESSAGE,getTSI_t *TSI)
@@ -5951,7 +6151,7 @@ void CheckTVI ( J1939_MESSAGE *J1939_MESSAGE,getTVI_t *TVI)
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<16;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    TVI->Trip_Cruise_Distance = Parameter_Translate(buff ,1,0) ;
+    TVI->Trip_Cruise_Distance = Parameter_Translate(buff ,0.125,0) ;
 }
 void CheckLF ( J1939_MESSAGE *J1939_MESSAGE,getLF_t *LF)
 {
@@ -5962,77 +6162,77 @@ void CheckLF ( J1939_MESSAGE *J1939_MESSAGE,getLF_t *LF)
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
     LF->Trip_Average_Engine_Speed = Parameter_Translate(buff ,0.125,0) ;
-    LF->Trip_Drive_Average_Load_Factor = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.125,0) ;
-    LF->Total_Drive_Average_Load_Factor = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],0.125,0) ;
+    LF->Trip_Drive_Average_Load_Factor = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.4,0) ;
+    LF->Total_Drive_Average_Load_Factor = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],0.4,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<24;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7])<<16;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[8])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[9]);
-    LF->Total_Engine_Cruise_Time = Parameter_Translate(buff ,0.125,0) ;
+    LF->Total_Engine_Cruise_Time = Parameter_Translate(buff ,0.05,0) ;
 }
 void CheckGTFI ( J1939_MESSAGE *J1939_MESSAGE,getGTFI_t *GTFI)
 {
        uint64_t buff;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
     GTFI->Trip_Drive_Fuel_Used__Gaseous_ = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
     GTFI->Trip_PTO_Governor_Moving_Fuel_Used__Gaseous_ = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[8])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[9])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[10])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[11]);
     GTFI->Trip_PTO_Governor_Non_moving_Fuel_Used__Gaseous_ = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[12])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[13])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[14])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[15]);
     GTFI->Trip_Vehicle_Idle_Fuel_Used__Gaseous_ = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[16])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[17])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[18])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[19]);
     GTFI->Trip_Cruise_Fuel_Used__Gaseous_ = Parameter_Translate(buff ,0.5,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    GTFI->Trip_Drive_Fuel_Economy__Gaseous_ = Parameter_Translate(buff ,0.5,0) ;
+    GTFI->Trip_Drive_Fuel_Economy__Gaseous_ = Parameter_Translate(buff ,1,0) ;
 }
 void CheckLTFI ( J1939_MESSAGE *J1939_MESSAGE,getLTFI_t *LTFI)
 {
        uint64_t buff;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
     LTFI->Trip_Drive_Fuel_Used = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
     LTFI->Trip_PTO_Governor_Moving_Fuel_Used = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[8])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[9])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[10])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[11]);
     LTFI->Trip_PTO_Governor_Non_moving_Fuel_Used = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[12])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[13])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[14])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[15]);
     LTFI->Trip_Vehicle_Idle_Fuel_Used = Parameter_Translate(buff ,0.5,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[16])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[17])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[18])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[19]);
     LTFI->Trip_Cruise_Fuel_Used = Parameter_Translate(buff ,0.5,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    LTFI->Trip_Drive_Fuel_Economy = Parameter_Translate(buff ,0.5,0) ;
+    LTFI->Trip_Drive_Fuel_Economy = Parameter_Translate(buff ,1,0) ;
 }
 void CheckTDI ( J1939_MESSAGE *J1939_MESSAGE,getTDI_t *TDI)
 {
@@ -6056,50 +6256,50 @@ void CheckTDI ( J1939_MESSAGE *J1939_MESSAGE,getTDI_t *TDI)
 void CheckTFI ( J1939_MESSAGE *J1939_MESSAGE,getTFI_t *TFI)
 {
        uint64_t buff;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    TFI->Trip_Fan_On_Time = Parameter_Translate(buff ,0.05,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    TFI->Trip_Fan_On_Time_Due_to_the_Engine_System = Parameter_Translate(buff ,0.05,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    TFI->Trip_Fan_On_Time_Due_to_a_Manual_Switch = Parameter_Translate(buff ,0.05,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
+    TFI->Trip_Fan_On_Time = Parameter_Translate(buff ,0.05,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
+    TFI->Trip_Fan_On_Time_Due_to_the_Engine_System = Parameter_Translate(buff ,0.05,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[8])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[9])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[10])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[11]);
+    TFI->Trip_Fan_On_Time_Due_to_a_Manual_Switch = Parameter_Translate(buff ,0.05,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[12])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[13])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[14])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[15]);
     TFI->Trip_Fan_On_Time_Due_to_the_A_C_System = Parameter_Translate(buff ,0.05,0) ;
 }
 void CheckCBI ( J1939_MESSAGE *J1939_MESSAGE,getCBI_t *CBI)
 {
        uint64_t buff;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    CBI->Total_Compression_Brake_Distance = Parameter_Translate(buff ,0.125,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    CBI->Trip_Compression_Brake_Distance = Parameter_Translate(buff ,0.125,0) ;
-    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[-1])<<24;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<16;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
-    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    CBI->Trip_Service_Brake_Distance = Parameter_Translate(buff ,0.125,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<24;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<16;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    CBI->Trip_Service_Brake_Applications = Parameter_Translate(buff ,0.125,0) ;
+    CBI->Total_Compression_Brake_Distance = Parameter_Translate(buff ,0.125,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
+    CBI->Trip_Compression_Brake_Distance = Parameter_Translate(buff ,0.125,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[8])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[9])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[10])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[11]);
+    CBI->Trip_Service_Brake_Distance = Parameter_Translate(buff ,0.125,0) ;
+    buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[12])<<24;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[13])<<16;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[14])<<8;
+    buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[15]);
+    CBI->Trip_Service_Brake_Applications = Parameter_Translate(buff ,1,0) ;
 }
 void CheckFD1 ( J1939_MESSAGE *J1939_MESSAGE,getFD1_t *FD1)
 {
@@ -6108,10 +6308,10 @@ void CheckFD1 ( J1939_MESSAGE *J1939_MESSAGE,getFD1_t *FD1)
     FD1->bt2.Fan_Drive_State = J1939_MESSAGE->Mxe.Data[1]>>0;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    FD1->Fan_Speed = Parameter_Translate(buff ,0.4,0) ;
+    FD1->Fan_Speed = Parameter_Translate(buff ,0.125,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    FD1->Hydraulic_Fan_Motor_Pressure = Parameter_Translate(buff ,0.4,0) ;
+    FD1->Hydraulic_Fan_Motor_Pressure = Parameter_Translate(buff ,0.5,0) ;
     FD1->Fan_Drive_Bypass_Command_Status = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.4,0) ;
 }
 void CheckEEC4 ( J1939_MESSAGE *J1939_MESSAGE,getEEC4_t *EEC4)
@@ -6122,10 +6322,10 @@ void CheckEEC4 ( J1939_MESSAGE *J1939_MESSAGE,getEEC4_t *EEC4)
     EEC4->Engine_Rated_Power = Parameter_Translate(buff ,0.5,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    EEC4->Engine_Rated_Speed = Parameter_Translate(buff ,0.5,0) ;
+    EEC4->Engine_Rated_Speed = Parameter_Translate(buff ,0.125,0) ;
     EEC4->bt5.Engine_Rotation_Direction = J1939_MESSAGE->Mxe.Data[4]>>0;
     EEC4->bt5.Engine_Intake_Manifold_Pressure_Control_Mode = J1939_MESSAGE->Mxe.Data[4]>>2;
-    EEC4->Crank_Attempt_Count_on_Present_Start_Attempt = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],0.5,0) ;
+    EEC4->Crank_Attempt_Count_on_Present_Start_Attempt = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],1,0) ;
 }
 void CheckEBC2 ( J1939_MESSAGE *J1939_MESSAGE,getEBC2_t *EBC2)
 {
@@ -6133,12 +6333,12 @@ void CheckEBC2 ( J1939_MESSAGE *J1939_MESSAGE,getEBC2_t *EBC2)
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[0])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[1]);
     EBC2->Front_Axle_Speed = Parameter_Translate(buff ,1,0) ;
-    EBC2->Relative_Speed__Front_Axle_Left_Wheel = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,0) ;
-    EBC2->Relative_Speed__Front_Axle_Right_Wheel = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],1,0) ;
-    EBC2->Relative_Speed__Rear_Axle_1_Left_Wheel = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],1,0) ;
-    EBC2->Relative_Speed__Rear_Axle_1_Right_Wheel = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],1,0) ;
-    EBC2->Relative_Speed__Rear_Axle_2_Left_Wheel = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],1,0) ;
-    EBC2->Relative_Speed__Rear_Axle_2_Right_Wheel = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],1,0) ;
+    EBC2->Relative_Speed__Front_Axle_Left_Wheel = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,-7.8125) ;
+    EBC2->Relative_Speed__Front_Axle_Right_Wheel = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],1,-7.8125) ;
+    EBC2->Relative_Speed__Rear_Axle_1_Left_Wheel = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],1,-7.8125) ;
+    EBC2->Relative_Speed__Rear_Axle_1_Right_Wheel = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],1,-7.8125) ;
+    EBC2->Relative_Speed__Rear_Axle_2_Left_Wheel = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],1,-7.8125) ;
+    EBC2->Relative_Speed__Rear_Axle_2_Right_Wheel = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],1,-7.8125) ;
 }
 void CheckVDHR ( J1939_MESSAGE *J1939_MESSAGE,getVDHR_t *VDHR)
 {
@@ -6227,10 +6427,10 @@ void CheckAUXIO1 ( J1939_MESSAGE *J1939_MESSAGE,getAUXIO1_t *AUXIO1)
     AUXIO1->bt4.Auxiliary_I_O_13 = J1939_MESSAGE->Mxe.Data[3]>>6;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    AUXIO1->Auxiliary_I_O_Channel_1 = Parameter_Translate(buff ,4,0) ;
+    AUXIO1->Auxiliary_I_O_Channel_1 = Parameter_Translate(buff ,1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    AUXIO1->Auxiliary_I_O_Channel_2 = Parameter_Translate(buff ,4,0) ;
+    AUXIO1->Auxiliary_I_O_Channel_2 = Parameter_Translate(buff ,1,0) ;
 }
 void CheckSOFT ( J1939_MESSAGE *J1939_MESSAGE,getSOFT_t *SOFT)
 {
@@ -6265,7 +6465,7 @@ void CheckIO ( J1939_MESSAGE *J1939_MESSAGE,getIO_t *IO)
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<16;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    IO->Engine_Total_Idle_Hours = Parameter_Translate(buff ,0.5,0) ;
+    IO->Engine_Total_Idle_Hours = Parameter_Translate(buff ,0.05,0) ;
 }
 void CheckTC ( J1939_MESSAGE *J1939_MESSAGE,getTC_t *TC)
 {
@@ -6287,12 +6487,12 @@ void CheckEEC3 ( J1939_MESSAGE *J1939_MESSAGE,getEEC3_t *EEC3)
     EEC3->Nominal_Friction___Percent_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],1,-125) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    EEC3->Engine_s_Desired_Operating_Speed = Parameter_Translate(buff ,1,-125) ;
-    EEC3->Engine_s_Desired_Operating_Speed_Asymmetry_Adjustment = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],1,-125) ;
+    EEC3->Engine_s_Desired_Operating_Speed = Parameter_Translate(buff ,0.125,0) ;
+    EEC3->Engine_s_Desired_Operating_Speed_Asymmetry_Adjustment = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],1,0) ;
     EEC3->Estimated_Engine_Parasitic_Losses___Percent_Torque = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],1,-125) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6]);
-    EEC3->Aftertreatment_1_Exhaust_Gas_Mass_Flow = Parameter_Translate(buff ,1,-125) ;
+    EEC3->Aftertreatment_1_Exhaust_Gas_Mass_Flow = Parameter_Translate(buff ,0.2,0) ;
     EEC3->bt8.Aftertreatment_1_Intake_Dew_Point = J1939_MESSAGE->Mxe.Data[7]>>0;
     EEC3->bt8.Aftertreatment_1_Exhaust_Dew_Point = J1939_MESSAGE->Mxe.Data[7]>>2;
     EEC3->bt8.Aftertreatment_2_Intake_Dew_Point = J1939_MESSAGE->Mxe.Data[7]>>4;
@@ -6319,7 +6519,7 @@ void CheckTCFG ( J1939_MESSAGE *J1939_MESSAGE,getTCFG_t *TCFG)
     TCFG->Number_of_Forward_Gear_Ratios = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    TCFG->Transmission_Gear_Ratio = Parameter_Translate(buff ,1,0) ;
+    TCFG->Transmission_Gear_Ratio = Parameter_Translate(buff ,0.001,0) ;
 }
 void CheckSHUTDN ( J1939_MESSAGE *J1939_MESSAGE,getSHUTDN_t *SHUTDN)
 {
@@ -6358,19 +6558,19 @@ void CheckHOURS ( J1939_MESSAGE *J1939_MESSAGE,getHOURS_t *HOURS)
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<16;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    HOURS->Engine_Total_Revolutions = Parameter_Translate(buff ,0.05,0) ;
+    HOURS->Engine_Total_Revolutions = Parameter_Translate(buff ,1000,0) ;
 }
 void CheckTD ( J1939_MESSAGE *J1939_MESSAGE,getTD_t *TD)
 {
        uint64_t buff;
     TD->Seconds = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],0.25,0) ;
-    TD->Minutes = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.25,0) ;
-    TD->Hours = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.25,0) ;
-    TD->Month = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.25,0) ;
+    TD->Minutes = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,0) ;
+    TD->Hours = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,0) ;
+    TD->Month = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],1,0) ;
     TD->Day = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.25,0) ;
-    TD->Year = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],0.25,0) ;
-    TD->Local_minute_offset = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.25,0) ;
-    TD->Local_hour_offset = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.25,0) ;
+    TD->Year = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],1,1985) ;
+    TD->Local_minute_offset = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],1,-125) ;
+    TD->Local_hour_offset = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],1,-125) ;
 }
 void CheckVH ( J1939_MESSAGE *J1939_MESSAGE,getVH_t *VH)
 {
@@ -6397,10 +6597,10 @@ void CheckVDS ( J1939_MESSAGE *J1939_MESSAGE,getVDS_t *VDS)
     VDS->Navigation_Based_Vehicle_Speed = Parameter_Translate(buff ,1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    VDS->Pitch = Parameter_Translate(buff ,1,0) ;
+    VDS->Pitch = Parameter_Translate(buff ,1,-200) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    VDS->Altitude = Parameter_Translate(buff ,1,0) ;
+    VDS->Altitude = Parameter_Translate(buff ,0.125,-2500) ;
 }
 void CheckLFC ( J1939_MESSAGE *J1939_MESSAGE,getLFC_t *LFC)
 {
@@ -6414,7 +6614,7 @@ void CheckLFC ( J1939_MESSAGE *J1939_MESSAGE,getLFC_t *LFC)
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<16;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    LFC->Engine_Total_Fuel_Used = Parameter_Translate(buff ,0.001,0) ;
+    LFC->Engine_Total_Fuel_Used = Parameter_Translate(buff ,0.5,0) ;
 }
 void CheckVW ( J1939_MESSAGE *J1939_MESSAGE,getVW_t *VW)
 {
@@ -6422,13 +6622,13 @@ void CheckVW ( J1939_MESSAGE *J1939_MESSAGE,getVW_t *VW)
     VW->bt1.Axle_Location = J1939_MESSAGE->Mxe.Data[0]>>0;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    VW->Axle_Weight = Parameter_Translate(buff ,256,0) ;
+    VW->Axle_Weight = Parameter_Translate(buff ,0.5,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    VW->Trailer_Weight = Parameter_Translate(buff ,256,0) ;
+    VW->Trailer_Weight = Parameter_Translate(buff ,2,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6]);
-    VW->Cargo_Weight = Parameter_Translate(buff ,256,0) ;
+    VW->Cargo_Weight = Parameter_Translate(buff ,2,0) ;
 }
 void CheckCCSS ( J1939_MESSAGE *J1939_MESSAGE,getCCSS_t *CCSS)
 {
@@ -6444,25 +6644,25 @@ void CheckET1 ( J1939_MESSAGE *J1939_MESSAGE,getET1_t *ET1)
     ET1->Engine_Fuel_Temperature_1 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,-40) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    ET1->Engine_Oil_Temperature_1 = Parameter_Translate(buff ,1,-40) ;
+    ET1->Engine_Oil_Temperature_1 = Parameter_Translate(buff ,0.03125,-273) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    ET1->Engine_Turbocharger_Oil_Temperature = Parameter_Translate(buff ,1,-40) ;
+    ET1->Engine_Turbocharger_Oil_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
     ET1->Engine_Intercooler_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],1,-40) ;
-    ET1->Engine_Intercooler_Thermostat_Opening = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],1,-40) ;
+    ET1->Engine_Intercooler_Thermostat_Opening = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.4,0) ;
 }
 void CheckEFL_P1 ( J1939_MESSAGE *J1939_MESSAGE,getEFL_P1_t *EFL_P1)
 {
        uint64_t buff;
     EFL_P1->Engine_Fuel_Delivery_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],4,0) ;
-    EFL_P1->Engine_Extended_Crankcase_Blow_by_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],4,0) ;
-    EFL_P1->Engine_Oil_Level = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],4,0) ;
+    EFL_P1->Engine_Extended_Crankcase_Blow_by_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.05,0) ;
+    EFL_P1->Engine_Oil_Level = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.4,0) ;
     EFL_P1->Engine_Oil_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],4,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    EFL_P1->Engine_Crankcase_Pressure = Parameter_Translate(buff ,4,0) ;
-    EFL_P1->Engine_Coolant_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],4,0) ;
-    EFL_P1->Engine_Coolant_Level = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],4,0) ;
+    EFL_P1->Engine_Crankcase_Pressure = Parameter_Translate(buff ,1,-250) ;
+    EFL_P1->Engine_Coolant_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],2,0) ;
+    EFL_P1->Engine_Coolant_Level = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.4,0) ;
 }
 void CheckPTO ( J1939_MESSAGE *J1939_MESSAGE,getPTO_t *PTO)
 {
@@ -6470,10 +6670,10 @@ void CheckPTO ( J1939_MESSAGE *J1939_MESSAGE,getPTO_t *PTO)
     PTO->Power_Takeoff_Oil_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],1,-40) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    PTO->Power_Takeoff_Speed = Parameter_Translate(buff ,1,-40) ;
+    PTO->Power_Takeoff_Speed = Parameter_Translate(buff ,0.125,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    PTO->Power_Takeoff_Set_Speed = Parameter_Translate(buff ,1,-40) ;
+    PTO->Power_Takeoff_Set_Speed = Parameter_Translate(buff ,0.125,0) ;
     PTO->bt6.Engine_PTO_Governor_Enable_Switch = J1939_MESSAGE->Mxe.Data[5]>>0;
     PTO->bt6.Engine_Remote_PTO_Governor_Preprogrammed_Speed_Control_Switch = J1939_MESSAGE->Mxe.Data[5]>>2;
     PTO->bt6.Engine_Remote_PTO_Governor_Variable_Speed_Control_Switch = J1939_MESSAGE->Mxe.Data[5]>>4;
@@ -6494,7 +6694,7 @@ void CheckCCVS1 ( J1939_MESSAGE *J1939_MESSAGE,getCCVS1_t *CCVS1)
     CCVS1->bt1.Park_Brake_Release_Inhibit_Request = J1939_MESSAGE->Mxe.Data[0]>>6;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    CCVS1->Wheel_Based_Vehicle_Speed = Parameter_Translate(buff ,4,0) ;
+    CCVS1->Wheel_Based_Vehicle_Speed = Parameter_Translate(buff ,1,0) ;
     CCVS1->bt4.Cruise_Control_Active = J1939_MESSAGE->Mxe.Data[3]>>0;
     CCVS1->bt4.Cruise_Control_Enable_Switch = J1939_MESSAGE->Mxe.Data[3]>>2;
     CCVS1->bt4.Brake_Switch = J1939_MESSAGE->Mxe.Data[3]>>4;
@@ -6503,7 +6703,7 @@ void CheckCCVS1 ( J1939_MESSAGE *J1939_MESSAGE,getCCVS1_t *CCVS1)
     CCVS1->bt5.Cruise_Control_Coast__Decelerate__Switch = J1939_MESSAGE->Mxe.Data[4]>>2;
     CCVS1->bt5.Cruise_Control_Resume_Switch = J1939_MESSAGE->Mxe.Data[4]>>4;
     CCVS1->bt5.Cruise_Control_Accelerate_Switch = J1939_MESSAGE->Mxe.Data[4]>>6;
-    CCVS1->Cruise_Control_Set_Speed = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],4,0) ;
+    CCVS1->Cruise_Control_Set_Speed = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],1,0) ;
     CCVS1->bt7.PTO_Governor_State = J1939_MESSAGE->Mxe.Data[6]>>0;
     CCVS1->bt7.Cruise_Control_States = J1939_MESSAGE->Mxe.Data[6]>>5;
     CCVS1->bt8.Engine_Idle_Increment_Switch = J1939_MESSAGE->Mxe.Data[7]>>0;
@@ -6519,12 +6719,12 @@ void CheckLFE1 ( J1939_MESSAGE *J1939_MESSAGE,getLFE1_t *LFE1)
     LFE1->Engine_Fuel_Rate = Parameter_Translate(buff ,0.05,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    LFE1->Engine_Instantaneous_Fuel_Economy = Parameter_Translate(buff ,0.05,0) ;
+    LFE1->Engine_Instantaneous_Fuel_Economy = Parameter_Translate(buff ,1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    LFE1->Engine_Average_Fuel_Economy = Parameter_Translate(buff ,0.05,0) ;
-    LFE1->Engine_Throttle_Valve_1_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.05,0) ;
-    LFE1->Engine_Throttle_Valve_2_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.05,0) ;
+    LFE1->Engine_Average_Fuel_Economy = Parameter_Translate(buff ,1,0) ;
+    LFE1->Engine_Throttle_Valve_1_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.4,0) ;
+    LFE1->Engine_Throttle_Valve_2_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.4,0) ;
 }
 void CheckVP ( J1939_MESSAGE *J1939_MESSAGE,getVP_t *VP)
 {
@@ -6544,16 +6744,16 @@ void CheckTIRE ( J1939_MESSAGE *J1939_MESSAGE,getTIRE_t *TIRE)
 {
        uint64_t buff;
     TIRE->bt1.Tire_Location = J1939_MESSAGE->Mxe.Data[0]>>0;
-    TIRE->Tire_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],256,0) ;
+    TIRE->Tire_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],4,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    TIRE->Tire_Temperature = Parameter_Translate(buff ,256,0) ;
+    TIRE->Tire_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
     TIRE->bt5.CTI_Wheel_Sensor_Status = J1939_MESSAGE->Mxe.Data[4]>>0;
     TIRE->bt5.CTI_Tire_Status = J1939_MESSAGE->Mxe.Data[4]>>2;
     TIRE->bt5.CTI_Wheel_End_Electrical_Fault = J1939_MESSAGE->Mxe.Data[4]>>4;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6]);
-    TIRE->Tire_Air_Leakage_Rate = Parameter_Translate(buff ,256,0) ;
+    TIRE->Tire_Air_Leakage_Rate = Parameter_Translate(buff ,0.1,0) ;
     TIRE->bt8.Tire_Pressure_Threshold_Detection = J1939_MESSAGE->Mxe.Data[7]>>5;
 }
 void CheckAMB ( J1939_MESSAGE *J1939_MESSAGE,getAMB_t *AMB)
@@ -6562,54 +6762,54 @@ void CheckAMB ( J1939_MESSAGE *J1939_MESSAGE,getAMB_t *AMB)
     AMB->Barometric_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],0.5,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    AMB->Cab_Interior_Temperature = Parameter_Translate(buff ,0.5,0) ;
+    AMB->Cab_Interior_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[3])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[4]);
-    AMB->Ambient_Air_Temperature = Parameter_Translate(buff ,0.5,0) ;
-    AMB->Engine_Air_Intake_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],0.5,0) ;
+    AMB->Ambient_Air_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
+    AMB->Engine_Air_Intake_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[5],1,-40) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    AMB->Road_Surface_Temperature = Parameter_Translate(buff ,0.5,0) ;
+    AMB->Road_Surface_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
 }
 void CheckIC1 ( J1939_MESSAGE *J1939_MESSAGE,getIC1_t *IC1)
 {
        uint64_t buff;
     IC1->Engine_Diesel_Particulate_Filter_Intake_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],0.5,0) ;
-    IC1->Engine_Intake_Manifold_1_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.5,0) ;
-    IC1->Engine_Intake_Manifold_1_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.5,0) ;
-    IC1->Engine_Air_Intake_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.5,0) ;
-    IC1->Engine_Air_Filter_1_Differential_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.5,0) ;
+    IC1->Engine_Intake_Manifold_1_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],2,0) ;
+    IC1->Engine_Intake_Manifold_1_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,-40) ;
+    IC1->Engine_Air_Intake_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],2,0) ;
+    IC1->Engine_Air_Filter_1_Differential_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],0.05,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[5])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[6]);
-    IC1->Engine_Exhaust_Gas_Temperature = Parameter_Translate(buff ,0.5,0) ;
+    IC1->Engine_Exhaust_Gas_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
     IC1->Engine_Coolant_Filter_Differential_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],0.5,0) ;
 }
 void CheckVEP1 ( J1939_MESSAGE *J1939_MESSAGE,getVEP1_t *VEP1)
 {
        uint64_t buff;
     VEP1->Net_Battery_Current = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],1,-125) ;
-    VEP1->Alternator_Current = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,-125) ;
+    VEP1->Alternator_Current = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[2])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[3]);
-    VEP1->Charging_System_Potential__Voltage_ = Parameter_Translate(buff ,1,-125) ;
+    VEP1->Charging_System_Potential__Voltage_ = Parameter_Translate(buff ,0.05,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    VEP1->Battery_Potential___Power_Input_1 = Parameter_Translate(buff ,1,-125) ;
+    VEP1->Battery_Potential___Power_Input_1 = Parameter_Translate(buff ,0.05,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[6])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[7]);
-    VEP1->Keyswitch_Battery_Potential = Parameter_Translate(buff ,1,-125) ;
+    VEP1->Keyswitch_Battery_Potential = Parameter_Translate(buff ,0.05,0) ;
 }
 void CheckTRF1 ( J1939_MESSAGE *J1939_MESSAGE,getTRF1_t *TRF1)
 {
        uint64_t buff;
     TRF1->Clutch_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],16,0) ;
-    TRF1->Transmission_Oil_Level_1 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],16,0) ;
-    TRF1->Transmission_Filter_Differential_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],16,0) ;
+    TRF1->Transmission_Oil_Level_1 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.4,0) ;
+    TRF1->Transmission_Filter_Differential_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],2,0) ;
     TRF1->Transmission_Oil_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],16,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    TRF1->Transmission_Oil_Temperature_1 = Parameter_Translate(buff ,16,0) ;
-    TRF1->Transmission_Oil_Level_1_High___Low = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],16,0) ;
+    TRF1->Transmission_Oil_Temperature_1 = Parameter_Translate(buff ,0.03125,-273) ;
+    TRF1->Transmission_Oil_Level_1_High___Low = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.5,-62.5) ;
     TRF1->bt8.Transmission_Oil_Level_1_Countdown_Timer = J1939_MESSAGE->Mxe.Data[7]>>0;
     TRF1->bt8.Transmission_Oil_Level_1_Measurement_Status = J1939_MESSAGE->Mxe.Data[7]>>4;
 }
@@ -6618,10 +6818,10 @@ void CheckAI ( J1939_MESSAGE *J1939_MESSAGE,getAI_t *AI)
        uint64_t buff;
     AI->Steering_Axle_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],1,-40) ;
     AI->bt2.Drive_Axle_Location = J1939_MESSAGE->Mxe.Data[1]>>0;
-    AI->Drive_Axle_Lift_Air_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],1,-40) ;
+    AI->Drive_Axle_Lift_Air_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],4,0) ;
     AI->Drive_Axle_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],1,-40) ;
-    AI->Drive_Axle_Lube_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],1,-40) ;
-    AI->Steering_Axle_Lube_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],1,-40) ;
+    AI->Drive_Axle_Lube_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[4],4,0) ;
+    AI->Steering_Axle_Lube_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[7],4,0) ;
 }
 void CheckB ( J1939_MESSAGE *J1939_MESSAGE,getB_t *B)
 {
@@ -6637,7 +6837,7 @@ void CheckRF ( J1939_MESSAGE *J1939_MESSAGE,getRF_t *RF)
 {
        uint64_t buff;
     RF->Hydraulic_Retarder_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],16,0) ;
-    RF->Hydraulic_Retarder_Oil_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],16,0) ;
+    RF->Hydraulic_Retarder_Oil_Temperature = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],1,-40) ;
     RF->bt3.Driveline_Retarder_Overheat_Indicator = J1939_MESSAGE->Mxe.Data[2]>>0;
 }
 void CheckDD ( J1939_MESSAGE *J1939_MESSAGE,getDD_t *DD)
@@ -6645,11 +6845,11 @@ void CheckDD ( J1939_MESSAGE *J1939_MESSAGE,getDD_t *DD)
        uint64_t buff;
     DD->Washer_Fluid_Level = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],0.4,0) ;
     DD->Fuel_Level_1 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[1],0.4,0) ;
-    DD->Engine_Fuel_Filter_Differential_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],0.4,0) ;
-    DD->Engine_Oil_Filter_Differential_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.4,0) ;
+    DD->Engine_Fuel_Filter_Differential_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[2],2,0) ;
+    DD->Engine_Oil_Filter_Differential_Pressure = Parameter_Translate(J1939_MESSAGE->Mxe.Data[3],0.5,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[4])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[5]);
-    DD->Cargo_Ambient_Temperature = Parameter_Translate(buff ,0.4,0) ;
+    DD->Cargo_Ambient_Temperature = Parameter_Translate(buff ,0.03125,-273) ;
     DD->Fuel_Level_2 = Parameter_Translate(J1939_MESSAGE->Mxe.Data[6],0.4,0) ;
 }
 void CheckA1 ( J1939_MESSAGE *J1939_MESSAGE,getA1_t *A1)
@@ -6658,7 +6858,7 @@ void CheckA1 ( J1939_MESSAGE *J1939_MESSAGE,getA1_t *A1)
     A1->Engine_Blower_Bypass_Valve_Position = Parameter_Translate(J1939_MESSAGE->Mxe.Data[0],0.4,0) ;
     buff=(uint64_t)(J1939_MESSAGE->Mxe.Data[1])<<8;
     buff |= (uint64_t)(J1939_MESSAGE->Mxe.Data[2]);
-    A1->Engine_Gas_Supply_Pressure = Parameter_Translate(buff ,0.4,0) ;
+    A1->Engine_Gas_Supply_Pressure = Parameter_Translate(buff ,0.5,0) ;
 }
 void CheckAWPP ( J1939_MESSAGE *J1939_MESSAGE,getAWPP_t *AWPP)
 {
@@ -6667,11 +6867,11 @@ void CheckAWPP ( J1939_MESSAGE *J1939_MESSAGE,getAWPP_t *AWPP)
 }
 
 
-
 void transmit_USART_STR(J1939_MESSAGE *J1939_MESSAGE)
 {
 				char data[128];
 				getLLRE_t LLRE;
+				getCCVS1_t CCVS1;
 	/*
 				sprintf(data,"\nPGN : %d Array:%X %X %X %X %X %X %X %X\n",J1939_MESSAGE->Mxe.PGN,J1939_MESSAGE->Mxe.Data[0],J1939_MESSAGE->Mxe.Data[1],J1939_MESSAGE->Mxe.Data[2],
 	J1939_MESSAGE->Mxe.Data[3],J1939_MESSAGE->Mxe.Data[4],J1939_MESSAGE->Mxe.Data[5],J1939_MESSAGE->Mxe.Data[6],J1939_MESSAGE->Mxe.Data[7]);
@@ -6699,7 +6899,18 @@ void transmit_USART_STR(J1939_MESSAGE *J1939_MESSAGE)
 					sprintf(data,"\n**PGN : %X Blade_Reference_Elevation_Offset___Right:%f **\n",J1939_MESSAGE->Mxe.PGN,LLRE.Blade_Reference_Elevation_Offset___Right);
 						USART_STR(USART2,data);
 				}
-	\
+				if (65265==J1939_MESSAGE->Mxe.PGN)
+				{
+					sprintf(data,"\nPGN : %d Array:%X %X %X %X %X %X %X %X\n",J1939_MESSAGE->Mxe.PGN,J1939_MESSAGE->Mxe.Data[0],J1939_MESSAGE->Mxe.Data[1],J1939_MESSAGE->Mxe.Data[2],
+	J1939_MESSAGE->Mxe.Data[3],J1939_MESSAGE->Mxe.Data[4],J1939_MESSAGE->Mxe.Data[5],J1939_MESSAGE->Mxe.Data[6],J1939_MESSAGE->Mxe.Data[7]);
+				USART_STR(USART2,data);
+					
+						CheckCCVS1(J1939_MESSAGE,&CCVS1);
+				
+						sprintf(data,"\n**PGN : %X Wheel_Based_Vehicle_Speed:%f **\n",J1939_MESSAGE->Mxe.PGN,CCVS1.Wheel_Based_Vehicle_Speed);
+						USART_STR(USART2,data);
+					
+				}
 	
 
 }

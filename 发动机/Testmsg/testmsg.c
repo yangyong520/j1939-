@@ -3,13 +3,52 @@
 void testallmsg_group1()
 {
 	J1939_MESSAGE_T msg;
+	
+	getLLRE_t llre;
+
+       config_LLRE(&llre);
+       LLRE(&msg,&llre);
+       send_massage(&msg);
+       Delay(500000);
+	//速度
+			getCCVS1_t ccvs1;
+
+       config_CCVS1(&ccvs1);
+       CCVS1(&msg,&ccvs1);
+       send_massage(&msg);
+       Delay(500000);
+	//引擎温度
+	       getET1_t et1;
+
+       config_ET1(&et1);
+       ET1(&msg,&et1);
+       send_massage(&msg);
+       Delay(500000);
+				//灯光响应
+			getLD_t ld;
+
+       config_LD(&ld);
+       LD(&msg,&ld);
+       send_massage(&msg);
+       Delay(500000);
+			 //灯光控制
+
+
+        getLCMD_t lcmd;
+
+       config_LCMD(&lcmd);
+       LCMD(&msg,&lcmd);
+       send_massage(&msg);
+       Delay(500000);
+			 
        getTSC1_t tsc1;
 
        config_TSC1(&tsc1);
        TSC1(&msg,&tsc1);
        send_massage(&msg);
        Delay(500000);
-
+}
+/*
        getTC1_t tc1;
 
        config_TC1(&tc1);
@@ -787,7 +826,13 @@ void testallmsg_group1()
        send_massage(&msg);
        Delay(500000);
 
-       getIVAC_t ivac;
+       
+}
+/*
+void testallmsg_group2()
+{
+	J1939_MESSAGE_T msg;
+getIVAC_t ivac;
 
        config_IVAC(&ivac);
        IVAC(&msg,&ivac);
@@ -877,11 +922,6 @@ void testallmsg_group1()
        CAC2(&msg,&cac2);
        send_massage(&msg);
        Delay(500000);
-}
-/*
-void testallmsg_group2()
-{
-	J1939_MESSAGE_T msg;
 
        getCAC2P_t cac2p;
 

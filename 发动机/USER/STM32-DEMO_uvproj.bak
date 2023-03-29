@@ -364,7 +364,7 @@
               <MiscControls>--gnu</MiscControls>
               <Define>USE_STDPERIPH_DRIVER, STM32F10X_HD</Define>
               <Undefine></Undefine>
-              <IncludePath>..\CMSIS;..\FWlib\inc;..\USER;..\J1939;..\Msg</IncludePath>
+              <IncludePath>..\CMSIS;..\FWlib\inc;..\USER;..\J1939;..\Msg;..\Testmsg</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -521,6 +521,16 @@
               <FileName>msg.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Msg\msg.h</FilePath>
+            </File>
+            <File>
+              <FileName>testmsg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Testmsg\testmsg.c</FilePath>
+            </File>
+            <File>
+              <FileName>testmsg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Testmsg\testmsg.h</FilePath>
             </File>
           </Files>
         </Group>
