@@ -6872,6 +6872,8 @@ void transmit_USART_STR(J1939_MESSAGE *J1939_MESSAGE)
 				char data[128];
 				getLLRE_t LLRE;
 				getCCVS1_t CCVS1;
+				getET1_t ET1;
+				getLD_t LD;
 	/*
 				sprintf(data,"\nPGN : %d Array:%X %X %X %X %X %X %X %X\n",J1939_MESSAGE->Mxe.PGN,J1939_MESSAGE->Mxe.Data[0],J1939_MESSAGE->Mxe.Data[1],J1939_MESSAGE->Mxe.Data[2],
 	J1939_MESSAGE->Mxe.Data[3],J1939_MESSAGE->Mxe.Data[4],J1939_MESSAGE->Mxe.Data[5],J1939_MESSAGE->Mxe.Data[6],J1939_MESSAGE->Mxe.Data[7]);
@@ -6882,7 +6884,7 @@ void transmit_USART_STR(J1939_MESSAGE *J1939_MESSAGE)
 				sprintf(data,"\n**PGN : %d Data:%X **\n",J1939_MESSAGE->Mxe.PGN,J1939_MESSAGE->Mxe.Data);
 				USART_STR(USART2,data);
 	*/
-				if (64750==J1939_MESSAGE->Mxe.PGN)
+				if (64750==J1939_MESSAGE->Mxe.PGN)//测试
 				{
 					sprintf(data,"\nPGN : %d Array:%X %X %X %X %X %X %X %X\n",J1939_MESSAGE->Mxe.PGN,J1939_MESSAGE->Mxe.Data[0],J1939_MESSAGE->Mxe.Data[1],J1939_MESSAGE->Mxe.Data[2],
 	J1939_MESSAGE->Mxe.Data[3],J1939_MESSAGE->Mxe.Data[4],J1939_MESSAGE->Mxe.Data[5],J1939_MESSAGE->Mxe.Data[6],J1939_MESSAGE->Mxe.Data[7]);
@@ -6899,7 +6901,7 @@ void transmit_USART_STR(J1939_MESSAGE *J1939_MESSAGE)
 					sprintf(data,"\n**PGN : %X Blade_Reference_Elevation_Offset___Right:%f **\n",J1939_MESSAGE->Mxe.PGN,LLRE.Blade_Reference_Elevation_Offset___Right);
 						USART_STR(USART2,data);
 				}
-				if (65265==J1939_MESSAGE->Mxe.PGN)
+				if (65265==J1939_MESSAGE->Mxe.PGN)//速度
 				{
 					sprintf(data,"\nPGN : %d Array:%X %X %X %X %X %X %X %X\n",J1939_MESSAGE->Mxe.PGN,J1939_MESSAGE->Mxe.Data[0],J1939_MESSAGE->Mxe.Data[1],J1939_MESSAGE->Mxe.Data[2],
 	J1939_MESSAGE->Mxe.Data[3],J1939_MESSAGE->Mxe.Data[4],J1939_MESSAGE->Mxe.Data[5],J1939_MESSAGE->Mxe.Data[6],J1939_MESSAGE->Mxe.Data[7]);
@@ -6908,6 +6910,32 @@ void transmit_USART_STR(J1939_MESSAGE *J1939_MESSAGE)
 						CheckCCVS1(J1939_MESSAGE,&CCVS1);
 				
 						sprintf(data,"\n**PGN : %X Wheel_Based_Vehicle_Speed:%f **\n",J1939_MESSAGE->Mxe.PGN,CCVS1.Wheel_Based_Vehicle_Speed);
+						USART_STR(USART2,data);
+					
+				}
+				if (65262==J1939_MESSAGE->Mxe.PGN)//温度
+				{
+					sprintf(data,"\nPGN : %d Array:%X %X %X %X %X %X %X %X\n",J1939_MESSAGE->Mxe.PGN,J1939_MESSAGE->Mxe.Data[0],J1939_MESSAGE->Mxe.Data[1],J1939_MESSAGE->Mxe.Data[2],
+	J1939_MESSAGE->Mxe.Data[3],J1939_MESSAGE->Mxe.Data[4],J1939_MESSAGE->Mxe.Data[5],J1939_MESSAGE->Mxe.Data[6],J1939_MESSAGE->Mxe.Data[7]);
+				USART_STR(USART2,data);
+					
+						CheckET1(J1939_MESSAGE,&ET1);
+				
+						sprintf(data,"\n**PGN : %X Engine_Coolant_Temperature:%f **\n",J1939_MESSAGE->Mxe.PGN,ET1.Engine_Coolant_Temperature);
+						USART_STR(USART2,data);
+					
+				}
+				if (65088==J1939_MESSAGE->Mxe.PGN)//获取灯光
+				{
+					sprintf(data,"\nPGN : %d Array:%X %X %X %X %X %X %X %X\n",J1939_MESSAGE->Mxe.PGN,J1939_MESSAGE->Mxe.Data[0],J1939_MESSAGE->Mxe.Data[1],J1939_MESSAGE->Mxe.Data[2],
+	J1939_MESSAGE->Mxe.Data[3],J1939_MESSAGE->Mxe.Data[4],J1939_MESSAGE->Mxe.Data[5],J1939_MESSAGE->Mxe.Data[6],J1939_MESSAGE->Mxe.Data[7]);
+				USART_STR(USART2,data);
+					
+						CheckLD(J1939_MESSAGE,&LD);
+				
+						sprintf(data,"\n**PGN : %X \nRunning_Light:%d High_Beam_Head_Light_Data:%d\n Low_Beam_Head_Light_Data :%d**\n",J1939_MESSAGE->Mxe.PGN,LD.bt1.Running_Light,LD.bt1.High_Beam_Head_Light_Data,LD.bt1.Low_Beam_Head_Light_Data);
+						USART_STR(USART2,data);
+					sprintf(data,"\n**PGN : %X \n Left_Turn_Signal_Lights:%d Right_Turn_Signal_Lights:%d\n Back_Up_Light_and_Alarm_Horn :%d**\n",J1939_MESSAGE->Mxe.PGN,LD.bt2.Left_Turn_Signal_Lights,LD.bt2.Right_Turn_Signal_Lights,LD.bt3.Back_Up_Light_and_Alarm_Horn);
 						USART_STR(USART2,data);
 					
 				}

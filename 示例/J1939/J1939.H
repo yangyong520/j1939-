@@ -147,15 +147,6 @@ typedef enum
 /**TP的状态描述枚举
 *
 */
-typedef struct getRBR {
-    uint16_t Unique_Beacon_Message_Identifier_Number;
-    struct RBR_byte3 {
-        uint8_t Radio_Beacon_Direction:2;
-    }RBR_byte3;
-    struct RBR_byte3 bt3;
-    uint32_t Transmitter_ID_2;
-    uint8_t Wireless_Signal_Strength_2;
-} getRBR_t ;
 typedef enum
 {
 	J1939_TP_NULL,  /**< 长数据传输处于空闲，只有TP系统处于空闲，才能用处理下一个发送，和接受请求*/ 
