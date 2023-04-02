@@ -1,0 +1,16 @@
+..\..\output\can.o: ..\..\can\USER\can.c
+..\..\output\can.o: ..\..\can\USER\can.h
+..\..\output\can.o: ..\..\Libraries\CMSIS\stm32f10x.h
+..\..\output\can.o: ..\..\Libraries\CMSIS\core_cm3.h
+..\..\output\can.o: C:\Keil_v5\ARM\ARMCC\bin\..\include\stdint.h
+..\..\output\can.o: ..\..\Libraries\CMSIS\system_stm32f10x.h
+..\..\output\can.o: ..\..\User\stm32f10x_conf.h
+..\..\output\can.o: ..\..\Libraries\FWlib\inc\stm32f10x_gpio.h
+..\..\output\can.o: ..\..\Libraries\CMSIS\stm32f10x.h
+..\..\output\can.o: ..\..\Libraries\FWlib\inc\stm32f10x_rcc.h
+..\..\output\can.o: ..\..\Libraries\FWlib\inc\stm32f10x_tim.h
+..\..\output\can.o: ..\..\Libraries\FWlib\inc\stm32f10x_usart.h
+..\..\output\can.o: ..\..\Libraries\FWlib\inc\misc.h
+..\..\output\can.o: ..\..\can\USER\led.h
+..\..\output\can.o: C:\Keil_v5\ARM\ARMCC\bin\..\include\stdio.h
+..\..\output\can.o: ..\..\Libraries\FWlib\inc\stm32f10x_can.h

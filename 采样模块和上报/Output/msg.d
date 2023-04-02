@@ -1,0 +1,14 @@
+..\..\output\msg.o: ..\..\Msg\msg.c
+..\..\output\msg.o: ..\..\Msg\msg.h
+..\..\output\msg.o: ..\..\Libraries\CMSIS\stm32f10x.h
+..\..\output\msg.o: ..\..\Libraries\CMSIS\core_cm3.h
+..\..\output\msg.o: C:\Keil_v5\ARM\ARMCC\bin\..\include\stdint.h
+..\..\output\msg.o: ..\..\Libraries\CMSIS\system_stm32f10x.h
+..\..\output\msg.o: ..\..\User\stm32f10x_conf.h
+..\..\output\msg.o: ..\..\Libraries\FWlib\inc\stm32f10x_gpio.h
+..\..\output\msg.o: ..\..\Libraries\CMSIS\stm32f10x.h
+..\..\output\msg.o: ..\..\Libraries\FWlib\inc\stm32f10x_rcc.h
+..\..\output\msg.o: ..\..\Libraries\FWlib\inc\stm32f10x_tim.h
+..\..\output\msg.o: ..\..\Libraries\FWlib\inc\stm32f10x_usart.h
+..\..\output\msg.o: ..\..\Libraries\FWlib\inc\misc.h
+..\..\output\msg.o: ..\..\can\J1939\J1939.H
