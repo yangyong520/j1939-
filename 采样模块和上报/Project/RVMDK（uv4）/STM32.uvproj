@@ -364,7 +364,7 @@
               <MiscControls>--gnu</MiscControls>
               <Define>STM32F10X_HD, USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Libraries\CMSIS;..\..\User;..\..\Libraries\FWlib\inc;..\..\User\gpio;..\..\User\SysTick;..\..\User\usart;..\..\User\wifi;..\..\can\USER;..\..\can\J1939;..\..\Msg;..\..\Testmsg</IncludePath>
+              <IncludePath>..\..\Libraries\CMSIS;..\..\User;..\..\Libraries\FWlib\inc;..\..\User\gpio;..\..\User\SysTick;..\..\User\usart;..\..\User\wifi;..\..\can\USER;..\..\can\J1939;..\..\Msg;..\..\Testmsg;..\..\Config</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -671,6 +671,16 @@
               <FileName>testmsg.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Testmsg\testmsg.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Config</GroupName>
+          <Files>
+            <File>
+              <FileName>config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Config\config.h</FilePath>
             </File>
           </Files>
         </Group>

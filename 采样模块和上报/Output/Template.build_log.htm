@@ -3,7 +3,7 @@
 <pre>
 <h1>礦ision Build Log</h1>
 <h2>Project:</h2>
-C:\Users\杨勇\Desktop\毕业设计\git\j1939-\采样模块\Project\RVMDK（uv4）\STM32.uvproj
+C:\Users\杨勇\Desktop\毕业设计\git\j1939-\采样模块和上报\Project\RVMDK（uv4）\STM32.uvproj
 Project File Date:  04/02/2023
 
 <h2>Output:</h2>
@@ -60,9 +60,11 @@ compiling main.c...
   void testallmsg_group3();
 ..\..\Testmsg\testmsg.h(7): warning:  #1-D: last line of file ends without a newline
   #endif
-..\..\User\main.c(153): warning:  #223-D: function "J1939_EnqueueMessage" declared implicitly
+..\..\Config\config.h(9): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\..\User\main.c(156): warning:  #223-D: function "J1939_EnqueueMessage" declared implicitly
           while (J1939_EnqueueMessage(&Msg,Select_CAN_NODE_1) != RC_SUCCESS){ 
-..\..\User\main.c: 10 warnings, 0 errors
+..\..\User\main.c: 11 warnings, 0 errors
 compiling stm32f10x_it.c...
 compiling bsp_usart1.c...
 compiling bsp_usart2.c...
@@ -70,9 +72,13 @@ compiling bsp_gpio.c...
 compiling bsp_SysTick.c...
 compiling wifi_config.c...
 compiling wifi_function.c...
+..\..\Config\config.h(9): warning:  #1-D: last line of file ends without a newline
+  #endif
 ..\..\User\wifi\wifi_function.c(357): warning:  #192-D: unrecognized character escape sequence
         PC_Usart ( "\r\connected successfully!\r\n" );
-..\..\User\wifi\wifi_function.c: 1 warning, 0 errors
+..\..\User\wifi\wifi_function.c(369): warning:  #223-D: function "Delay" declared implicitly
+        Delay(500000);
+..\..\User\wifi\wifi_function.c: 3 warnings, 0 errors
 compiling led.c...
 compiling can.c...
 ..\..\Libraries\FWlib\inc\stm32f10x_can.h(619): warning:  #47-D: incompatible redefinition of macro "CANTXOK" (declared at line 437)
@@ -191,9 +197,9 @@ compiling testmsg.c...
   */
 ..\..\Testmsg\testmsg.c: 19 warnings, 0 errors
 linking...
-Program Size: Code=98452 RO-data=336 RW-data=100 ZI-data=3620  
+Program Size: Code=98956 RO-data=336 RW-data=100 ZI-data=3620  
 FromELF: creating hex file...
-"..\..\Output\Template.axf" - 0 Error(s), 68 Warning(s).
+"..\..\Output\Template.axf" - 0 Error(s), 71 Warning(s).
 Load "..\\..\\Output\\Template.axf" 
 Full Chip Erase Done.
 Programming Done.

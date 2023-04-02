@@ -19,3 +19,4 @@
 ..\..\output\wifi_function.o: ..\..\User\usart\bsp_usart2.h
 ..\..\output\wifi_function.o: ..\..\User\SysTick\bsp_SysTick.h
 ..\..\output\wifi_function.o: C:\Keil_v5\ARM\ARMCC\bin\..\include\string.h
+..\..\output\wifi_function.o: ..\..\Config\config.h

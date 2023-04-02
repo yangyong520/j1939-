@@ -24,3 +24,4 @@
 ..\..\output\main.o: ..\..\can\J1939\j1939.h
 ..\..\output\main.o: ..\..\Msg\msg.h
 ..\..\output\main.o: ..\..\Testmsg\testmsg.h
+..\..\output\main.o: ..\..\Config\config.h

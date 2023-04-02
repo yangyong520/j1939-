@@ -18,6 +18,7 @@
 #include "j1939.h"
 #include "msg.h"
 #include "testmsg.h"
+#include "config.h"
  
 
 /**
@@ -80,11 +81,6 @@ void  GetKey(void)
 J1939_MESSAGE Msg;
 int main(void)
 {
-  char *wifiname="1702";
-	char *wifipawd="12345678";
-	char *IP="23.224.131.118";
-	char *port="6000";
-
 	/* 初始化 */
 	SystemInit();
 	KeyInit();
@@ -94,10 +90,10 @@ int main(void)
 	CAN_NVIC_Configuration();
 	
 	
- GPIO_Config ( );              
- USART1_Config ( );           
- USART2_Config ( );         
- NVIC_Configuration( ); 
+	GPIO_Config ( );              
+	USART1_Config ( );           
+	USART2_Config ( );         
+	NVIC_Configuration( ); 
 	CAN_INIT();
 	J1939_Initialization( );	
                                                                  //初始化WiFi模块使用的接口和外设
@@ -106,7 +102,7 @@ int main(void)
 	PC_Usart("\r\n ESP8266 test\r\n");                            //打印测试例程提示信息
 
   
-	ESP8266_STA_TCP_Client(wifiname,wifipawd,IP,port);
+	ESP8266_STA_TCP_Client(WIFINAME,WIFIPSWD,IP,PORT);
 	while(1)
     {
 			
@@ -131,7 +127,8 @@ int main(void)
 
 void send_massage(J1939_MESSAGE_T *msg)
 {			
-
+	
+				char buff[1024];
 				Msg.Mxe.PDUSpecific							= msg->PGN<<24>>24;
         Msg.Mxe.DataPage                = 0;//dp
         Msg.Mxe.Priority                = J1939_CONTROL_PRIORITY;
@@ -140,6 +137,7 @@ void send_massage(J1939_MESSAGE_T *msg)
         Msg.Mxe.PDUFormat               = msg->PGN<<16>>24;//pf
 				
 				//Msg.Mxe.PGN =msg->PGN;
+				
 
         Msg.Mxe.Data[0]         = msg->data[0];
         Msg.Mxe.Data[1]         = msg->data[1];
@@ -149,6 +147,11 @@ void send_massage(J1939_MESSAGE_T *msg)
         Msg.Mxe.Data[5]         = msg->data[5];
         Msg.Mxe.Data[6]         = msg->data[6];
         Msg.Mxe.Data[7]         = msg->data[7];
+				sprintf(buff,"PGN:%X-byte_count:%d-data-%d-%d-%d-%d-%d-%d-%d-%d-\t\0",
+				msg->PGN,msg->byte_count,msg->data[0],msg->data[1],msg->data[2],msg->data[3],
+				msg->data[4],msg->data[5],msg->data[6],msg->data[7]);
+				PC_Usart ( buff );
+				SendMsg(buff);
 				//把数据写入发送缓存区中，然后触发CAN中断在J1939_ISR()中进行数据发送
         while (J1939_EnqueueMessage(&Msg,Select_CAN_NODE_1) != RC_SUCCESS){ 
             J1939_Poll();//只有查询方式才需要

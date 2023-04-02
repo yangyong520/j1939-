@@ -7,7 +7,7 @@
 #include <string.h> 
 #include <stdio.h>  
 #include <stdbool.h>
-
+#include "config.h"
 
 /*
  * 函数名：ESP8266_Choose
@@ -91,7 +91,7 @@ bool ESP8266_Cmd ( char * cmd, char * reply1, char * reply2, u32 waittime )
 	
 	strEsp8266_Fram_Record .Data_RX_BUF [ strEsp8266_Fram_Record .InfBit .FramLength ]  = '\0';
 
-	PC_Usart ( "%s", strEsp8266_Fram_Record .Data_RX_BUF );
+	//PC_Usart ( "%s\n", strEsp8266_Fram_Record .Data_RX_BUF );
   
 	if ( ( reply1 != 0 ) && ( reply2 != 0 ) )
 		return ( ( bool ) strstr ( strEsp8266_Fram_Record .Data_RX_BUF, reply1 ) || 
@@ -332,11 +332,11 @@ char * ESP8266_ReceiveString ( FunctionalState enumEnUnvarnishTx )
  * 返回  : 无
  * 调用  ：被外部调用
  */
-void ESP8266_STA_TCP_Client ( char *wifiname,char *wifipawd,char *IP,char* port )
+void ESP8266_STA_TCP_Client ( char *wifiname,char *wifipawd,char *ip,char* port )
 {
 	char bf[1024];
 
-	sprintf(bf,"\r\n%s:%s:%s:%s\r\n",wifiname,wifipawd,IP,port);
+	sprintf(bf,"\r\n%s:%s:%s:%s\r\n",wifiname,wifipawd,ip,port);
 	PC_Usart(bf);   
 	ESP8266_Choose ( ENABLE );	
 	ESP8266_AT_Test ();
@@ -353,7 +353,7 @@ void ESP8266_STA_TCP_Client ( char *wifiname,char *wifipawd,char *IP,char* port 
 	{
 		PC_Usart ( "\r\nConnect server ...\r\n" );
 
-  } while ( ! ( ESP8266_Link_Server ( enumTCP, IP, port) ));
+  } while ( ! ( ESP8266_Link_Server ( enumTCP, ip, port) ));
 	PC_Usart ( "\r\connected successfully!\r\n" );
 	
 	PC_Usart ( "\r\ESP8266_SendString...\r\n" );
@@ -361,6 +361,13 @@ void ESP8266_STA_TCP_Client ( char *wifiname,char *wifipawd,char *IP,char* port 
 	ESP8266_SendString ("yangyongtest", strlen("yangyongtest") );
 	PC_Usart ( "\r\ESP8266 SendString successfully\r\n" );
 
+}
+void SendMsg(char *str)
+{
+	ESP8266_Link_Server ( enumTCP, IP, PORT);
+	ESP8266_SendString (str, strlen(str)-2 );
+	Delay(500000);
+	Delay(500000);
 }
 
 

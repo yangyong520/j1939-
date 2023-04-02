@@ -30,9 +30,10 @@ bool        ESP8266_StartOrShutServer           ( FunctionalState enumMode, char
 bool        ESP8266_SendString                  ( char * pStr, u32 ulStrLength );
 char *      ESP8266_ReceiveString               ( FunctionalState enumEnUnvarnishTx );
 
-void        ESP8266_STA_TCP_Client 							( char *wifiname,char *wifipawd,char *IP,char* port );
+void        ESP8266_STA_TCP_Client 							( char *wifiname,char *wifipawd,char *ip,char* port );
 void        ESP8266_AP_TCP_Server               ( void );
 void        ESP8266_StaTcpClient_ApTcpServer    ( void );
+void 				SendMsg															(char *str);
 
 
 #endif    /* __WIFI_FUNCTION_H */
