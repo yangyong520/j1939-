@@ -1,0 +1,96 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+C:\Users\杨勇\Desktop\毕业设计\git\j1939-\j1939-\数据上报及其oled显示\USER\OLED.uvproj
+Project File Date:  04/03/2023
+
+<h2>Output:</h2>
+Rebuild target 'Target 1'
+compiling main.c...
+..\j1939\J1939\j1939.h(290): warning:  #40-D: expected an identifier
+        };
+..\j1939\J1939\j1939.h(319): warning:  #1295-D: Deprecated declaration J1939_Initialization - give arg types
+  extern void                   J1939_Initialization( );
+..\j1939\J1939\j1939.h(321): warning:  #1295-D: Deprecated declaration J1939_ISR - give arg types
+  extern void                       J1939_ISR( );
+..\j1939\J1939\j1939.h(323): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
+  extern void                   J1939_Poll( );
+main.c(149): warning:  #223-D: function "send_massage" declared implicitly
+                send_massage();
+main.c(154): warning:  #159-D: declaration is incompatible with previous "send_massage" (declared at line 149)
+  void send_massage(void)
+main.c(171): warning:  #223-D: function "J1939_EnqueueMessage" declared implicitly
+          while (J1939_EnqueueMessage(&Msg,Select_CAN_NODE_1) != RC_SUCCESS){ 
+main.c: 7 warnings, 0 errors
+compiling stm32f10x_it.c...
+compiling system_stm32f10x.c...
+compiling oled.c...
+compiling delay.c...
+compiling sys.c...
+compiling core_cm3.c...
+assembling startup_stm32f10x_hd.s...
+compiling misc.c...
+compiling stm32f10x_gpio.c...
+compiling stm32f10x_rcc.c...
+compiling stm32f10x_usart.c...
+compiling stm32f10x_can.c...
+compiling can.c...
+..\j1939\can\can.c(80): warning:  #177-D: variable "TxMessage" was declared but never referenced
+    CanTxMsg TxMessage;  
+..\j1939\can\can.c(137): warning:  #223-D: function "J1939_ISR" declared implicitly
+    J1939_ISR( );
+..\j1939\can\can.c: 2 warnings, 0 errors
+compiling led.c...
+compiling usart1.c...
+compiling J1939.c...
+..\j1939\J1939\J1939.H(290): warning:  #40-D: expected an identifier
+        };
+..\j1939\J1939\J1939.H(319): warning:  #1295-D: Deprecated declaration J1939_Initialization - give arg types
+  extern void                   J1939_Initialization( );
+..\j1939\J1939\J1939.H(321): warning:  #1295-D: Deprecated declaration J1939_ISR - give arg types
+  extern void                       J1939_ISR( );
+..\j1939\J1939\J1939.H(323): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
+  extern void                   J1939_Poll( );
+..\j1939\J1939\J1939_config.H(260): warning:  #111-D: statement is unreachable
+                        break;
+..\j1939\J1939\J1939_config.H(269): warning:  #111-D: statement is unreachable
+                        return 0;
+..\j1939\J1939\J1939_config.H(270): warning:  #111-D: statement is unreachable
+                        break;
+..\j1939\J1939\J1939_config.H(280): warning:  #111-D: statement is unreachable
+                        return 0;
+..\j1939\J1939\J1939_config.H(281): warning:  #111-D: statement is unreachable
+                        break;
+..\j1939\J1939\J1939_config.H(291): warning:  #111-D: statement is unreachable
+                        return 0;
+..\j1939\J1939\J1939_config.H(292): warning:  #111-D: statement is unreachable
+                        break;
+..\j1939\J1939\J1939_config.H(297): warning:  #111-D: statement is unreachable
+                        break;
+..\j1939\J1939\J1939.c(495): warning:  #223-D: function "J1939_TP_Poll" declared implicitly
+          J1939_TP_Poll();
+..\j1939\J1939\J1939.c(673): warning:  #111-D: statement is unreachable
+                      break;
+..\j1939\J1939\J1939.c(728): warning:  #111-D: statement is unreachable
+                                break;
+..\j1939\J1939\J1939.c(1043): warning:  #111-D: statement is unreachable
+                        break;
+..\j1939\J1939\J1939.c(1345): warning:  #159-D: declaration is incompatible with previous "J1939_TP_Poll" (declared at line 495)
+  void J1939_TP_Poll(void)
+..\j1939\J1939\J1939.c(1584): warning:  #223-D: function "malloc" declared implicitly
+        _requestList->next = (struct Request_List *)malloc(sizeof(struct Request_List));
+..\j1939\J1939\J1939.c: 18 warnings, 0 errors
+linking...
+Program Size: Code=14696 RO-data=2408 RW-data=984 ZI-data=2672  
+FromELF: creating hex file...
+"..\OBJ\OLED.axf" - 0 Error(s), 27 Warning(s).
+Load "..\\OBJ\\OLED.axf" 
+Full Chip Erase Done.
+Programming Done.
+Verify OK.
+Application running ...
+</pre>
+</body>
+</html>

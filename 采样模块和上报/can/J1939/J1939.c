@@ -387,6 +387,7 @@ j1939_uint8_t J1939_EnqueueMessage( J1939_MESSAGE *MsgPtr, CAN_NODE  _Can_Node)
 			{
 				break;
 			}
+			J1939_ISR( );
 		}
     }   
 
