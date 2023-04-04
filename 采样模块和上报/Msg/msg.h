@@ -4,6 +4,7 @@
 
 #include "stm32f10x.h"
 #include "J1939.H"  
+#include "bsp_ds18b20.h"
 #define RATE 1
 
 uint16_t Parameter_Translate(long double measured,float resolutionratio,float offset);

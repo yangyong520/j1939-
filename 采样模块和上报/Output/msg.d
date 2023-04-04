@@ -12,3 +12,5 @@
 ..\..\output\msg.o: ..\..\Libraries\FWlib\inc\stm32f10x_usart.h
 ..\..\output\msg.o: ..\..\Libraries\FWlib\inc\misc.h
 ..\..\output\msg.o: ..\..\can\J1939\J1939.H
+..\..\output\msg.o: ..\..\ds18b20\bsp_ds18b20.h
+..\..\output\msg.o: ..\..\User\SysTick\bsp_SysTick.h

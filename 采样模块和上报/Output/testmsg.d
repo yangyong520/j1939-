@@ -13,3 +13,5 @@
 ..\..\output\testmsg.o: ..\..\Libraries\FWlib\inc\stm32f10x_usart.h
 ..\..\output\testmsg.o: ..\..\Libraries\FWlib\inc\misc.h
 ..\..\output\testmsg.o: ..\..\can\J1939\J1939.H
+..\..\output\testmsg.o: ..\..\ds18b20\bsp_ds18b20.h
+..\..\output\testmsg.o: ..\..\User\SysTick\bsp_SysTick.h

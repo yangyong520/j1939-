@@ -19,6 +19,7 @@
 #include "msg.h"
 #include "testmsg.h"
 #include "config.h"
+#include "bsp_ds18b20.h"
  
 
 /**
@@ -99,6 +100,7 @@ int main(void)
                                                                  //初始化WiFi模块使用的接口和外设
 	SysTick_Init();                                                                 //配置 SysTick 为 1ms 中断一次 
 
+	DS18B20_Init();
 	PC_Usart("\r\n ESP8266 test\r\n");                            //打印测试例程提示信息
 
   

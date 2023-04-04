@@ -23,5 +23,6 @@
 ..\..\output\main.o: ..\..\can\USER\led.h
 ..\..\output\main.o: ..\..\can\J1939\j1939.h
 ..\..\output\main.o: ..\..\Msg\msg.h
+..\..\output\main.o: ..\..\ds18b20\bsp_ds18b20.h
 ..\..\output\main.o: ..\..\Testmsg\testmsg.h
 ..\..\output\main.o: ..\..\Config\config.h

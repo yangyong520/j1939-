@@ -10473,7 +10473,7 @@ void config_CCSS (getCCSS_t *CCSS)
 }
 void config_ET1 (getET1_t *ET1)
 {
-    ET1 -> Engine_Coolant_Temperature= Parameter_Translate(210.0*RATE , 1.0 , -40.0);
+    ET1 -> Engine_Coolant_Temperature= Parameter_Translate(DS18B20_Get_Temp(), 1.0 , -40.0);
     ET1 -> Engine_Fuel_Temperature_1= Parameter_Translate(210.0*RATE , 1.0 , -40.0);
     ET1 -> Engine_Oil_Temperature_1= Parameter_Translate(1734.96875*RATE , 0.03125 , -273.0);
     ET1 -> Engine_Turbocharger_Oil_Temperature= Parameter_Translate(1734.96875*RATE , 0.03125 , -273.0);
