@@ -9,28 +9,24 @@ void testallmsg_group1()
        config_LLRE(&llre);
        LLRE(&msg,&llre);
        send_massage(&msg);
-       Delay(500000);
 	//速度
 			getCCVS1_t ccvs1;
 
        config_CCVS1(&ccvs1);
        CCVS1(&msg,&ccvs1);
        send_massage(&msg);
-       Delay(500000);
 	//引擎温度
 	       getET1_t et1;
 
        config_ET1(&et1);
        ET1(&msg,&et1);
        send_massage(&msg);
-       Delay(500000);
 				//灯光响应
 			getLD_t ld;
 
        config_LD(&ld);
        LD(&msg,&ld);
        send_massage(&msg);
-       Delay(500000);
 			 //灯光控制
 
 
@@ -39,14 +35,12 @@ void testallmsg_group1()
        config_LCMD(&lcmd);
        LCMD(&msg,&lcmd);
        send_massage(&msg);
-       Delay(500000);
 			 
        getTSC1_t tsc1;
 
        config_TSC1(&tsc1);
        TSC1(&msg,&tsc1);
        send_massage(&msg);
-       Delay(500000);
 }
 /*
        getTC1_t tc1;

@@ -39,6 +39,8 @@
 "..\..\output\msg.o"
 "..\..\output\testmsg.o"
 "..\..\output\bsp_ds18b20.o"
+"..\..\output\led.o"
+"..\..\output\time_test.o"
 --library_type=microlib --strict --scatter "..\..\Output\Template.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

@@ -1,5 +1,5 @@
-..\..\output\led.o: ..\..\can\USER\led.c
-..\..\output\led.o: ..\..\can\USER\led.h
+..\..\output\led.o: ..\..\TM2\led.c
+..\..\output\led.o: ..\..\TM2\led.h
 ..\..\output\led.o: ..\..\Libraries\CMSIS\stm32f10x.h
 ..\..\output\led.o: ..\..\Libraries\CMSIS\core_cm3.h
 ..\..\output\led.o: C:\Keil_v5\ARM\ARMCC\bin\..\include\stdint.h

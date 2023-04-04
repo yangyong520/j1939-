@@ -684,6 +684,9 @@
             </File>
           </Files>
         </Group>
+        <Group>
+          <GroupName>ds18b20</GroupName>
+        </Group>
       </Groups>
     </Target>
   </Targets>

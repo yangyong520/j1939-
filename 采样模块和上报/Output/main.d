@@ -26,3 +26,4 @@
 ..\..\output\main.o: ..\..\ds18b20\bsp_ds18b20.h
 ..\..\output\main.o: ..\..\Testmsg\testmsg.h
 ..\..\output\main.o: ..\..\Config\config.h
+..\..\output\main.o: ..\..\TM2\Time_test.h

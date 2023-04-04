@@ -1,4 +1,5 @@
 #include "msg.h"
+#include "wifi_function.h"
 uint16_t Parameter_Translate(long double measured,float resolutionratio,float offset)
 {
 	return (uint16_t)((measured+abs((int)offset))/resolutionratio);
@@ -4827,17 +4828,7 @@ void LVDD ( J1939_MESSAGE_T *J1939_MESSAGE,getLVDD_t *LVDD)
     J1939_MESSAGE->data[2] |= (uint8_t)(LVDD->bt3.LED_Pattern_Control)<<0;
     J1939_MESSAGE->data[2] |= (uint8_t)(LVDD->bt3.Display_Deadbands)<<4;
 }
-void AP ( J1939_MESSAGE_T *J1939_MESSAGE,getAP_t *AP)
-{
-    J1939_MESSAGE->PGN = 0x00FE77 ;
-    J1939_MESSAGE->byte_count = 8;
-    J1939_MESSAGE->data[0] = (uint8_t)(AP->Auxiliary_Vacuum_Pressure_Reading>>8);
-    J1939_MESSAGE->data[1] = (uint8_t)(AP->Auxiliary_Vacuum_Pressure_Reading);
-    J1939_MESSAGE->data[2] = (uint8_t)(AP->Auxiliary_Gage_Pressure_Reading_1>>8);
-    J1939_MESSAGE->data[3] = (uint8_t)(AP->Auxiliary_Gage_Pressure_Reading_1);
-    J1939_MESSAGE->data[4] = (uint8_t)(AP->Auxiliary_Absolute_Pressure_Reading>>8);
-    J1939_MESSAGE->data[5] = (uint8_t)(AP->Auxiliary_Absolute_Pressure_Reading);
-}
+
 void TP1 ( J1939_MESSAGE_T *J1939_MESSAGE,getTP1_t *TP1)
 {
     J1939_MESSAGE->PGN = 0x00FE78 ;
@@ -10473,6 +10464,7 @@ void config_CCSS (getCCSS_t *CCSS)
 }
 void config_ET1 (getET1_t *ET1)
 {
+	//PC_Usart("\r\n config_ET1 test\r\n");  
     ET1 -> Engine_Coolant_Temperature= Parameter_Translate(DS18B20_Get_Temp(), 1.0 , -40.0);
     ET1 -> Engine_Fuel_Temperature_1= Parameter_Translate(210.0*RATE , 1.0 , -40.0);
     ET1 -> Engine_Oil_Temperature_1= Parameter_Translate(1734.96875*RATE , 0.03125 , -273.0);
@@ -10631,4 +10623,37 @@ void config_A1 (getA1_t *A1)
 void config_AWPP (getAWPP_t *AWPP)
 {
     AWPP -> Auxiliary_Pump_Pressure= Parameter_Translate(4000.0*RATE , 16.0 , 0.0);
+}
+void send_massage(J1939_MESSAGE_T *msg)
+{			
+	J1939_MESSAGE Msg;
+	
+				char buff[1024];
+				Msg.Mxe.PDUSpecific							= msg->PGN<<24>>24;
+        Msg.Mxe.DataPage                = 0;//dp
+        Msg.Mxe.Priority                = J1939_CONTROL_PRIORITY;
+        //Msg.Mxe.DestinationAddress      = 0x40;
+        Msg.Mxe.DataLength              = msg->byte_count;
+        Msg.Mxe.PDUFormat               = msg->PGN<<16>>24;//pf
+				
+				//Msg.Mxe.PGN =msg->PGN;
+				
+
+        Msg.Mxe.Data[0]         = msg->data[0];
+        Msg.Mxe.Data[1]         = msg->data[1];
+        Msg.Mxe.Data[2]         = msg->data[2];
+        Msg.Mxe.Data[3]         = msg->data[3];
+        Msg.Mxe.Data[4]         = msg->data[4];
+        Msg.Mxe.Data[5]         = msg->data[5];
+        Msg.Mxe.Data[6]         = msg->data[6];
+        Msg.Mxe.Data[7]         = msg->data[7];
+				sprintf(buff,"PGN:%X-byte_count:%d-data-%d-%d-%d-%d-%d-%d-%d-%d-\t\0",
+				msg->PGN,msg->byte_count,msg->data[0],msg->data[1],msg->data[2],msg->data[3],
+				msg->data[4],msg->data[5],msg->data[6],msg->data[7]);
+				PC_Usart ( buff );
+				SendMsg(buff);
+				//把数据写入发送缓存区中，然后触发CAN中断在J1939_ISR()中进行数据发送
+        while (J1939_EnqueueMessage(&Msg,Select_CAN_NODE_1) != RC_SUCCESS){ 
+            J1939_Poll();//只有查询方式才需要
+				}	
 }

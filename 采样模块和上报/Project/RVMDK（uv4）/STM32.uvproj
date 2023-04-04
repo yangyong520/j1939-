@@ -364,7 +364,7 @@
               <MiscControls>--gnu</MiscControls>
               <Define>STM32F10X_HD, USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Libraries\CMSIS;..\..\User;..\..\Libraries\FWlib\inc;..\..\User\gpio;..\..\User\SysTick;..\..\User\usart;..\..\User\wifi;..\..\can\USER;..\..\can\J1939;..\..\Msg;..\..\Testmsg;..\..\Config</IncludePath>
+              <IncludePath>..\..\Libraries\CMSIS;..\..\User;..\..\Libraries\FWlib\inc;..\..\User\gpio;..\..\User\SysTick;..\..\User\usart;..\..\User\wifi;..\..\can\USER;..\..\can\J1939;..\..\Msg;..\..\Testmsg;..\..\Config;..\..\ds18b20;..\..\TM2</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -686,6 +686,48 @@
         </Group>
         <Group>
           <GroupName>ds18b20</GroupName>
+          <Files>
+            <File>
+              <FileName>bsp_ds18b20.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ds18b20\bsp_ds18b20.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_ds18b20.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\ds18b20\bsp_ds18b20.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>tim</GroupName>
+          <Files>
+            <File>
+              <FileName>led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\TM2\led.c</FilePath>
+            </File>
+            <File>
+              <FileName>led.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\TM2\led.h</FilePath>
+            </File>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\TM2\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>Time_test.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\TM2\Time_test.c</FilePath>
+            </File>
+            <File>
+              <FileName>Time_test.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\TM2\Time_test.h</FilePath>
+            </File>
+          </Files>
         </Group>
       </Groups>
     </Target>
