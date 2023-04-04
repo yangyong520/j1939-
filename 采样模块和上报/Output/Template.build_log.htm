@@ -1,0 +1,276 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+C:\Users\杨勇\Desktop\毕业设计\git\j1939-\采样模块和上报\Project\RVMDK（uv4）\STM32.uvproj
+Project File Date:  04/04/2023
+
+<h2>Output:</h2>
+Rebuild target 'ESP8266'
+assembling startup_stm32f10x_hd.s...
+compiling core_cm3.c...
+compiling system_stm32f10x.c...
+compiling misc.c...
+compiling stm32f10x_adc.c...
+compiling stm32f10x_bkp.c...
+compiling stm32f10x_can.c...
+..\..\Libraries\FWlib\inc\stm32f10x_can.h(619): warning:  #47-D: incompatible redefinition of macro "CANTXOK" (declared at line 437)
+  #define CANTXOK                     CAN_TxStatus_Ok
+..\..\Libraries\FWlib\inc\stm32f10x_can.h(620): warning:  #47-D: incompatible redefinition of macro "CANTXPENDING" (declared at line 438)
+  #define CANTXPENDING                CAN_TxStatus_Pending
+..\..\Libraries\FWlib\inc\stm32f10x_can.h(621): warning:  #47-D: incompatible redefinition of macro "CAN_NO_MB" (declared at line 439)
+  #define CAN_NO_MB                   CAN_TxStatus_NoMailBox
+..\..\Libraries\FWlib\src\stm32f10x_can.c: 3 warnings, 0 errors
+compiling stm32f10x_cec.c...
+compiling stm32f10x_crc.c...
+compiling stm32f10x_dac.c...
+compiling stm32f10x_dbgmcu.c...
+compiling stm32f10x_dma.c...
+compiling stm32f10x_exti.c...
+compiling stm32f10x_flash.c...
+compiling stm32f10x_fsmc.c...
+compiling stm32f10x_gpio.c...
+compiling stm32f10x_i2c.c...
+compiling stm32f10x_iwdg.c...
+compiling stm32f10x_pwr.c...
+compiling stm32f10x_rcc.c...
+compiling stm32f10x_rtc.c...
+compiling stm32f10x_sdio.c...
+compiling stm32f10x_spi.c...
+compiling stm32f10x_tim.c...
+compiling stm32f10x_usart.c...
+compiling stm32f10x_wwdg.c...
+compiling main.c...
+..\..\can\J1939\j1939.h(290): warning:  #40-D: expected an identifier
+        };
+..\..\can\J1939\j1939.h(319): warning:  #1295-D: Deprecated declaration J1939_Initialization - give arg types
+  extern void                   J1939_Initialization( );
+..\..\can\J1939\j1939.h(321): warning:  #1295-D: Deprecated declaration J1939_ISR - give arg types
+  extern void                       J1939_ISR( );
+..\..\can\J1939\j1939.h(323): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
+  extern void                   J1939_Poll( );
+..\..\Msg\msg.h(6280): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\..\Testmsg\testmsg.h(4): warning:  #1295-D: Deprecated declaration testallmsg_group1 - give arg types
+  void testallmsg_group1();
+..\..\Testmsg\testmsg.h(5): warning:  #1295-D: Deprecated declaration testallmsg_group2 - give arg types
+  void testallmsg_group2();
+..\..\Testmsg\testmsg.h(6): warning:  #1295-D: Deprecated declaration testallmsg_group3 - give arg types
+  void testallmsg_group3();
+..\..\Testmsg\testmsg.h(7): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\..\Config\config.h(9): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\..\TM2\Time_test.h(11): warning:  #1295-D: Deprecated declaration TIM_2 - give arg types
+  void TIM_2();
+..\..\User\main.c: 11 warnings, 0 errors
+compiling stm32f10x_it.c...
+..\..\User\stm32f10x_it.c(148): warning:  #223-D: function "TimingDelay_Decrement" declared implicitly
+        TimingDelay_Decrement();        
+..\..\User\stm32f10x_it.c: 1 warning, 0 errors
+compiling bsp_usart1.c...
+compiling bsp_usart2.c...
+compiling bsp_gpio.c...
+compiling bsp_SysTick.c...
+compiling wifi_config.c...
+compiling wifi_function.c...
+..\..\Config\config.h(9): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\..\User\wifi\wifi_function.c(357): warning:  #192-D: unrecognized character escape sequence
+        PC_Usart ( "\r\connected successfully!\r\n" );
+..\..\User\wifi\wifi_function.c: 2 warnings, 0 errors
+compiling led.c...
+compiling can.c...
+..\..\Libraries\FWlib\inc\stm32f10x_can.h(619): warning:  #47-D: incompatible redefinition of macro "CANTXOK" (declared at line 437)
+  #define CANTXOK                     CAN_TxStatus_Ok
+..\..\Libraries\FWlib\inc\stm32f10x_can.h(620): warning:  #47-D: incompatible redefinition of macro "CANTXPENDING" (declared at line 438)
+  #define CANTXPENDING                CAN_TxStatus_Pending
+..\..\Libraries\FWlib\inc\stm32f10x_can.h(621): warning:  #47-D: incompatible redefinition of macro "CAN_NO_MB" (declared at line 439)
+  #define CAN_NO_MB                   CAN_TxStatus_NoMailBox
+..\..\can\USER\can.c(79): warning:  #177-D: variable "TxMessage" was declared but never referenced
+    CanTxMsg TxMessage;  
+..\..\can\USER\can.c(136): warning:  #223-D: function "J1939_ISR" declared implicitly
+    J1939_ISR( );
+..\..\can\USER\can.c: 5 warnings, 0 errors
+compiling J1939.c...
+..\..\can\J1939\J1939.H(290): warning:  #40-D: expected an identifier
+        };
+..\..\can\J1939\J1939.H(319): warning:  #1295-D: Deprecated declaration J1939_Initialization - give arg types
+  extern void                   J1939_Initialization( );
+..\..\can\J1939\J1939.H(321): warning:  #1295-D: Deprecated declaration J1939_ISR - give arg types
+  extern void                       J1939_ISR( );
+..\..\can\J1939\J1939.H(323): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
+  extern void                   J1939_Poll( );
+..\..\Libraries\FWlib\inc\stm32f10x_can.h(619): warning:  #47-D: incompatible redefinition of macro "CANTXOK" (declared at line 437)
+  #define CANTXOK                     CAN_TxStatus_Ok
+..\..\Libraries\FWlib\inc\stm32f10x_can.h(620): warning:  #47-D: incompatible redefinition of macro "CANTXPENDING" (declared at line 438)
+  #define CANTXPENDING                CAN_TxStatus_Pending
+..\..\Libraries\FWlib\inc\stm32f10x_can.h(621): warning:  #47-D: incompatible redefinition of macro "CAN_NO_MB" (declared at line 439)
+  #define CAN_NO_MB                   CAN_TxStatus_NoMailBox
+..\..\can\J1939\J1939_config.H(261): warning:  #111-D: statement is unreachable
+                        break;
+..\..\can\J1939\J1939_config.H(270): warning:  #111-D: statement is unreachable
+                        return 0;
+..\..\can\J1939\J1939_config.H(271): warning:  #111-D: statement is unreachable
+                        break;
+..\..\can\J1939\J1939_config.H(281): warning:  #111-D: statement is unreachable
+                        return 0;
+..\..\can\J1939\J1939_config.H(282): warning:  #111-D: statement is unreachable
+                        break;
+..\..\can\J1939\J1939_config.H(292): warning:  #111-D: statement is unreachable
+                        return 0;
+..\..\can\J1939\J1939_config.H(293): warning:  #111-D: statement is unreachable
+                        break;
+..\..\can\J1939\J1939_config.H(298): warning:  #111-D: statement is unreachable
+                        break;
+..\..\can\J1939\J1939.c(390): warning:  #111-D: statement is unreachable
+                        J1939_ISR( );
+..\..\can\J1939\J1939.c(496): warning:  #223-D: function "J1939_TP_Poll" declared implicitly
+          J1939_TP_Poll();
+..\..\can\J1939\J1939.c(674): warning:  #111-D: statement is unreachable
+                      break;
+..\..\can\J1939\J1939.c(729): warning:  #111-D: statement is unreachable
+                                break;
+..\..\can\J1939\J1939.c(1044): warning:  #111-D: statement is unreachable
+                        break;
+..\..\can\J1939\J1939.c(1346): warning:  #159-D: declaration is incompatible with previous "J1939_TP_Poll" (declared at line 496)
+  void J1939_TP_Poll(void)
+..\..\can\J1939\J1939.c(1585): warning:  #223-D: function "malloc" declared implicitly
+        _requestList->next = (struct Request_List *)malloc(sizeof(struct Request_List));
+..\..\can\J1939\J1939.c: 22 warnings, 0 errors
+compiling msg.c...
+..\..\can\J1939\J1939.H(290): warning:  #40-D: expected an identifier
+        };
+..\..\can\J1939\J1939.H(319): warning:  #1295-D: Deprecated declaration J1939_Initialization - give arg types
+  extern void                   J1939_Initialization( );
+..\..\can\J1939\J1939.H(321): warning:  #1295-D: Deprecated declaration J1939_ISR - give arg types
+  extern void                       J1939_ISR( );
+..\..\can\J1939\J1939.H(323): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
+  extern void                   J1939_Poll( );
+..\..\Msg\msg.h(6280): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\..\Msg\msg.c(5): warning:  #223-D: function "abs" declared implicitly
+        return (uint16_t)((measured+abs((int)offset))/resolutionratio);
+..\..\Msg\msg.c(695): warning:  #62-D: shift count is negative
+      J1939_MESSAGE->data[2] |= (uint8_t)(ESC1->bt3.Axle_Location)<<-1;
+..\..\Msg\msg.c(2654): warning:  #62-D: shift count is negative
+      J1939_MESSAGE->data[6] |= (uint8_t)(A2SCRRT2I->bt7.Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Heater)<<-1;
+..\..\Msg\msg.c(9019): warning:  #173-D: floating-point value does not fit in required integral type
+      TR5 -> bt6.Route_Number= 4095.0*RATE;
+..\..\Msg\msg.c(10650): warning:  #223-D: function "sprintf" declared implicitly
+                                sprintf(buff,"PGN:%X-byte_count:%d-data-%d-%d-%d-%d-%d-%d-%d-%d-\t\0",
+..\..\Msg\msg.c(10653): warning:  #223-D: function "printf" declared implicitly
+                                PC_Usart ( buff );
+..\..\Msg\msg.c(10656): warning:  #223-D: function "J1939_EnqueueMessage" declared implicitly
+          while (J1939_EnqueueMessage(&Msg,Select_CAN_NODE_1) != RC_SUCCESS){ 
+..\..\Msg\msg.c(10659): warning:  #1-D: last line of file ends without a newline
+  }
+..\..\Msg\msg.c: 13 warnings, 0 errors
+compiling testmsg.c...
+..\..\can\J1939\J1939.H(290): warning:  #40-D: expected an identifier
+        };
+..\..\can\J1939\J1939.H(319): warning:  #1295-D: Deprecated declaration J1939_Initialization - give arg types
+  extern void                   J1939_Initialization( );
+..\..\can\J1939\J1939.H(321): warning:  #1295-D: Deprecated declaration J1939_ISR - give arg types
+  extern void                       J1939_ISR( );
+..\..\can\J1939\J1939.H(323): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
+  extern void                   J1939_Poll( );
+..\..\Msg\msg.h(6280): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\..\Testmsg\testmsg.h(4): warning:  #1295-D: Deprecated declaration testallmsg_group1 - give arg types
+  void testallmsg_group1();
+..\..\Testmsg\testmsg.h(5): warning:  #1295-D: Deprecated declaration testallmsg_group2 - give arg types
+  void testallmsg_group2();
+..\..\Testmsg\testmsg.h(6): warning:  #1295-D: Deprecated declaration testallmsg_group3 - give arg types
+  void testallmsg_group3();
+..\..\Testmsg\testmsg.h(7): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\..\Testmsg\testmsg.c(10): warning:  #223-D: function "LLRE" declared implicitly
+         LLRE(&msg,&llre);
+..\..\Testmsg\testmsg.c(16): warning:  #223-D: function "CCVS1" declared implicitly
+         CCVS1(&msg,&ccvs1);
+..\..\Testmsg\testmsg.c(22): warning:  #223-D: function "ET1" declared implicitly
+         ET1(&msg,&et1);
+..\..\Testmsg\testmsg.c(28): warning:  #223-D: function "LD" declared implicitly
+         LD(&msg,&ld);
+..\..\Testmsg\testmsg.c(36): warning:  #223-D: function "LCMD" declared implicitly
+         LCMD(&msg,&lcmd);
+..\..\Testmsg\testmsg.c(42): warning:  #223-D: function "TSC1" declared implicitly
+         TSC1(&msg,&tsc1);
+..\..\Testmsg\testmsg.c(825): warning:  #9-D: nested comment is not allowed
+  /*
+..\..\Testmsg\testmsg.c(3252): warning:  #1-D: last line of file ends without a newline
+  */
+..\..\Testmsg\testmsg.c: 17 warnings, 0 errors
+compiling bsp_ds18b20.c...
+compiling led.c...
+compiling Time_test.c...
+..\..\TM2\Time_test.h(11): warning:  #1295-D: Deprecated declaration TIM_2 - give arg types
+  void TIM_2();
+..\..\TM2\Time_test.c(65): warning:  #1-D: last line of file ends without a newline
+  }
+..\..\TM2\Time_test.c: 2 warnings, 0 errors
+linking...
+..\..\Output\Template.axf: Warning: L6304W: Duplicate input file ..\..\output\led.o ignored.
+Program Size: Code=105988 RO-data=336 RW-data=104 ZI-data=3600  
+Finished: 0 information, 1 warning and 0 error messages.
+FromELF: creating hex file...
+"..\..\Output\Template.axf" - 0 Error(s), 77 Warning(s).
+Load "..\\..\\Output\\Template.axf" 
+Full Chip Erase Done.
+Programming Done.
+Verify OK.
+Application running ...
+
+Load "..\\..\\Output\\Template.axf" 
+Full Chip Erase Done.
+Programming Done.
+Verify OK.
+Application running ...
+   Delay(1);
+..\..\ds18b20\bsp_ds18b20.c(144): warning:  #223-D: function "Delay" declared implicitly
+        Delay(10);
+..\..\ds18b20\bsp_ds18b20.c(194): warning:  #223-D: function "Delay" declared implicitly
+                        Delay(8);
+..\..\ds18b20\bsp_ds18b20.c(203): warning:  #223-D: function "Delay" declared implicitly
+                        Delay(70);
+..\..\ds18b20\bsp_ds18b20.c: 6 warnings, 0 errors
+compiling led.c...
+compiling Time_test.c...
+..\..\TM2\Time_test.h(11): warning:  #1295-D: Deprecated declaration TIM_2 - give arg types
+  void TIM_2();
+..\..\can\J1939\J1939.H(290): warning:  #40-D: expected an identifier
+        };
+..\..\can\J1939\J1939.H(319): warning:  #1295-D: Deprecated declaration J1939_Initialization - give arg types
+  extern void                   J1939_Initialization( );
+..\..\can\J1939\J1939.H(321): warning:  #1295-D: Deprecated declaration J1939_ISR - give arg types
+  extern void                       J1939_ISR( );
+..\..\can\J1939\J1939.H(323): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
+  extern void                   J1939_Poll( );
+..\..\Msg\msg.h(6280): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\..\Testmsg\testmsg.h(4): warning:  #1295-D: Deprecated declaration testallmsg_group1 - give arg types
+  void testallmsg_group1();
+..\..\Testmsg\testmsg.h(5): warning:  #1295-D: Deprecated declaration testallmsg_group2 - give arg types
+  void testallmsg_group2();
+..\..\Testmsg\testmsg.h(6): warning:  #1295-D: Deprecated declaration testallmsg_group3 - give arg types
+  void testallmsg_group3();
+..\..\Testmsg\testmsg.h(7): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\..\TM2\Time_test.c(65): warning:  #223-D: function "printf" declared implicitly
+                 PC_Usart("\r\n testallmsg_group2 test\r\n");  
+..\..\TM2\Time_test.c(68): warning:  #1-D: last line of file ends without a newline
+  }
+..\..\TM2\Time_test.c: 12 warnings, 0 errors
+linking...
+..\..\Output\Template.axf: Warning: L6304W: Duplicate input file ..\..\output\led.o ignored.
+Program Size: Code=106344 RO-data=336 RW-data=104 ZI-data=3600  
+Finished: 0 information, 1 warning and 0 error messages.
+FromELF: creating hex file...
+"..\..\Output\Template.axf" - 0 Error(s), 97 Warning(s).
+Load "..\\..\\Output\\Template.axf" 
+Full Chip Erase Done.
+Programming Done.
+Verify OK.
+Application running ...

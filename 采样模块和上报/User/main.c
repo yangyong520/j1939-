@@ -119,15 +119,6 @@ int main(void)
 	TIM_2( );
 	while(1)
     {
-			
-	  GPIO_SetBits(GPIOC,GPIO_Pin_14);
-	  GPIO_SetBits(GPIOC,GPIO_Pin_15);
-    Delay(500000);
-	  Delay(500000);	
-	  GPIO_SetBits(GPIOC,GPIO_Pin_14);
-	  GPIO_SetBits(GPIOC,GPIO_Pin_15);
-    Delay(500000);
-	  Delay(500000);
 		testallmsg_group1()	;		
 		//testallmsg_group2()	;	
 		//testallmsg_group3()	;	

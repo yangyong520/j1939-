@@ -287,7 +287,7 @@ I (..\..\Libraries\FWlib\inc\stm32f10x_rcc.h)(0x642BEBB9)
 I (..\..\Libraries\FWlib\inc\stm32f10x_tim.h)(0x642BEBB9)
 I (..\..\Libraries\FWlib\inc\stm32f10x_usart.h)(0x642BEBB9)
 I (..\..\Libraries\FWlib\inc\misc.h)(0x642BEBB9)
-F (..\..\User\main.c)(0x642C114A)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\..\Libraries\CMSIS -I..\..\User -I..\..\Libraries\FWlib\inc -I..\..\User\gpio -I..\..\User\SysTick -I..\..\User\usart -I..\..\User\wifi -I..\..\can\USER -I..\..\can\J1939 -I..\..\Msg -I..\..\Testmsg -I..\..\Config -I..\..\ds18b20 -I..\..\TM2 --gnu-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I C:\Keil_v5\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\..\output\main.o --omf_browse ..\..\output\main.crf --depend ..\..\output\main.d)
+F (..\..\User\main.c)(0x642C14F7)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\..\Libraries\CMSIS -I..\..\User -I..\..\Libraries\FWlib\inc -I..\..\User\gpio -I..\..\User\SysTick -I..\..\User\usart -I..\..\User\wifi -I..\..\can\USER -I..\..\can\J1939 -I..\..\Msg -I..\..\Testmsg -I..\..\Config -I..\..\ds18b20 -I..\..\TM2 --gnu-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I C:\Keil_v5\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\..\output\main.o --omf_browse ..\..\output\main.crf --depend ..\..\output\main.d)
 I (..\..\Libraries\CMSIS\stm32f10x.h)(0x642BEBB9)
 I (..\..\Libraries\CMSIS\core_cm3.h)(0x642BEBB9)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x53463A44)
@@ -401,7 +401,7 @@ I (..\..\User\gpio\bsp_gpio.h)(0x642BEBB9)
 I (..\..\User\usart\bsp_usart1.h)(0x642BEBB9)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x53463A44)
 I (..\..\User\usart\bsp_usart2.h)(0x642BEBB9)
-F (..\..\User\wifi\wifi_function.c)(0x642C1105)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\..\Libraries\CMSIS -I..\..\User -I..\..\Libraries\FWlib\inc -I..\..\User\gpio -I..\..\User\SysTick -I..\..\User\usart -I..\..\User\wifi -I..\..\can\USER -I..\..\can\J1939 -I..\..\Msg -I..\..\Testmsg -I..\..\Config -I..\..\ds18b20 -I..\..\TM2 --gnu-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I C:\Keil_v5\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\..\output\wifi_function.o --omf_browse ..\..\output\wifi_function.crf --depend ..\..\output\wifi_function.d)
+F (..\..\User\wifi\wifi_function.c)(0x642C1689)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\..\Libraries\CMSIS -I..\..\User -I..\..\Libraries\FWlib\inc -I..\..\User\gpio -I..\..\User\SysTick -I..\..\User\usart -I..\..\User\wifi -I..\..\can\USER -I..\..\can\J1939 -I..\..\Msg -I..\..\Testmsg -I..\..\Config -I..\..\ds18b20 -I..\..\TM2 --gnu-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I C:\Keil_v5\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\..\output\wifi_function.o --omf_browse ..\..\output\wifi_function.crf --depend ..\..\output\wifi_function.d)
 I (..\..\User\wifi\wifi_function.h)(0x642C1105)
 I (..\..\Libraries\CMSIS\stm32f10x.h)(0x642BEBB9)
 I (..\..\Libraries\CMSIS\core_cm3.h)(0x642BEBB9)

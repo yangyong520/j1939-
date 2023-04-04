@@ -225,7 +225,7 @@ bool ESP8266_Link_Server ( ENUM_NetPro_TypeDef enumE, char * ip, char * ComNum)
 
  sprintf ( cCmd, "AT+CIPSTART=%s", cStr );
 
-	return ESP8266_Cmd ( cCmd, "OK", "ALREAY CONNECT", 500 );
+	return ESP8266_Cmd ( cCmd, "OK", "ALREAY CONNECT", 5 );
 	
 }
 
@@ -281,9 +281,9 @@ bool ESP8266_SendString ( char * pStr, u32 ulStrLength )
 	bool bRet = false;
 	sprintf ( cStr, "AT+CIPSEND=%d", ulStrLength + 2 );
 	
-		ESP8266_Cmd ( cStr, "> ", 0, 1000 );
+		ESP8266_Cmd ( cStr, "> ", 0, 10 );
 
-		bRet = ESP8266_Cmd ( pStr, "SEND OK", 0, 1000 );
+		bRet = ESP8266_Cmd ( pStr, "SEND OK", 0, 10 );
 	
 	return bRet;
 
@@ -366,8 +366,6 @@ void SendMsg(char *str)
 {
 	ESP8266_Link_Server ( enumTCP, IP, PORT);
 	ESP8266_SendString (str, strlen(str)-2 );
-	Delay(500000);
-	Delay(500000);
 }
 
 
