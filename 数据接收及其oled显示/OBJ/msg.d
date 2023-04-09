@@ -12,3 +12,4 @@
 ..\obj\msg.o: ..\STM32F10x_FWLib\inc\stm32f10x_usart.h
 ..\obj\msg.o: ..\STM32F10x_FWLib\inc\misc.h
 ..\obj\msg.o: ..\j1939\J1939\J1939.H
+..\obj\msg.o: ..\j1939\can\led.h

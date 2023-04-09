@@ -9390,37 +9390,37 @@ void config_ET (getET_t *ET)
 }
 void config_LD (getLD_t *LD)
 {
-    LD -> bt1.Running_Light= 3.0*RATE;
-    LD -> bt1.Alternate_Beam_Head_Light_Data= 3.0*RATE;
-    LD -> bt1.Low_Beam_Head_Light_Data= 3.0*RATE;
-    LD -> bt1.High_Beam_Head_Light_Data= 3.0*RATE;
-    LD -> bt2.Tractor_Front_Fog_Lights= 3.0*RATE;
-    LD -> bt2.Rotating_Beacon_Light= 3.0*RATE;
-    LD -> bt2.Right_Turn_Signal_Lights= 3.0*RATE;
-    LD -> bt2.Left_Turn_Signal_Lights= 3.0*RATE;
-    LD -> bt3.Back_Up_Light_and_Alarm_Horn= 3.0*RATE;
-    LD -> bt3.Center_Stop_Light= 3.0*RATE;
-    LD -> bt3.Right_Stop_Light= 3.0*RATE;
-    LD -> bt3.Left_Stop_Light= 3.0*RATE;
-    LD -> bt4.Implement_Clearance_Light= 3.0*RATE;
-    LD -> bt4.Tractor_Clearance_Light= 3.0*RATE;
-    LD -> bt4.Implement_Marker_Light= 3.0*RATE;
-    LD -> bt4.Tractor_Marker_Light= 3.0*RATE;
-    LD -> bt5.Rear_Fog_Lights= 3.0*RATE;
-    LD -> bt5.Tractor_Underside_Mounted_Work_Lights= 3.0*RATE;
-    LD -> bt5.Tractor_Rear_Low_Mounted_Work_Lights= 3.0*RATE;
-    LD -> bt5.Tractor_Rear_High_Mounted_Work_Lights= 3.0*RATE;
-    LD -> bt6.Tractor_Side_Low_Mounted_Work_Lights= 3.0*RATE;
-    LD -> bt6.Tractor_Side_High_Mounted_Work_Lights= 3.0*RATE;
-    LD -> bt6.Tractor_Front_Low_Mounted_Work_Lights= 3.0*RATE;
-    LD -> bt6.Tractor_Front_High_Mounted_Work_Lights= 3.0*RATE;
-    LD -> bt7.Implement_OEM_Option_2_Light= 3.0*RATE;
-    LD -> bt7.Implement_OEM_Option_1_Light= 3.0*RATE;
-    LD -> bt7.Implement_Right_Facing_Work_Light= 3.0*RATE;
-    LD -> bt7.Implement_Left_Forward_Work_Light= 3.0*RATE;
-    LD -> bt8.Implement_Right_Forward_Work_Light= 3.0*RATE;
-    LD -> bt8.Implement_Left_Facing_Work_Light= 3.0*RATE;
-    LD -> bt8.Implement_Rear_Work_Light= 3.0*RATE;
+    LD -> bt1.Running_Light= 0x01;
+    LD -> bt1.Alternate_Beam_Head_Light_Data= 0x01;
+    LD -> bt1.Low_Beam_Head_Light_Data= 0x01;
+    LD -> bt1.High_Beam_Head_Light_Data= 0x01;
+    LD -> bt2.Tractor_Front_Fog_Lights= 0x01;
+    LD -> bt2.Rotating_Beacon_Light= 0x01;
+    LD -> bt2.Right_Turn_Signal_Lights= 0x01;
+    LD -> bt2.Left_Turn_Signal_Lights= 0x01;
+    LD -> bt3.Back_Up_Light_and_Alarm_Horn= 0x01;
+    LD -> bt3.Center_Stop_Light= 0x01;
+    LD -> bt3.Right_Stop_Light= 0x01;
+    LD -> bt3.Left_Stop_Light= 0x01;
+    LD -> bt4.Implement_Clearance_Light= 0x01;
+    LD -> bt4.Tractor_Clearance_Light= 0x01;
+    LD -> bt4.Implement_Marker_Light= 0x01;
+    LD -> bt4.Tractor_Marker_Light= 0x01;
+    LD -> bt5.Rear_Fog_Lights= 0x01;
+    LD -> bt5.Tractor_Underside_Mounted_Work_Lights= 0x01;
+    LD -> bt5.Tractor_Rear_Low_Mounted_Work_Lights= 0x01;
+    LD -> bt5.Tractor_Rear_High_Mounted_Work_Lights= 0x01;
+    LD -> bt6.Tractor_Side_Low_Mounted_Work_Lights= 0x01;
+    LD -> bt6.Tractor_Side_High_Mounted_Work_Lights= 0x01;
+    LD -> bt6.Tractor_Front_Low_Mounted_Work_Lights= 0x01;
+    LD -> bt6.Tractor_Front_High_Mounted_Work_Lights= 0x01;
+    LD -> bt7.Implement_OEM_Option_2_Light= 0x01;
+    LD -> bt7.Implement_OEM_Option_1_Light= 0x01;
+    LD -> bt7.Implement_Right_Facing_Work_Light= 0x01;
+    LD -> bt7.Implement_Left_Forward_Work_Light= 0x01;
+    LD -> bt8.Implement_Right_Forward_Work_Light= 0x01;
+    LD -> bt8.Implement_Left_Facing_Work_Light= 0x01;
+    LD -> bt8.Implement_Rear_Work_Light= 0x01;
 }
 void config_LCMD (getLCMD_t *LCMD)
 {

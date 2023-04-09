@@ -12,11 +12,13 @@
 "..\obj\stm32f10x_rcc.o"
 "..\obj\stm32f10x_usart.o"
 "..\obj\stm32f10x_can.o"
+"..\obj\stm32f10x_exti.o"
 "..\obj\can.o"
 "..\obj\led.o"
 "..\obj\usart1.o"
 "..\obj\j1939.o"
 "..\obj\msg.o"
+"..\obj\exti.o"
 --strict --scatter "..\OBJ\OLED.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

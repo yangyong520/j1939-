@@ -14,11 +14,13 @@
 #include "can.h"
 #include "led.h"
 #include "j1939.h"
-
+#include "exti.h"
+/*
 void Delay(vu32 nCount)
 {
   for(; nCount != 0; nCount--);
 }
+*/
 void KeyInit(void)
 {
         GPIO_InitTypeDef GPIO_InitStructure;
@@ -132,9 +134,12 @@ int main(void)
 	CAN_GPIO_Config();//CAN管脚初始化
 	CAN_NVIC_Configuration(); //CAN中断初始化   
 	CAN_INIT();//CA初始化N模块	
+	
+	
 	J1939_Initialization( );
 	OLED_ShowString(6,3,"0.96' OLED TEST",16);	
-OLED_Clear();	
+	OLED_Clear();	
+	EXTI_Config();
  	while(1)
     {
 			

@@ -18,3 +18,5 @@
 ..\obj\main.o: ..\STM32F10x_FWLib\inc\stm32f10x_can.h
 ..\obj\main.o: ..\j1939\can\led.h
 ..\obj\main.o: ..\j1939\J1939\j1939.h
+..\obj\main.o: ..\exti\exti.h
+..\obj\main.o: ..\STM32F10x_FWLib\inc\stm32f10x_exti.h

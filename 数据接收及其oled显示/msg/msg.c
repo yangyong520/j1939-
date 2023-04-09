@@ -138,28 +138,70 @@ void transmit_USART_STR(J1939_MESSAGE *J1939_MESSAGE)
 						CheckET1(J1939_MESSAGE,&ET1);
 				
 						sprintf(data,"Temp:%.2f",ET1.Engine_Coolant_Temperature);
-						OLED_ShowString(0,3,data,26);
+						OLED_ShowString(0,1,data,26);
 					
 				}
-				/*
+
 				if (65088==J1939_MESSAGE->Mxe.PGN)//»ñÈ¡µÆ¹â
 				{
 
-					sprintf(data,"\nPGN : %d Array:%X %X %X %X %X %X %X %X\n",J1939_MESSAGE->Mxe.PGN,J1939_MESSAGE->Mxe.Data[0],J1939_MESSAGE->Mxe.Data[1],J1939_MESSAGE->Mxe.Data[2],
-	J1939_MESSAGE->Mxe.Data[3],J1939_MESSAGE->Mxe.Data[4],J1939_MESSAGE->Mxe.Data[5],J1939_MESSAGE->Mxe.Data[6],J1939_MESSAGE->Mxe.Data[7]);
-				OLED_ShowString(0,0,data,26);
-					OLED_ShowString(0,0,data,26);
-
 					
 						CheckLD(J1939_MESSAGE,&LD);
-				
-						sprintf(data,"Running Light:%d High_Beam_Head_Light_Data:%d\n Low_Beam_Head_Light_Data :%d",LD.bt1.Running_Light,LD.bt1.High_Beam_Head_Light_Data,LD.bt1.Low_Beam_Head_Light_Data);
-						OLED_ShowString(0,0,data,26);
-					sprintf(data,"\nLeft_Turn_Signal_Lights:%d Right_Turn_Signal_Lights:%d\n Back_Up_Light_and_Alarm_Horn :%d",LD.bt2.Left_Turn_Signal_Lights,LD.bt2.Right_Turn_Signal_Lights,LD.bt3.Back_Up_Light_and_Alarm_Horn);
-						OLED_ShowString(0,0,data,26);
+					if(1==LD.bt1.Running_Light)
+					{
+						LED3( ON );	
+					}
+					else
+					{
+						LED3( OFF );	
+					}
+					if(1==LD.bt1.High_Beam_Head_Light_Data)
+					{
+						LED6( ON );	
+					}
+					else
+					{
+						LED6( OFF );	
+					}
+					
+					if(3==LD.bt1.Low_Beam_Head_Light_Data)
+					{
+						LED5( ON );	
+					}
+					else
+					{
+						LED5( OFF );	
+					}
+
+					if(3==LD.bt2.Left_Turn_Signal_Lights)
+					{
+						LED4( ON );	
+					}
+					else
+					{
+						LED4( OFF );	
+					}
+					if(3==LD.bt2.Right_Turn_Signal_Lights)
+					{
+						LED1( ON );	
+					}
+					else
+					{
+						LED1( OFF );	
+					}
+					if(1==LD.bt3.Back_Up_Light_and_Alarm_Horn)
+					{
+						LED2( ON );	
+					}
+					else
+					{
+						LED2( OFF );	
+					}
+					sprintf(data,"LLit:%d RLit:%d BkUpLtH:%d",LD.bt2.Left_Turn_Signal_Lights,LD.bt2.Right_Turn_Signal_Lights,LD.bt3.Back_Up_Light_and_Alarm_Horn);
+						OLED_ShowString(0,3,data,26);
 					
 				}
-				*/
+
 	
 
 }

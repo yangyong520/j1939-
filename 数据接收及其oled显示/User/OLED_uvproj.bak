@@ -364,7 +364,7 @@
               <MiscControls>--gnu</MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\HARDWARE\LED;..\SYSTEM\delay;..\SYSTEM\sys;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\HARDWARE\KEY;..\HARDWARE\OLED;..\j1939\can;..\j1939\J1939</IncludePath>
+              <IncludePath>..\HARDWARE\LED;..\SYSTEM\delay;..\SYSTEM\sys;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\HARDWARE\KEY;..\HARDWARE\OLED;..\j1939\can;..\j1939\J1939;..\msg</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -546,6 +546,21 @@
               <FileName>J1939_Config.H</FileName>
               <FileType>5</FileType>
               <FilePath>..\j1939\J1939\J1939_Config.H</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>msg</GroupName>
+          <Files>
+            <File>
+              <FileName>msg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\msg\msg.c</FilePath>
+            </File>
+            <File>
+              <FileName>msg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\msg\msg.h</FilePath>
             </File>
           </Files>
         </Group>
