@@ -4,7 +4,7 @@
  *          
  * 实验平台：MINI STM32开发板 基于STM32F103C8T6
  * 硬件连接：-----------------
- *          |   PB15 - LED1   |
+ *          |   PB15 - Right_Turn_Signal_Lights   |
  *          |   PB14 - LED2   |
  *          |                 |
  *           ----------------- 

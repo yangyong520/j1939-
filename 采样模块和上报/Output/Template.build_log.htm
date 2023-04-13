@@ -4,7 +4,7 @@
 <h1>礦ision Build Log</h1>
 <h2>Project:</h2>
 C:\Users\杨勇\Desktop\毕业设计\git\j1939-\采样模块和上报\Project\RVMDK（uv4）\STM32.uvproj
-Project File Date:  04/04/2023
+Project File Date:  04/09/2023
 
 <h2>Output:</h2>
 Rebuild target 'ESP8266'
@@ -50,7 +50,11 @@ compiling main.c...
   extern void                       J1939_ISR( );
 ..\..\can\J1939\j1939.h(323): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
   extern void                   J1939_Poll( );
-..\..\Msg\msg.h(6280): warning:  #1-D: last line of file ends without a newline
+..\..\Msg\msg.h(6281): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\..\Msg\dealwithmsg.h(8): warning:  #1295-D: Deprecated declaration sendLD - give arg types
+  void sendLD();
+..\..\Msg\msg.h(6281): warning:  #1-D: last line of file ends without a newline
   #endif
 ..\..\Testmsg\testmsg.h(4): warning:  #1295-D: Deprecated declaration testallmsg_group1 - give arg types
   void testallmsg_group1();
@@ -64,7 +68,7 @@ compiling main.c...
   #endif
 ..\..\TM2\Time_test.h(11): warning:  #1295-D: Deprecated declaration TIM_2 - give arg types
   void TIM_2();
-..\..\User\main.c: 11 warnings, 0 errors
+..\..\User\main.c: 13 warnings, 0 errors
 compiling stm32f10x_it.c...
 ..\..\User\stm32f10x_it.c(148): warning:  #223-D: function "TimingDelay_Decrement" declared implicitly
         TimingDelay_Decrement();        
@@ -124,21 +128,27 @@ compiling J1939.c...
                         break;
 ..\..\can\J1939\J1939_config.H(298): warning:  #111-D: statement is unreachable
                         break;
-..\..\can\J1939\J1939.c(390): warning:  #111-D: statement is unreachable
+..\..\Msg\msg.h(6281): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\..\Msg\dealwithmsg.h(8): warning:  #1295-D: Deprecated declaration sendLD - give arg types
+  void sendLD();
+..\..\can\J1939\J1939.c(391): warning:  #111-D: statement is unreachable
                         J1939_ISR( );
-..\..\can\J1939\J1939.c(496): warning:  #223-D: function "J1939_TP_Poll" declared implicitly
+..\..\can\J1939\J1939.c(497): warning:  #223-D: function "J1939_TP_Poll" declared implicitly
           J1939_TP_Poll();
-..\..\can\J1939\J1939.c(674): warning:  #111-D: statement is unreachable
+..\..\can\J1939\J1939.c(675): warning:  #111-D: statement is unreachable
                       break;
-..\..\can\J1939\J1939.c(729): warning:  #111-D: statement is unreachable
+..\..\can\J1939\J1939.c(730): warning:  #111-D: statement is unreachable
                                 break;
-..\..\can\J1939\J1939.c(1044): warning:  #111-D: statement is unreachable
+..\..\can\J1939\J1939.c(896): warning:  #223-D: function "printf" declared implicitly
+                PC_Usart("\r\n readOneMessage test\r\n"); 
+..\..\can\J1939\J1939.c(1049): warning:  #111-D: statement is unreachable
                         break;
-..\..\can\J1939\J1939.c(1346): warning:  #159-D: declaration is incompatible with previous "J1939_TP_Poll" (declared at line 496)
+..\..\can\J1939\J1939.c(1351): warning:  #159-D: declaration is incompatible with previous "J1939_TP_Poll" (declared at line 497)
   void J1939_TP_Poll(void)
-..\..\can\J1939\J1939.c(1585): warning:  #223-D: function "malloc" declared implicitly
+..\..\can\J1939\J1939.c(1590): warning:  #223-D: function "malloc" declared implicitly
         _requestList->next = (struct Request_List *)malloc(sizeof(struct Request_List));
-..\..\can\J1939\J1939.c: 22 warnings, 0 errors
+..\..\can\J1939\J1939.c: 25 warnings, 0 errors
 compiling msg.c...
 ..\..\can\J1939\J1939.H(290): warning:  #40-D: expected an identifier
         };
@@ -148,7 +158,11 @@ compiling msg.c...
   extern void                       J1939_ISR( );
 ..\..\can\J1939\J1939.H(323): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
   extern void                   J1939_Poll( );
-..\..\Msg\msg.h(6280): warning:  #1-D: last line of file ends without a newline
+..\..\Msg\msg.h(6281): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\..\Msg\dealwithmsg.h(8): warning:  #1295-D: Deprecated declaration sendLD - give arg types
+  void sendLD();
+..\..\Msg\msg.h(6281): warning:  #1-D: last line of file ends without a newline
   #endif
 ..\..\Msg\msg.c(5): warning:  #223-D: function "abs" declared implicitly
         return (uint16_t)((measured+abs((int)offset))/resolutionratio);
@@ -156,17 +170,17 @@ compiling msg.c...
       J1939_MESSAGE->data[2] |= (uint8_t)(ESC1->bt3.Axle_Location)<<-1;
 ..\..\Msg\msg.c(2654): warning:  #62-D: shift count is negative
       J1939_MESSAGE->data[6] |= (uint8_t)(A2SCRRT2I->bt7.Aftertreatment_2_Diesel_Exhaust_Fluid_Tank_2_Heater)<<-1;
-..\..\Msg\msg.c(9019): warning:  #173-D: floating-point value does not fit in required integral type
+..\..\Msg\msg.c(9024): warning:  #173-D: floating-point value does not fit in required integral type
       TR5 -> bt6.Route_Number= 4095.0*RATE;
-..\..\Msg\msg.c(10650): warning:  #223-D: function "sprintf" declared implicitly
-                                sprintf(buff,"PGN:%X-byte_count:%d-data-%d-%d-%d-%d-%d-%d-%d-%d-\t\0",
-..\..\Msg\msg.c(10653): warning:  #223-D: function "printf" declared implicitly
+..\..\Msg\msg.c(10655): warning:  #223-D: function "sprintf" declared implicitly
+                                sprintf(buff,"PGN:%X-byte_count:%d-data-%X-%X-%X-%X-%X-%X-%X-%X-\t\0",
+..\..\Msg\msg.c(10658): warning:  #223-D: function "printf" declared implicitly
                                 PC_Usart ( buff );
-..\..\Msg\msg.c(10656): warning:  #223-D: function "J1939_EnqueueMessage" declared implicitly
+..\..\Msg\msg.c(10661): warning:  #223-D: function "J1939_EnqueueMessage" declared implicitly
           while (J1939_EnqueueMessage(&Msg,Select_CAN_NODE_1) != RC_SUCCESS){ 
-..\..\Msg\msg.c(10659): warning:  #1-D: last line of file ends without a newline
+..\..\Msg\msg.c(10664): warning:  #1-D: last line of file ends without a newline
   }
-..\..\Msg\msg.c: 13 warnings, 0 errors
+..\..\Msg\msg.c: 15 warnings, 0 errors
 compiling testmsg.c...
 ..\..\can\J1939\J1939.H(290): warning:  #40-D: expected an identifier
         };
@@ -176,7 +190,11 @@ compiling testmsg.c...
   extern void                       J1939_ISR( );
 ..\..\can\J1939\J1939.H(323): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
   extern void                   J1939_Poll( );
-..\..\Msg\msg.h(6280): warning:  #1-D: last line of file ends without a newline
+..\..\Msg\msg.h(6281): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\..\Msg\dealwithmsg.h(8): warning:  #1295-D: Deprecated declaration sendLD - give arg types
+  void sendLD();
+..\..\Msg\msg.h(6281): warning:  #1-D: last line of file ends without a newline
   #endif
 ..\..\Testmsg\testmsg.h(4): warning:  #1295-D: Deprecated declaration testallmsg_group1 - give arg types
   void testallmsg_group1();
@@ -188,21 +206,67 @@ compiling testmsg.c...
   #endif
 ..\..\Testmsg\testmsg.c(10): warning:  #223-D: function "LLRE" declared implicitly
          LLRE(&msg,&llre);
-..\..\Testmsg\testmsg.c(16): warning:  #223-D: function "CCVS1" declared implicitly
+..\..\Testmsg\testmsg.c(12): warning:  #223-D: function "Delay" declared implicitly
+        Delay(500000);
+..\..\Testmsg\testmsg.c(17): warning:  #223-D: function "CCVS1" declared implicitly
          CCVS1(&msg,&ccvs1);
-..\..\Testmsg\testmsg.c(22): warning:  #223-D: function "ET1" declared implicitly
+..\..\Testmsg\testmsg.c(24): warning:  #223-D: function "ET1" declared implicitly
          ET1(&msg,&et1);
-..\..\Testmsg\testmsg.c(28): warning:  #223-D: function "LD" declared implicitly
-         LD(&msg,&ld);
-..\..\Testmsg\testmsg.c(36): warning:  #223-D: function "LCMD" declared implicitly
-         LCMD(&msg,&lcmd);
-..\..\Testmsg\testmsg.c(42): warning:  #223-D: function "TSC1" declared implicitly
+..\..\Testmsg\testmsg.c(49): warning:  #223-D: function "TSC1" declared implicitly
          TSC1(&msg,&tsc1);
-..\..\Testmsg\testmsg.c(825): warning:  #9-D: nested comment is not allowed
+..\..\Testmsg\testmsg.c(833): warning:  #9-D: nested comment is not allowed
   /*
-..\..\Testmsg\testmsg.c(3252): warning:  #1-D: last line of file ends without a newline
+..\..\Testmsg\testmsg.c(3260): warning:  #1-D: last line of file ends without a newline
   */
-..\..\Testmsg\testmsg.c: 17 warnings, 0 errors
+..\..\Testmsg\testmsg.c: 18 warnings, 0 errors
+compiling dealwithmsg.c...
+..\..\can\J1939\J1939.H(290): warning:  #40-D: expected an identifier
+        };
+..\..\can\J1939\J1939.H(319): warning:  #1295-D: Deprecated declaration J1939_Initialization - give arg types
+  extern void                   J1939_Initialization( );
+..\..\can\J1939\J1939.H(321): warning:  #1295-D: Deprecated declaration J1939_ISR - give arg types
+  extern void                       J1939_ISR( );
+..\..\can\J1939\J1939.H(323): warning:  #1295-D: Deprecated declaration J1939_Poll - give arg types
+  extern void                   J1939_Poll( );
+..\..\Msg\msg.h(6281): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\..\Msg\dealwithmsg.h(8): warning:  #1295-D: Deprecated declaration sendLD - give arg types
+  void sendLD();
+..\..\Msg\dealwithmsg.c(5): warning:  #177-D: variable "buff" was declared but never referenced
+         uint64_t buff;
+..\..\Msg\dealwithmsg.c(46): warning:  #223-D: function "printf" declared implicitly
+                                        PC_Usart("\r\n CheckLCMD test\r\n"); 
+..\..\Msg\dealwithmsg.c(52): warning:  #223-D: function "Delay" declared implicitly
+                                                Delay(500000);                                          
+..\..\Msg\dealwithmsg.c(58): warning:  #223-D: function "Delay" declared implicitly
+                                                Delay(500000);
+..\..\Msg\dealwithmsg.c(63): warning:  #223-D: function "Delay" declared implicitly
+                                                Delay(500000);                                          
+..\..\Msg\dealwithmsg.c(69): warning:  #223-D: function "Delay" declared implicitly
+                                                Delay(500000);
+..\..\Msg\dealwithmsg.c(74): warning:  #223-D: function "Delay" declared implicitly
+                                                Delay(500000);                                          
+..\..\Msg\dealwithmsg.c(80): warning:  #223-D: function "Delay" declared implicitly
+                                                Delay(500000);
+..\..\Msg\dealwithmsg.c(87): warning:  #223-D: function "Delay" declared implicitly
+                                                Delay(500000);                                          
+..\..\Msg\dealwithmsg.c(93): warning:  #223-D: function "Delay" declared implicitly
+                                                Delay(500000);
+..\..\Msg\dealwithmsg.c(100): warning:  #223-D: function "Delay" declared implicitly
+                                                Delay(500000);                                          
+..\..\Msg\dealwithmsg.c(106): warning:  #223-D: function "Delay" declared implicitly
+                                                Delay(500000);
+..\..\Msg\dealwithmsg.c(112): warning:  #223-D: function "Delay" declared implicitly
+                                                Delay(500000);                                          
+..\..\Msg\dealwithmsg.c(118): warning:  #223-D: function "Delay" declared implicitly
+                                                Delay(500000);
+..\..\Msg\dealwithmsg.c(41): warning:  #177-D: variable "data" was declared but never referenced
+                                char data[64];
+..\..\Msg\dealwithmsg.c(129): warning:  #223-D: function "LD" declared implicitly
+         LD(&msg,&ld);
+..\..\Msg\dealwithmsg.c(131): warning:  #1-D: last line of file ends without a newline
+  }
+..\..\Msg\dealwithmsg.c: 23 warnings, 0 errors
 compiling bsp_ds18b20.c...
 compiling led.c...
 compiling Time_test.c...
@@ -213,12 +277,16 @@ compiling Time_test.c...
 ..\..\TM2\Time_test.c: 2 warnings, 0 errors
 linking...
 ..\..\Output\Template.axf: Warning: L6304W: Duplicate input file ..\..\output\led.o ignored.
-Program Size: Code=105988 RO-data=336 RW-data=104 ZI-data=3600  
+Program Size: Code=106608 RO-data=336 RW-data=112 ZI-data=3600  
 Finished: 0 information, 1 warning and 0 error messages.
 FromELF: creating hex file...
-"..\..\Output\Template.axf" - 0 Error(s), 77 Warning(s).
+"..\..\Output\Template.axf" - 0 Error(s), 108 Warning(s).
 Load "..\\..\\Output\\Template.axf" 
 Full Chip Erase Done.
 Programming Done.
 Verify OK.
 Application running ...
+</pre>
+</body>
+</html>
+ing ...

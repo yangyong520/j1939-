@@ -6,7 +6,6 @@
 #include "wifi_config.h"
 #include <stdbool.h>
 
-
 #define     ESP8266_Usart( fmt, ... )           USART2_printf ( USART2, fmt, ##__VA_ARGS__ ) 
 #define     PC_Usart( fmt, ... )                printf ( fmt, ##__VA_ARGS__ )
 

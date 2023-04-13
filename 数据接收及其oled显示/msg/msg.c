@@ -103,23 +103,9 @@ void transmit_USART_STR(J1939_MESSAGE *J1939_MESSAGE)
 				getCCVS1_t CCVS1;
 				getET1_t ET1;
 				getLD_t LD;
-	/*
-				sprintf(data,"\nPGN : %d Array:%X %X %X %X %X %X %X %X\n",J1939_MESSAGE->Mxe.PGN,J1939_MESSAGE->Mxe.Data[0],J1939_MESSAGE->Mxe.Data[1],J1939_MESSAGE->Mxe.Data[2],
-	J1939_MESSAGE->Mxe.Data[3],J1939_MESSAGE->Mxe.Data[4],J1939_MESSAGE->Mxe.Data[5],J1939_MESSAGE->Mxe.Data[6],J1939_MESSAGE->Mxe.Data[7]);
-				USART_STR(USART2,data);
-	*/
-	/*
-				CheckCommand( &J1939_MESSAGE,&Command);
-				sprintf(data,"\n**PGN : %d Data:%X **\n",J1939_MESSAGE->Mxe.PGN,J1939_MESSAGE->Mxe.Data);
-				USART_STR(USART2,data);
-	*/
-				
+	
 				if (65265==J1939_MESSAGE->Mxe.PGN)//ËÙ¶È
 				{
-					/*sprintf(data,"\nPGN : %d Array:%X %X %X %X %X %X %X %X\n",J1939_MESSAGE->Mxe.PGN,J1939_MESSAGE->Mxe.Data[0],J1939_MESSAGE->Mxe.Data[1],J1939_MESSAGE->Mxe.Data[2],
-	J1939_MESSAGE->Mxe.Data[3],J1939_MESSAGE->Mxe.Data[4],J1939_MESSAGE->Mxe.Data[5],J1939_MESSAGE->Mxe.Data[6],J1939_MESSAGE->Mxe.Data[7]);
-				OLED_ShowString(0,0,data,26);
-					*/
 					
 						CheckCCVS1(J1939_MESSAGE,&CCVS1);
 				
@@ -129,12 +115,7 @@ void transmit_USART_STR(J1939_MESSAGE *J1939_MESSAGE)
 				}
 				if (65262==J1939_MESSAGE->Mxe.PGN)//ÎÂ¶È
 				{
-					/*
-					sprintf(data,"\nPGN : %d Array:%X %X %X %X %X %X %X %X\n",J1939_MESSAGE->Mxe.PGN,J1939_MESSAGE->Mxe.Data[0],J1939_MESSAGE->Mxe.Data[1],J1939_MESSAGE->Mxe.Data[2],
-	J1939_MESSAGE->Mxe.Data[3],J1939_MESSAGE->Mxe.Data[4],J1939_MESSAGE->Mxe.Data[5],J1939_MESSAGE->Mxe.Data[6],J1939_MESSAGE->Mxe.Data[7]);
-				OLED_ShowString(0,0,data,26);
-					*/
-					
+	
 						CheckET1(J1939_MESSAGE,&ET1);
 				
 						sprintf(data,"Temp:%.2f",ET1.Engine_Coolant_Temperature);
@@ -149,59 +130,56 @@ void transmit_USART_STR(J1939_MESSAGE *J1939_MESSAGE)
 						CheckLD(J1939_MESSAGE,&LD);
 					if(1==LD.bt1.Running_Light)
 					{
-						LED3( ON );	
+						Running_Light( ON );	
 					}
 					else
 					{
-						LED3( OFF );	
+						Running_Light( OFF );	
 					}
 					if(1==LD.bt1.High_Beam_Head_Light_Data)
 					{
-						LED6( ON );	
+						High_Beam_Head_Light_Data( ON );	
 					}
 					else
 					{
-						LED6( OFF );	
+						High_Beam_Head_Light_Data( OFF );	
 					}
 					
-					if(3==LD.bt1.Low_Beam_Head_Light_Data)
+					if(1==LD.bt1.Low_Beam_Head_Light_Data)
 					{
-						LED5( ON );	
+						Low_Beam_Head_Light_Data( ON );	
 					}
 					else
 					{
-						LED5( OFF );	
+						Low_Beam_Head_Light_Data( OFF );	
 					}
 
-					if(3==LD.bt2.Left_Turn_Signal_Lights)
+					if(1==LD.bt2.Left_Turn_Signal_Lights)
 					{
-						LED4( ON );	
+						Left_Turn_Signal_Lights( ON );	
 					}
 					else
 					{
-						LED4( OFF );	
+						Left_Turn_Signal_Lights( OFF );	
 					}
-					if(3==LD.bt2.Right_Turn_Signal_Lights)
+					if(1==LD.bt2.Right_Turn_Signal_Lights)
 					{
-						LED1( ON );	
+						Right_Turn_Signal_Lights( ON );	
 					}
 					else
 					{
-						LED1( OFF );	
+						Right_Turn_Signal_Lights( OFF );	
 					}
 					if(1==LD.bt3.Back_Up_Light_and_Alarm_Horn)
 					{
-						LED2( ON );	
+						Back_Up_Light_and_Alarm_Horn( ON );	
 					}
 					else
 					{
-						LED2( OFF );	
+						Back_Up_Light_and_Alarm_Horn( OFF );	
 					}
 					sprintf(data,"LLit:%d RLit:%d BkUpLtH:%d",LD.bt2.Left_Turn_Signal_Lights,LD.bt2.Right_Turn_Signal_Lights,LD.bt3.Back_Up_Light_and_Alarm_Horn);
-						OLED_ShowString(0,3,data,26);
-					
+						OLED_ShowString(0,3,data,26);	
 				}
-
-	
 
 }

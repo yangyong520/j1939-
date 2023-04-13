@@ -42,7 +42,8 @@
 
 #include "J1939.H"   
 #include "J1939_config.H"
-
+#include "dealwithmsg.h"
+#include "wifi_function.h"
 #define J1939_TRUE         1	/**< 代表函数正确返回*/
 #define J1939_FALSE        0	/**< 代表函数错误返回*/
 #define ADDRESS_CLAIM_TX   1	/**< 进入地址竞争发送处理模式*/
@@ -891,6 +892,10 @@ if(OneMessage.Mxe.PDUFormat < 240){
 
         }   
     }
+
+		PC_Usart("\r\n readOneMessage test\r\n"); 
+		readOneMessage(&OneMessage);
+
 
 }   
 

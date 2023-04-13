@@ -38,6 +38,7 @@
 "..\..\output\j1939.o"
 "..\..\output\msg.o"
 "..\..\output\testmsg.o"
+"..\..\output\dealwithmsg.o"
 "..\..\output\bsp_ds18b20.o"
 "..\..\output\led.o"
 "..\..\output\time_test.o"

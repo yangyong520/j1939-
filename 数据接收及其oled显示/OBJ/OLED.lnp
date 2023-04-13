@@ -18,6 +18,7 @@
 "..\obj\usart1.o"
 "..\obj\j1939.o"
 "..\obj\msg.o"
+"..\obj\sendmsg.o"
 "..\obj\exti.o"
 --strict --scatter "..\OBJ\OLED.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols

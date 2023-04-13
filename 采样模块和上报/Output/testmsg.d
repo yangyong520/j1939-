@@ -15,3 +15,8 @@
 ..\..\output\testmsg.o: ..\..\can\J1939\J1939.H
 ..\..\output\testmsg.o: ..\..\ds18b20\bsp_ds18b20.h
 ..\..\output\testmsg.o: ..\..\User\SysTick\bsp_SysTick.h
+..\..\output\testmsg.o: ..\..\Msg\dealwithmsg.h
+..\..\output\testmsg.o: ..\..\Msg\msg.h
+..\..\output\testmsg.o: ..\..\User\wifi\wifi_function.h
+..\..\output\testmsg.o: ..\..\User\wifi\wifi_config.h
+..\..\output\testmsg.o: C:\Keil_v5\ARM\ARMCC\bin\..\include\stdbool.h

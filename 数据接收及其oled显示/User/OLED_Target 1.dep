@@ -1,5 +1,5 @@
 Dependencies for Project 'OLED', Target 'Target 1': (DO NOT MODIFY !)
-F (.\main.c)(0x64323812)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\HARDWARE\LED -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\USER -I..\STM32F10x_FWLib\inc -I..\CORE -I..\HARDWARE\KEY -I..\HARDWARE\OLED -I..\j1939\can -I..\j1939\J1939 -I..\msg -I..\exti --gnu-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I C:\Keil_v5\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\main.o --omf_browse ..\obj\main.crf --depend ..\obj\main.d)
+F (.\main.c)(0x64356277)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\HARDWARE\LED -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\USER -I..\STM32F10x_FWLib\inc -I..\CORE -I..\HARDWARE\KEY -I..\HARDWARE\OLED -I..\j1939\can -I..\j1939\J1939 -I..\msg -I..\exti --gnu-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I C:\Keil_v5\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\main.o --omf_browse ..\obj\main.crf --depend ..\obj\main.d)
 I (..\SYSTEM\delay\delay.h)(0x642BEBB9)
 I (..\SYSTEM\sys\sys.h)(0x642BEBB9)
 I (..\USER\stm32f10x.h)(0x642BEBB9)
@@ -16,10 +16,12 @@ I (..\HARDWARE\OLED\oled.h)(0x642BEBB8)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x53463A44)
 I (..\j1939\can\can.h)(0x642BEBB9)
 I (..\STM32F10x_FWLib\inc\stm32f10x_can.h)(0x642BEBB9)
-I (..\j1939\can\led.h)(0x64314CEF)
+I (..\j1939\can\led.h)(0x643567F9)
 I (..\j1939\J1939\j1939.h)(0x642BEBB9)
-I (..\exti\exti.h)(0x64323739)
+I (..\exti\exti.h)(0x6434E16A)
 I (..\STM32F10x_FWLib\inc\stm32f10x_exti.h)(0x642BEBB9)
+I (..\msg\sendmsg.h)(0x6433BCF3)
+I (..\msg\msg.h)(0x64324F48)
 F (.\stm32f10x_it.c)(0x642BEBB9)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\HARDWARE\LED -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\USER -I..\STM32F10x_FWLib\inc -I..\CORE -I..\HARDWARE\KEY -I..\HARDWARE\OLED -I..\j1939\can -I..\j1939\J1939 -I..\msg -I..\exti --gnu-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I C:\Keil_v5\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\stm32f10x_it.o --omf_browse ..\obj\stm32f10x_it.crf --depend ..\obj\stm32f10x_it.d)
 I (stm32f10x_it.h)(0x642BEBB9)
 I (stm32f10x.h)(0x642BEBB9)
@@ -171,10 +173,10 @@ I (..\STM32F10x_FWLib\inc\stm32f10x_rcc.h)(0x642BEBB9)
 I (..\STM32F10x_FWLib\inc\stm32f10x_usart.h)(0x642BEBB9)
 I (..\STM32F10x_FWLib\inc\misc.h)(0x642BEBB9)
 I (..\STM32F10x_FWLib\inc\stm32f10x_can.h)(0x642BEBB9)
-I (..\j1939\can\led.h)(0x64314CEF)
+I (..\j1939\can\led.h)(0x643567F9)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x53463A44)
-F (..\j1939\can\led.c)(0x64314CEF)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\HARDWARE\LED -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\USER -I..\STM32F10x_FWLib\inc -I..\CORE -I..\HARDWARE\KEY -I..\HARDWARE\OLED -I..\j1939\can -I..\j1939\J1939 -I..\msg -I..\exti --gnu-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I C:\Keil_v5\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\led.o --omf_browse ..\obj\led.crf --depend ..\obj\led.d)
-I (..\j1939\can\led.h)(0x64314CEF)
+F (..\j1939\can\led.c)(0x6435624A)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\HARDWARE\LED -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\USER -I..\STM32F10x_FWLib\inc -I..\CORE -I..\HARDWARE\KEY -I..\HARDWARE\OLED -I..\j1939\can -I..\j1939\J1939 -I..\msg -I..\exti --gnu-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I C:\Keil_v5\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\led.o --omf_browse ..\obj\led.crf --depend ..\obj\led.d)
+I (..\j1939\can\led.h)(0x643567F9)
 I (..\USER\stm32f10x.h)(0x642BEBB9)
 I (..\CORE\core_cm3.h)(0x642BEBB8)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x53463A44)
@@ -200,7 +202,7 @@ I (..\STM32F10x_FWLib\inc\misc.h)(0x642BEBB9)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x53463A44)
 I (C:\Keil_v5\ARM\ARMCC\include\stdarg.h)(0x53463A44)
 F (..\j1939\can\can.h)(0x642BEBB9)()
-F (..\j1939\can\led.h)(0x64314CEF)()
+F (..\j1939\can\led.h)(0x643567F9)()
 F (..\j1939\can\usart1.h)(0x642BEBB9)()
 F (..\j1939\J1939\J1939.c)(0x642BEBB9)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\HARDWARE\LED -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\USER -I..\STM32F10x_FWLib\inc -I..\CORE -I..\HARDWARE\KEY -I..\HARDWARE\OLED -I..\j1939\can -I..\j1939\J1939 -I..\msg -I..\exti --gnu-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I C:\Keil_v5\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\j1939.o --omf_browse ..\obj\j1939.crf --depend ..\obj\j1939.d)
 I (..\j1939\J1939\J1939.H)(0x642BEBB9)
@@ -217,11 +219,11 @@ I (..\STM32F10x_FWLib\inc\stm32f10x_usart.h)(0x642BEBB9)
 I (..\STM32F10x_FWLib\inc\misc.h)(0x642BEBB9)
 I (..\j1939\can\can.h)(0x642BEBB9)
 I (..\STM32F10x_FWLib\inc\stm32f10x_can.h)(0x642BEBB9)
-I (..\j1939\can\led.h)(0x64314CEF)
+I (..\j1939\can\led.h)(0x643567F9)
 I (..\msg\msg.h)(0x64324F48)
 F (..\j1939\J1939\J1939.H)(0x642BEBB9)()
 F (..\j1939\J1939\J1939_Config.H)(0x642BEBB9)()
-F (..\msg\msg.c)(0x643258D2)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\HARDWARE\LED -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\USER -I..\STM32F10x_FWLib\inc -I..\CORE -I..\HARDWARE\KEY -I..\HARDWARE\OLED -I..\j1939\can -I..\j1939\J1939 -I..\msg -I..\exti --gnu-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I C:\Keil_v5\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\msg.o --omf_browse ..\obj\msg.crf --depend ..\obj\msg.d)
+F (..\msg\msg.c)(0x64359C63)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\HARDWARE\LED -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\USER -I..\STM32F10x_FWLib\inc -I..\CORE -I..\HARDWARE\KEY -I..\HARDWARE\OLED -I..\j1939\can -I..\j1939\J1939 -I..\msg -I..\exti --gnu-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I C:\Keil_v5\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\msg.o --omf_browse ..\obj\msg.crf --depend ..\obj\msg.d)
 I (..\msg\msg.h)(0x64324F48)
 I (..\USER\stm32f10x.h)(0x642BEBB9)
 I (..\CORE\core_cm3.h)(0x642BEBB8)
@@ -234,10 +236,26 @@ I (..\STM32F10x_FWLib\inc\stm32f10x_rcc.h)(0x642BEBB9)
 I (..\STM32F10x_FWLib\inc\stm32f10x_usart.h)(0x642BEBB9)
 I (..\STM32F10x_FWLib\inc\misc.h)(0x642BEBB9)
 I (..\j1939\J1939\J1939.H)(0x642BEBB9)
-I (..\j1939\can\led.h)(0x64314CEF)
+I (..\j1939\can\led.h)(0x643567F9)
 F (..\msg\msg.h)(0x64324F48)()
-F (..\exti\exti.c)(0x64323739)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\HARDWARE\LED -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\USER -I..\STM32F10x_FWLib\inc -I..\CORE -I..\HARDWARE\KEY -I..\HARDWARE\OLED -I..\j1939\can -I..\j1939\J1939 -I..\msg -I..\exti --gnu-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I C:\Keil_v5\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\exti.o --omf_browse ..\obj\exti.crf --depend ..\obj\exti.d)
-I (..\exti\exti.h)(0x64323739)
+F (..\msg\sendmsg.c)(0x643519DE)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\HARDWARE\LED -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\USER -I..\STM32F10x_FWLib\inc -I..\CORE -I..\HARDWARE\KEY -I..\HARDWARE\OLED -I..\j1939\can -I..\j1939\J1939 -I..\msg -I..\exti --gnu-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I C:\Keil_v5\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\sendmsg.o --omf_browse ..\obj\sendmsg.crf --depend ..\obj\sendmsg.d)
+I (..\msg\sendmsg.h)(0x6433BCF3)
+I (..\msg\msg.h)(0x64324F48)
+I (..\USER\stm32f10x.h)(0x642BEBB9)
+I (..\CORE\core_cm3.h)(0x642BEBB8)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x53463A44)
+I (..\USER\system_stm32f10x.h)(0x642BEBB9)
+I (..\USER\stm32f10x_conf.h)(0x642BEBB9)
+I (..\STM32F10x_FWLib\inc\stm32f10x_dbgmcu.h)(0x642BEBB9)
+I (..\STM32F10x_FWLib\inc\stm32f10x_gpio.h)(0x642BEBB9)
+I (..\STM32F10x_FWLib\inc\stm32f10x_rcc.h)(0x642BEBB9)
+I (..\STM32F10x_FWLib\inc\stm32f10x_usart.h)(0x642BEBB9)
+I (..\STM32F10x_FWLib\inc\misc.h)(0x642BEBB9)
+I (..\j1939\J1939\J1939.H)(0x642BEBB9)
+I (..\j1939\can\led.h)(0x643567F9)
+F (..\msg\sendmsg.h)(0x6433BCF3)()
+F (..\exti\exti.c)(0x6435A541)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\HARDWARE\LED -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\USER -I..\STM32F10x_FWLib\inc -I..\CORE -I..\HARDWARE\KEY -I..\HARDWARE\OLED -I..\j1939\can -I..\j1939\J1939 -I..\msg -I..\exti --gnu-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I C:\Keil_v5\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\exti.o --omf_browse ..\obj\exti.crf --depend ..\obj\exti.d)
+I (..\exti\exti.h)(0x6434E16A)
 I (..\USER\stm32f10x.h)(0x642BEBB9)
 I (..\CORE\core_cm3.h)(0x642BEBB8)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x53463A44)
@@ -249,5 +267,9 @@ I (..\STM32F10x_FWLib\inc\stm32f10x_rcc.h)(0x642BEBB9)
 I (..\STM32F10x_FWLib\inc\stm32f10x_usart.h)(0x642BEBB9)
 I (..\STM32F10x_FWLib\inc\misc.h)(0x642BEBB9)
 I (..\STM32F10x_FWLib\inc\stm32f10x_exti.h)(0x642BEBB9)
-I (..\j1939\can\led.h)(0x64314CEF)
-F (..\exti\exti.h)(0x64323739)()
+I (..\j1939\can\led.h)(0x643567F9)
+I (..\msg\sendmsg.h)(0x6433BCF3)
+I (..\msg\msg.h)(0x64324F48)
+I (..\j1939\J1939\J1939.H)(0x642BEBB9)
+I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x53463A44)
+F (..\exti\exti.h)(0x6434E16A)()

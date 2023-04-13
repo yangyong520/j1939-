@@ -14,3 +14,11 @@
 ..\..\output\j1939.o: ..\..\Libraries\FWlib\inc\misc.h
 ..\..\output\j1939.o: ..\..\can\USER\can.h
 ..\..\output\j1939.o: ..\..\Libraries\FWlib\inc\stm32f10x_can.h
+..\..\output\j1939.o: ..\..\Msg\dealwithmsg.h
+..\..\output\j1939.o: ..\..\Msg\msg.h
+..\..\output\j1939.o: ..\..\ds18b20\bsp_ds18b20.h
+..\..\output\j1939.o: ..\..\User\SysTick\bsp_SysTick.h
+..\..\output\j1939.o: ..\..\Msg\dealwithmsg.h
+..\..\output\j1939.o: ..\..\User\wifi\wifi_function.h
+..\..\output\j1939.o: ..\..\User\wifi\wifi_config.h
+..\..\output\j1939.o: C:\Keil_v5\ARM\ARMCC\bin\..\include\stdbool.h

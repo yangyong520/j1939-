@@ -116,10 +116,11 @@ int main(void)
 
   
 	ESP8266_STA_TCP_Client(WIFINAME,WIFIPSWD,IP,PORT);
-	TIM_2( );
+	//TIM_2( );
 	while(1)
     {
-		testallmsg_group1()	;		
+			sendLD();
+		//testallmsg_group1()	;		
 		//testallmsg_group2()	;	
 		//testallmsg_group3()	;	
 			

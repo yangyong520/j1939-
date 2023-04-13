@@ -672,6 +672,16 @@
               <FileType>5</FileType>
               <FilePath>..\..\Testmsg\testmsg.h</FilePath>
             </File>
+            <File>
+              <FileName>dealwithmsg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Msg\dealwithmsg.c</FilePath>
+            </File>
+            <File>
+              <FileName>dealwithmsg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Msg\dealwithmsg.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

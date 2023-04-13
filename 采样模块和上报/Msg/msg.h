@@ -5,6 +5,7 @@
 #include "stm32f10x.h"
 #include "J1939.H"  
 #include "bsp_ds18b20.h"
+#include "dealwithmsg.h"
 #define RATE 1
 void send_massage(J1939_MESSAGE_T *msg);
 uint16_t Parameter_Translate(long double measured,float resolutionratio,float offset);

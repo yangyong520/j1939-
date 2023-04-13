@@ -1,21 +1,6 @@
 #include "exti.h"
+#include <stdbool.h>
 #define printf(fmt, ...) do { } while (0)
-static void NVIC_ConfigurationEXTI9_5_IRQn(void)
-{
-	
-  NVIC_InitTypeDef NVIC_InitStructure; 
-	printf("\r\n NVIC_Configuration \r\n");
-  
-  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);// 设置优先级分组
-  
-  /* 配置P[A|B|C|D|E]0为中断源 */
-  NVIC_InitStructure.NVIC_IRQChannel = EXTI9_5_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;//先占优先级为0
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;  //从优先级为0
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-	printf("\r\n NVIC_Configuration end\r\n");
-}
 static void NVIC_ConfigurationEXTI15_10_IRQn(void)
 {
   NVIC_InitTypeDef NVIC_InitStructure; 
@@ -191,46 +176,141 @@ void EXTI_Config(void)
 
 void EXTI15_10_IRQHandler(void)
 {
+	delay_ms(10);
+
   if(EXTI_GetITStatus(EXTI_Line12) != RESET) //确保是否产生了EXTI Line中断
   {
 		printf("\r\n EXTI_Line12\r\n");
-	  LED4( ON );	
+		 switch (LCMDneed[3])
+			{
+				case 1:
+				{
+					LCMDneed[3]=0;
+					break;
+				}
+				case 0:
+				{
+					LCMDneed[3]=1;
+					break;
+				}				
+			}		
+				sendLCMD();
+			//Right_Turn_Signal_Lights( ON );
+	  
     EXTI_ClearITPendingBit(EXTI_Line12);     //清除中断标志位
-  }  
-	if(EXTI_GetITStatus(EXTI_Line11) != RESET) //确保是否产生了EXTI Line中断
+  } 
+
+	if(EXTI_GetITStatus(EXTI_Line11) != RESET) //运行灯
   {
 		printf("\r\n EXTI_Line11\r\n");
-	  LED3( ON );	
+	  switch (LCMDneed[0])
+			{
+				case 1:
+				{
+					LCMDneed[0]=0;
+					break;
+				}
+				case 0:
+				{
+					LCMDneed[0]=1;
+					break;
+				}				
+			}		
+				sendLCMD();
     EXTI_ClearITPendingBit(EXTI_Line11);     //清除中断标志位
   }  
 	if(EXTI_GetITStatus(EXTI_Line13) != RESET) //确保是否产生了EXTI Line中断
   {
 		printf("\r\n EXTI_Line13\r\n");
-	  LED1( ON );
+		 switch (LCMDneed[4])
+			{
+				case 1:
+				{
+					LCMDneed[4]=0;
+					break;
+				}
+				case 0:
+				{
+					LCMDneed[4]=1;
+					break;
+				}				
+			}		
+				sendLCMD();
+	  //Left_Turn_Signal_Lights( ON );	
     EXTI_ClearITPendingBit(EXTI_Line13);     //清除中断标志位
   }  
 }
-void EXTI1_IRQHandler(void)
+void EXTI1_IRQHandler(void)//倒车灯
 {
+		
+	if (EXTI_GetITStatus(EXTI_Line1) != RESET) {
+        delay_ms(10);
     if (EXTI_GetITStatus(EXTI_Line1) != RESET) {
         printf("\r\n EXTI_Line1\r\n");
-				LED2( ON );	
+			switch (LCMDneed[5])
+			{
+				case 1:
+				{
+					LCMDneed[5]=0;
+					break;
+				}
+				case 0:
+				{
+					LCMDneed[5]=1;
+					break;
+				}				
+			}		
+				sendLCMD();
         EXTI_ClearITPendingBit(EXTI_Line1);
     }
+	}
 }
 void EXTI2_IRQHandler(void)
 {
+		
     if (EXTI_GetITStatus(EXTI_Line2) != RESET) {
         printf("\r\n EXTI_Line1\r\n");
-				LED5( ON );	
+			 switch (LCMDneed[1])
+			{
+				case 1:
+				{
+					LCMDneed[1]=0;
+					break;
+				}
+				case 0:
+				{
+					LCMDneed[1]=1;
+					break;
+				}				
+			}		
+				sendLCMD();
+			//Low_Beam_Head_Light_Data( ON );	
         EXTI_ClearITPendingBit(EXTI_Line2);
     }
+	
 }
-void EXTI3_IRQHandler(void)
+void EXTI3_IRQHandler(void)//远光灯
 {
+
     if (EXTI_GetITStatus(EXTI_Line3) != RESET) {
         printf("\r\n EXTI_Line1\r\n");
-				LED6( ON );	
+			 switch (LCMDneed[2])
+			{
+				case 1:
+				{
+					LCMDneed[2]=0;
+					break;
+				}
+				case 0:
+				{
+					LCMDneed[2]=1;
+					break;
+				}				
+			}		
+				sendLCMD();
+				//High_Beam_Head_Light_Data( ON );
+				//sendLCMD();	
         EXTI_ClearITPendingBit(EXTI_Line3);
     }
-}
+
+	}

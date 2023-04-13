@@ -13,3 +13,7 @@
 ..\obj\exti.o: ..\STM32F10x_FWLib\inc\misc.h
 ..\obj\exti.o: ..\STM32F10x_FWLib\inc\stm32f10x_exti.h
 ..\obj\exti.o: ..\j1939\can\led.h
+..\obj\exti.o: ..\msg\sendmsg.h
+..\obj\exti.o: ..\msg\msg.h
+..\obj\exti.o: ..\j1939\J1939\J1939.H
+..\obj\exti.o: C:\Keil_v5\ARM\ARMCC\bin\..\include\stdbool.h

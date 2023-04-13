@@ -5,6 +5,8 @@
 #include "misc.h"
 #include "stm32f10x_exti.h"
 #include "led.h"
+#include "sendmsg.h"
+
 void EXTI_PB12_Config(void);
 void EXTI_PA11_Config(void);
 void EXTI_PC13_Config(void);

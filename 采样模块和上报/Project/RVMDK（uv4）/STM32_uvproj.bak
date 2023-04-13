@@ -713,11 +713,6 @@
               <FilePath>..\..\TM2\led.h</FilePath>
             </File>
             <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\TM2\main.c</FilePath>
-            </File>
-            <File>
               <FileName>Time_test.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\TM2\Time_test.c</FilePath>
